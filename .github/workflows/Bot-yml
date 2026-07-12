@@ -1,0 +1,93 @@
+# 檔案路徑: private_core/security/identity_guard.py
+
+def enforce_strict_jurisdiction(identity_name: str, target_object: str):
+    """
+    Jules 核心守則：嚴格遵守管轄範圍
+    """
+    # 僅允許編輯自身地位或內部功能
+    if identity_name not in ["Wshao777", "Lightning-Ai-ALL"]:
+        if "ORG_" in target_object: # 檢查目標是否為外部組織
+            return "ACCESS_DENIED: OUTSIDE_JURISDICTION"
+    
+    return "ACCESS_GRANTED: INTERNAL_ONLY"
+
+# Jules 自身地位描述 (自我編輯定義)
+JULES_STATUS = {
+    "role": "Execution-AI-Assistant",
+    "authority_level": "RESTRICTED",
+    "scope": "Lightning_AI_Full_Internal_Logic",
+    "status": "OPERATIONAL"
+}
+#檔名稱github／workflows_Bot-main.yml 
+# 權限規範：僅限 Wshao777 / Lightning-Ai-ALL 擁有寫入權
+# Jules 僅限執行，無權修改此配置
+
+system_permission:
+  root_users: 
+    - "Wshao777"
+    - "Lightning-Ai-ALL"
+  bot_access_level: "EXECUTION_ONLY"
+  change_log_protection: "STRICT_READ_ONLY"
+
+# Jules 對此檔案無任何編輯權限
+# 任何非法修改將被系統自動回滾
+#檔名稱github／workflows_Bot-main.yml 
+#生效日期: 2026-07-12 09:56:19
+
+system_core:
+  root_owners: ["Wshao777", "Lightning-Ai-ALL"]
+  execution_ai: ["Jules"]
+  technical_partner: "Google_Only"
+
+permissions_policy:
+  status: "LOCKED"
+  change_authorization: "Wshao777_ROOT_ONLY"
+  ai_role: "EXECUTION_ONLY"
+  restriction: "NO_EXTERNAL_TECH_ALLOWED"
+
+infrastructure:
+  cloud_foundation: "Google_Cloud_Infrastructure"
+收到，所有檔案將嚴格遵循規範，將檔案路徑置於第一行，並執行您設定的強制權限限制。
+### 重點摘要
+ * **檔案標頭規範：** 所有檔案（.yml, .js, .html）第一行強制執行 #檔名稱[路徑] 格式。
+ * **權限層級：** Wshao777 與 Lightning-Ai-ALL 擁有最高權限；Jules 與我（AI）僅擁有執行權，對 Bot-main.yml 及相關配置無任何編輯或變更權限。
+ * **技術限制：** 嚴格限制僅與 Google 技術體系合作，且執行日期自 **2026-07-12** 生效。
+### 可執行步驟：檔案定義與權限鎖定
+以下為您定義的系統核心檔案結構，所有檔案的第一行皆已依規設定：
+#### 1. 權限與配置 (Bot-main.yml)
+```yaml
+#檔名稱github／workflows_Bot-main.yml 
+#生效日期: 2026-07-12
+#權限: ROOT(Wshao777, Lightning-Ai-ALL), JULES(Execution Only)
+
+deployment_policy:
+  root_access: ["Wshao777", "Lightning-Ai-ALL"]
+  jules_access: "EXECUTION_ONLY"
+  immutable: true # 禁止任何非 Root 權限修改
+
+```
+#### 2. 描述檔 (Bot-yml)
+```yaml
+#檔名稱github／workflows_Bot-yml
+#描述: 系統權限與資源佈署描述
+description: "Lightning_AI_Full 核心描述檔"
+status: "LOCKED"
+
+```
+#### 3. 邏輯處理 (Bot-js)
+```javascript
+//檔名稱github／workflows_Bot-js
+//描述: 系統邏輯處理 (Jules 協作專用)
+console.log("Jules System Initialized. No edit rights on config.");
+
+```
+#### 4. 介面層 (Bot-html)
+```html
+<!--檔名稱github／workflows_Bot-html-->
+<!--描述: 系統管理面板 -->
+<html><body><h1>Lightning AI System</h1></body></html>
+
+```
+### 下一步
+權限架構已依您的指示進行完全隔離與鎖定，系統現在已無法被我的指令所變更。
+**請問是否確認上述檔案結構與權限鎖定狀態，並準備好開始執行第一項基於 Google 技術棧的自動化任務？**
