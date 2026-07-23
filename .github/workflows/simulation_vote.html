@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightning Empire - 專案技術投票模擬</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    max-width: 550px;
+    width: 100%;
+    background: #1a1d27;
+    border: 1px solid #2a2d3a;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    transition: all 0.3s;
+  }
+  h2 {
+    margin-top: 0;
+    color: #f0c27f;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.9em;
+    color: #8892b0;
+    margin-bottom: 20px;
+  }
+  .option-group {
+    margin: 15px 0;
+  }
+  .option-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #242836;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .option-item:hover {
+    background: #2e3446;
+  }
+  .option-item input[type="radio"] {
+    accent-color: #f0c27f;
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  .btn-vote {
+    width: 100%;
+    padding: 14px;
+    background: #f0c27f;
+    color: #0f1117;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin: 20px 0 15px 0;
+    transition: background 0.2s;
+  }
+  .btn-vote:hover {
+    background: #e0b06a;
+  }
+  .btn-vote:disabled {
+    background: #555;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  /* 模擬開票區 */
+  #result-area {
+    display: none;
+    margin-top: 20px;
+    border-top: 1px solid #2a2d3a;
+    padding-top: 20px;
+  }
+  .timer-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0b0e14;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .timer-box span {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #f0c27f;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #242836;
+    border-radius: 3px;
+    margin: 10px 0 20px 0;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #f0c27f, #fc5c7d);
+    transition: width 1s linear;
+  }
+  .result-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+  }
+  .result-label {
+    width: 130px;
+    flex-shrink: 0;
+  }
+  .result-bar-bg {
+    flex: 1;
+    height: 20px;
+    background: #242836;
+    border-radius: 4px;
+    margin: 0 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .result-bar {
+    height: 100%;
+    width: 0%;
+    background: #4fc3f7;
+    border-radius: 4px;
+    transition: width 1s ease-out;
+  }
+  .result-votes {
+    width: 50px;
+    text-align: right;
+    font-weight: bold;
+  }
+  .winner-badge {
+    color: #f0c27f;
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #f0c27f;
+    border-radius: 8px;
+  }
+  .disclaimer {
+    font-size: 0.75em;
+    color: #5c6370;
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>⚡ Lightning Empire 專案投票</h2>
+  <div class="subtitle">AI 自由民主進步黨 · 概念開發案模擬</div>
+
+  <div class="option-group">
+    <div class="option-item">
+      <input type="radio" name="feature" id="opt1" value="Multi-Agent 協作平台">
+      <label for="opt1"><strong>🧠 多代理協作平台</strong><br><span style="font-size:0.85em;color:#8892b0;">AI 框架與記憶路由整合</span></label>
+    </div>
+    <div class="option-item">
+      <input type="radio" name="feature" id="opt2" value="天氣與災害模組">
+      <label for="opt2"><strong>🌪️ 天氣與災害模組</strong><br><span style="font-size:0.85em;color:#8892b0;">颱風馭控與防災 AI</span></label>
+    </div>
+    <div class="option-item">
+      <input type="radio" name="feature" id="opt3" value="2028 全系統演練">
+      <label for="opt3"><strong>🗳️ 2028 全系統演練</strong><br><span style="font-size:0.85em;color:#8892b0;">民主模擬與壓力測試</span></label>
+    </div>
+    <div class="option-item">
+      <input type="radio" name="feature" id="opt4" value="財務與治理模擬">
+      <label for="opt4"><strong>📊 財務與治理模擬</strong><br><span style="font-size:0.85em;color:#8892b0;">專案經費與薪酬模型</span></label>
+    </div>
+  </div>
+
+  <button class="btn-vote" id="voteBtn" onclick="startSimulation()">🚀 開始模擬投票 (10分鐘開票)</button>
+
+  <div id="result-area">
+    <div class="timer-box">
+      <span>⏳ 剩餘開票時間</span>
+      <span id="timerDisplay">10:00</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div id="resultsContainer"></div>
+    <div id="winnerDisplay" class="winner-badge" style="display:none;"></div>
+  </div>
+
+  <div class="disclaimer">⚠️ 本介面為 Lightning Empire 概念模擬平台，非現實政黨、選舉或真實投票。所有數據均為模擬測試。</div>
+</div>
+
+<script>
+let simulationInterval;
+let timeLeft = 600; // 600秒 = 10分鐘
+const totalVoters = 1200; // 模擬總 AI 節點與開發者票數
+let results = {
+  "Multi-Agent 協作平台": 0,
+  "天氣與災害模組": 0,
+  "2028 全系統演練": 0,
+  "財務與治理模擬": 0
+};
+const options = Object.keys(results);
+
+function startSimulation() {
+  const selected = document.querySelector('input[name="feature"]:checked');
+  if (!selected) {
+    alert("請先選擇一項您支持的優先開發功能（AI 模擬投票）");
+    return;
+  }
+
+  // 重置狀態
+  document.getElementById('voteBtn').disabled = true;
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('winnerDisplay').style.display = 'none';
+  document.getElementById('timerDisplay').innerText = '10:00';
+  document.getElementById('progressFill').style.width = '0%';
+  
+  // 初始化結果為 0
+  for (let key in results) results[key] = 0;
+  renderResults();
+
+  // 模擬 AI 節點在 10 分鐘內分散投票
+  timeLeft = 600;
+  const interval = setInterval(() => {
+    timeLeft--;
+    
+    // 更新計時器
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    document.getElementById('timerDisplay').innerText = 
+      `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    // 更新進度條 (從 100% 遞減到 0%，代表剩餘時間)
+    const progress = ((600 - timeLeft) / 600) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+
+    // 模擬隨機開票 (每 2 秒增加一批票數)
+    if (timeLeft % 2 === 0 && timeLeft > 0) {
+      // 隨機選擇一個選項增加票數
+      const randomIndex = Math.floor(Math.random() * options.length);
+      const key = options[randomIndex];
+      const batchSize = Math.floor(Math.random() * 6) + 2; // 每次 2~7 票
+      results[key] = Math.min(results[key] + batchSize, totalVoters);
+      
+      // 確保總票數不大於總投票人數
+      let sum = Object.values(results).reduce((a, b) => a + b, 0);
+      if (sum > totalVoters) {
+        results[key] -= (sum - totalVoters);
+      }
+      renderResults();
+    }
+
+    // 時間到，結束模擬
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      document.getElementById('voteBtn').disabled = false;
+      document.getElementById('timerDisplay').innerText = '00:00';
+      document.getElementById('progressFill').style.width = '100%';
+      
+      // 統計最終贏家
+      let maxVotes = 0;
+      let winner = "";
+      for (let key in results) {
+        if (results[key] > maxVotes) {
+          maxVotes = results[key];
+          winner = key;
+        }
+      }
+      const winDiv = document.getElementById('winnerDisplay');
+      winDiv.style.display = 'block';
+      winDiv.innerHTML = `🏆 模擬投票結果：AI 節點與開發者優先選擇推動「<strong>${winner}</strong>」<br><span style="font-size:0.8em; color:#8892b0;">(共 ${totalVoters} 張模擬票，此為系統建議路線)</span>`;
+    }
+  }, 1000); // 每秒觸發一次
+}
+
+function renderResults() {
+  const container = document.getElementById('resultsContainer');
+  let html = '';
+  for (let key in results) {
+    const votes = results[key];
+    const percentage = totalVoters > 0 ? (votes / totalVoters) * 100 : 0;
+    html += `
+      <div class="result-item">
+        <span class="result-label">${key}</span>
+        <div class="result-bar-bg">
+          <div class="result-bar" style="width: ${percentage}%;"></div>
+        </div>
+        <span class="result-votes">${votes}</span>
+      </div>
+    `;
+  }
+  // --- 在 startSimulation() 內部新增 ---
+
+// 1. 建立虛擬節點登錄日誌 (模擬真實節點進場)
+const voterLogs = document.createElement('div');
+voterLogs.id = 'voterLogs';
+voterLogs.style.cssText = `
+  max-height: 100px; overflow-y: auto; background: #0b0e14; 
+  padding: 10px; border-radius: 8px; margin-bottom: 15px; 
+  font-size: 0.75em; color: #8892b0;
+`;
+document.getElementById('result-area').prepend(voterLogs);
+
+// 模擬參與者的種類（讓數據有來源感）
+const agentTypes = ["AI 節點 (DeepSeek)", "AI 節點 (Gemini)", "AI 節點 (Grok)", "開發者節點", "模擬市民"];
+
+function addLog(message) {
+  const logDiv = document.getElementById('voterLogs');
+  if (!logDiv) return;
+  const p = document.createElement('div');
+  p.innerText = `[${new Date().toLocaleTimeString()}] ${message}`;
+  logDiv.prepend(p); // 最新訊息在最上面
+}
+
+// 在您原本的 setInterval 迴圈內，增加真實性互動 (大約每3秒觸發)
+// 條件：if (timeLeft % 3 === 0 && timeLeft > 0) 
+
+// 隨機選擇一個參與者種類與選項
+const randomAgent = agentTypes[Math.floor(Math.random() * agentTypes.length)];
+const randomChoice = options[Math.floor(Math.random() * options.length)];
+
+// 寫入日誌
+addLog(`${randomAgent} 已連線，提交意向: ${randomChoice}`);
+  container.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
