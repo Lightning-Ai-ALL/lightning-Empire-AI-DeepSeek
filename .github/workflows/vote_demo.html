@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightning Empire - 專案開發投票模擬</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #0b0d14;
+    color: #e8edf5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    max-width: 600px;
+    width: 100%;
+    background: #161b24;
+    border: 1px solid #2a303c;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  }
+  h2 {
+    margin-top: 0;
+    color: #ffd966;
+    text-align: center;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #2a303c;
+    padding-bottom: 15px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.9em;
+    color: #8892b0;
+    margin: -10px 0 20px 0;
+  }
+  .topic-box {
+    background: #1f2532;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #ffd966;
+    font-weight: 500;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    text-align: left;
+    color: #8892b0;
+    font-weight: 400;
+    font-size: 0.9em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2a303c;
+  }
+  td {
+    padding: 12px 0;
+    border-bottom: 1px solid #1f2532;
+  }
+  .project-name {
+    font-weight: 500;
+  }
+  .vote-count {
+    text-align: center;
+    font-weight: 600;
+  }
+  .percentage {
+    text-align: right;
+    font-weight: 600;
+    color: #ffd966;
+  }
+  .bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #252b38;
+    border-radius: 4px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4fc3f7, #ffd966);
+    border-radius: 4px;
+    transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .total-votes {
+    margin-top: 20px;
+    text-align: center;
+    color: #8892b0;
+    font-size: 0.95em;
+    padding-top: 10px;
+    border-top: 1px solid #2a303c;
+  }
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: #ffd966;
+    color: #0b0d14;
+  }
+  .btn-primary:hover {
+    background: #e6c354;
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: #8892b0;
+    border: 1px solid #2a303c;
+  }
+  .btn-outline:hover {
+    background: #1f2532;
+    color: #fff;
+  }
+  .disclaimer {
+    font-size: 0.75em;
+    color: #5c6370;
+    text-align: center;
+    margin-top: 25px;
+    line-height: 1.5;
+    border-top: 1px solid #1f2532;
+    padding-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>⚡ Lightning Empire 專案投票模擬</h2>
+  <div class="subtitle">AI 自由民主進步黨 · 開發重點決策展示</div>
+
+  <div class="topic-box">
+    📌 當前投票主題：Lightning Empire 下一階段開發重點
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 45%;">開發項目</th>
+        <th style="width: 25%; text-align: center;">票數</th>
+        <th style="width: 30%; text-align: right;">佔比</th>
+      </tr>
+    </thead>
+    <tbody id="voteTableBody">
+      <!-- 動態 JS 渲染 -->
+    </tbody>
+  </table>
+
+  <div class="total-votes" id="totalVotesDisplay">
+    總票數：<span id="totalCount">1000</span>（示範模擬資料）
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-primary" onclick="regenerateSimulation()">🔄 重新模擬數據</button>
+    <button class="btn-outline" onclick="resetToExample()">↺ 還原預設範例</button>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ 註：以上數據為程式展示用的模擬資料，並非真實投票或民意調查結果。<br>
+    本介面為 Lightning Empire 概念模擬平台，僅供技術展示與開發測試使用。
+  </div>
+</div>
+
+<script>
+const projects = [
+  "Agent Framework",
+  "Memory Router",
+  "Weather AI",
+  "Simulation AI"
+];
+
+// 預設範例數據
+const exampleData = [320, 280, 250, 150];
+const totalVotes = 1000;
+
+function renderTable(dataArray) {
+  const tbody = document.getElementById('voteTableBody');
+  let html = '';
+  
+  dataArray.forEach((votes, index) => {
+    const percentage = ((votes / totalVotes) * 100);
+    html += `
+      <tr>
+        <td class="project-name">${projects[index]}</td>
+        <td class="vote-count">${votes}</td>
+        <td class="percentage">${percentage.toFixed(1)}%</td>
+      </tr>
+      <tr>
+        <td colspan="3" style="padding-top: 0; padding-bottom: 15px;">
+          <div class="bar-bg">
+            <div class="bar-fill" style="width: ${percentage}%;"></div>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+  
+  tbody.innerHTML = html;
+  document.getElementById('totalCount').innerText = totalVotes;
+}
+
+// 模擬真實感數據：總和固定為1000，讓數值隨機但真實
+function generateSimulationData() {
+  let data = new Array(4).fill(0);
+  let remaining = totalVotes;
+  
+  // 隨機分配前三個項目
+  for (let i = 0; i < 3; i++) {
+    if (remaining <= 0) break;
+    // 隨機取 0 到剩餘數值
+    let randomVal = Math.floor(Math.random() * (remaining + 1));
+    data[i] = randomVal;
+    remaining -= randomVal;
+  }
+  // 最後一個項目拿剩下的
+  data[3] = remaining;
+  
+  // 為了避免全集中某個，稍微洗牌(Shuffle)一下
+  for (let i = data.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [data[i], data[j]] = [data[j], data[i]];
+  }
+  return data;
+}
+
+function regenerateSimulation() {
+  const newData = generateSimulationData();
+  renderTable(newData);
+}
+
+function resetToExample() {
+  renderTable(exampleData);
+}
+
+// 頁面載入時顯示預設範例
+resetToExample();
+</script>
+
+</body>
+</html>
