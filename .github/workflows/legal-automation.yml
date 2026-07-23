@@ -8,38 +8,61 @@ on:
         required: true
         default: 'cases/115簡238_raw.txt'
   schedule:
-    - cron: '0 8 * * *'   # 每日早上8點（UTC）執行，需設定好預設案件檔名
+    - cron: '0 8 * * *'   # 台灣時間下午4點（UTC+8 轉 UTC），可自行調整
 
 jobs:
   run-legal-assistant:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: 檢出程式碼
+        uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v4
+      - name: 設定 Python 3.11
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: 安裝依賴套件
         run: pip install -r requirements.txt
 
-      - name: Run pipeline
+      - name: 執行法律助理管線
         env:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
+          # 取得案件檔案路徑
           CASE_FILE="${{ github.event.inputs.case_file }}"
+          
+          # 若為排程觸發，CASE_FILE 為空，自動尋找第一個 _raw.txt
           if [ -z "$CASE_FILE" ]; then
-            # 排程觸發時使用預設第一個案件
-            CASE_FILE=$(ls cases/*_raw.txt | head -1)
+            echo "排程觸發，自動選取第一個案件檔案..."
+            CASE_FILE=$(ls cases/*_raw.txt 2>/dev/null | head -1)
+            if [ -z "$CASE_FILE" ]; then
+              echo "❌ 錯誤：cases/ 目錄下沒有任何 *_raw.txt 檔案，工作流程中斷。"
+              exit 1
+            fi
           fi
+          
+          # 確認檔案存在
+          if [ ! -f "$CASE_FILE" ]; then
+            echo "❌ 錯誤：指定的案件檔案不存在：$CASE_FILE"
+            exit 1
+          fi
+          
+          echo "📄 開始處理案件：$CASE_FILE"
           python run_pipeline.py "$CASE_FILE"
+          
+          # 檢查主要輸出檔案是否成功產生（可選）
+          if [ -f "output/appeal_draft.docx" ]; then
+            echo "✅ appeal_draft.docx 已產生"
+          else
+            echo "⚠️ 警告：appeal_draft.docx 未產生，請檢查程式日誌"
+          fi
 
-      - name: Upload output artifacts (optional)
-        uses: actions/upload-artifact@v3
+      - name: 上傳產出檔案（選用）
+        if: success()
+        uses: actions/upload-artifact@v4
         with:
           name: legal-outputs
           path: output/
