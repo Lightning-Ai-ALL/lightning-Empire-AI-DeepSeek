@@ -1,0 +1,150 @@
+import time
+import threading
+from datetime import datetime
+import webbrowser
+import os
+
+# 引入你原有的所有引擎（假設已經整合成類別）
+from lightning_engines import (
+    LightningEarthRiskValueAI,
+    DeliveryRiskSimulator,
+)
+
+class LightningDashboard:
+    def __init__(self):
+        self.earth_ai = LightningEarthRiskValueAI()
+        self.delivery_sim = DeliveryRiskSimulator()
+        self.html_path = "lightning_dashboard.html"
+
+    def generate_html(self):
+        """產生即時儀表板 HTML"""
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # 1. 價值排名
+        value_rows = ""
+        for i, asset in enumerate(self.earth_ai.ranked_assets, 1):
+            value_rows += f"""
+            <tr>
+                <td>{i}</td>
+                <td>{asset['name']}</td>
+                <td>{asset['score']}</td>
+            </tr>"""
+
+        # 2. 颱風動態（簡化，只取一個颱風為例，實際可迴圈）
+        typhoon_cards = ""
+        for t in self.earth_ai.typhoons:
+            debris_items = ""
+            for d in t.get("debris", []):
+                debris_items += f"<li>{d['type']}: {d['fly_distance_km']}km ({d['impact_probability']}%)</li>"
+
+            city_risks = ""
+            for city, risk in t.get("city_risks", {}).items():
+                econ = risk * 1.5  # 簡化經濟損失
+                city_risks += f"""
+                <tr>
+                    <td>{city}</td>
+                    <td>{risk:.1f}%</td>
+                    <td>{econ:.1f}</td>
+                </tr>"""
+
+            typhoon_cards += f"""
+            <div class="typhoon-card">
+                <h3>🌀 {t['name']} → {t['target_name']}</h3>
+                <p>風速: {t['wind']} km/h | 距離: {t['dist_to_target']:.0f} km</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width:{t['progress']}%"></div>
+                </div>
+                <p>預計抵達: {t['eta']}</p>
+                <h4>🧱 雜物搬運</h4>
+                <ul>{debris_items}</ul>
+                <h4>🏙️ 城市風險與經濟損失</h4>
+                <table>
+                    <tr><th>城市</th><th>風險</th><th>經濟損失</th></tr>
+                    {city_risks}
+                </table>
+            </div>"""
+
+        # 3. 外送風險
+        delivery_status = f"""
+        <div class="delivery-box">
+            <h3>🛵 台中西屯外送風險</h3>
+            <p>即時雨量: {self.delivery_sim.rain_level:.1f} mm</p>
+            <p>烏雲密度: {self.delivery_sim.dark_cloud:.1f}%</p>
+            <p>風險等級: {self.delivery_sim.risk_level:.1f}%</p>
+            <p>司機供給: {self.delivery_sim.driver_supply:.0f}%</p>
+            <p>訂單需求: {self.delivery_sim.order_demand:.0f}%</p>
+            <p>加成狀態: {'🔥 動態加成' if self.delivery_sim.surge else '✅ 正常'}</p>
+        </div>"""
+
+        html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lightning Earth Dashboard</title>
+    <meta http-equiv="refresh" content="5">
+    <style>
+        body {{ font-family: sans-serif; background: #0a0f1e; color: #eee; padding: 20px; }}
+        .header {{ text-align: center; margin-bottom: 30px; }}
+        .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }}
+        .card {{ background: #1a1f2e; border-radius: 15px; padding: 20px; box-shadow: 0 0 15px #00b4d8; }}
+        .typhoon-card {{ background: #16213e; margin: 10px 0; padding: 15px; border-radius: 10px; }}
+        table {{ width: 100%%; border-collapse: collapse; }}
+        th, td {{ padding: 8px; text-align: left; border-bottom: 1px solid #333; }}
+        .progress-bar {{ background: #333; border-radius: 10px; height: 20px; margin: 10px 0; }}
+        .progress {{ background: linear-gradient(90deg, #00b4d8, #ff6b6b); height: 100%%; border-radius: 10px; }}
+        .delivery-box {{ background: #16213e; padding: 15px; border-radius: 10px; }}
+        h2 {{ color: #00b4d8; }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Lightning Earth Risk Value AI</h1>
+        <p>即時更新時間: {now}</p>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <h2>🏆 未來核心資產價值排名</h2>
+            <table>
+                <tr><th>排名</th><th>資產</th><th>價值分數</th></tr>
+                {value_rows}
+            </table>
+        </div>
+        <div class="card">
+            <h2>🌪️ 颱風即時戰情</h2>
+            {typhoon_cards}
+        </div>
+    </div>
+    <div class="grid">
+        <div class="card">
+            {delivery_status}
+        </div>
+        <div class="card">
+            <h2>📡 系統狀態</h2>
+            <p>所有引擎運作中</p>
+            <p>下一更新: 5 秒後</p>
+        </div>
+    </div>
+</body>
+</html>"""
+        with open(self.html_path, "w", encoding="utf-8") as f:
+            f.write(html)
+        return self.html_path
+
+    def run_headless(self, refresh_interval=5):
+        """背景不斷更新 HTML 檔案"""
+        print("📊 儀表板開始生成，每 5 秒刷新 HTML...")
+        while True:
+            # 先跑一次模擬更新（這部分需要你的引擎提供最新數據）
+            self.earth_ai.update(3)
+            self.delivery_sim.update()
+            self.generate_html()
+            time.sleep(refresh_interval)
+
+if __name__ == "__main__":
+    dashboard = LightningDashboard()
+    # 產生第一次 HTML 並打開瀏覽器
+    path = dashboard.generate_html()
+    webbrowser.open("file://" + os.path.abspath(path))
+    # 背景執行更新
+    threading.Thread(target=dashboard.run_headless, daemon=True).start()
+    input("按 Enter 停止...")

@@ -1,11 +1,14 @@
-# 敏感法律文件
-cases/*_raw.txt
-output/*
-logs/*.log
+# A fast, small, safe, gradually typed embeddable scripting language derived from Lua
+#
+# https://github.com/luau-lang/luau
+# https://luau.org/
 
-# 環境變數
-.env
+# Code coverage
+coverage.out
 
-# Python
-__pycache__/
-*.pyc
+# Profiling
+profile.out
+profile.svg
+
+# Time trace
+trace.json
