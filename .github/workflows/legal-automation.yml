@@ -1,0 +1,45 @@
+name: Lightning-Legal-AI
+
+on:
+  workflow_dispatch:
+    inputs:
+      case_file:
+        description: '案件原始檔案路徑 (例如 cases/115簡238_raw.txt)'
+        required: true
+        default: 'cases/115簡238_raw.txt'
+  schedule:
+    - cron: '0 8 * * *'   # 每日早上8點（UTC）執行，需設定好預設案件檔名
+
+jobs:
+  run-legal-assistant:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: |
+          CASE_FILE="${{ github.event.inputs.case_file }}"
+          if [ -z "$CASE_FILE" ]; then
+            # 排程觸發時使用預設第一個案件
+            CASE_FILE=$(ls cases/*_raw.txt | head -1)
+          fi
+          python run_pipeline.py "$CASE_FILE"
+
+      - name: Upload output artifacts (optional)
+        uses: actions/upload-artifact@v3
+        with:
+          name: legal-outputs
+          path: output/
