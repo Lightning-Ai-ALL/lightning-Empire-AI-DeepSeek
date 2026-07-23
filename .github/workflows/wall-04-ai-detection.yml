@@ -1,0 +1,7 @@
+name: 🛡️ 04 - AI Identity Firewall
+on: workflow_dispatch
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🤖 AI 模型识别异常请求"

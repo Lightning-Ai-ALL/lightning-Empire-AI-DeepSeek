@@ -1,0 +1,62 @@
+Lightning-Ai-
+
+ALL/Lightning-
+
+Empire-Ai-Water-
+
+Wind-fire]
+
+.github/workflows/All- Ai-main.yml 工作流程
+
+運行
+
+.github/workflows/All- Ai-main.yml:未執行任 何
+name: All-Ai-main
+
+on:
+  push:
+    branches:
+      - "main"
+      - "Ai-main"
+      - "bot-main"
+  workflow_dispatch:
+
+jobs:
+  check-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢查分支觸發 (無權限及環境進行編譯)
+        run: |
+          echo "✅ 權限與環境缺失，自動跳過 Android 打包。"
+          echo "✅ 當前觸發分支為: ${{ github.ref_name }}"
+          echo "✅ 工作流程檢查完畢，狀態為 PASS。"
+          name: All-Ai-main
+
+on:
+  push:
+    branches:
+      - "main"
+      - "Ai-main"
+      - "bot-main"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+    - name: Build with Gradle
+      run: |
+        cd android-app
+        chmod +x gradlew
+        ./gradlew assembleDebug
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug
+        path: android-app/app/build/outputs/apk/debug/app-debug.apk

@@ -1,0 +1,122 @@
+
+system:
+  name: AI Factory
+
+control_tower:
+  entry_point: control_tower.py
+
+runtime:
+  mode: single_runtime   # 🔥 關鍵：禁止多 runtime
+
+workflows:
+  main_flow:
+    steps:
+      - intent_agent
+      - router
+      - executor
+      - reporter
+system:
+  name: Lightning AI Factory
+  version: 1.0
+  mode: production
+
+control_tower:
+  enabled: true
+  entry_point: control_tower.py
+
+runtime:
+  executor: run_factory
+  max_concurrent_agents: 8
+  timeout_seconds: 120
+
+# =========================
+# 🧩 AGENT LAYER
+# =========================
+agents:
+
+  - name: intent_agent
+    type: classifier
+    model: deepseek
+    role: "判斷使用者意圖"
+
+  - name: policy_agent
+    type: reasoning
+    model: gpt
+    role: "政策分析與建議生成"
+
+  - name: data_agent
+    type: tool
+    role: "資料查詢與整理"
+
+  - name: simulation_agent
+    type: simulator
+    role: "情境推演與A/B測試"
+
+  - name: report_agent
+    type: formatter
+    role: "輸出報告與結構化結果"
+
+# =========================
+# 🔁 WORKFLOW PIPELINES
+# =========================
+workflows:
+
+  policy_analysis_flow:
+    trigger:
+      keywords: ["政策", "政府", "經濟", "法規"]
+    steps:
+      - intent_agent
+      - data_agent
+      - policy_agent
+      - simulation_agent
+      - report_agent
+
+  general_ai_flow:
+    trigger:
+      fallback: true
+    steps:
+      - intent_agent
+      - policy_agent
+      - report_agent
+
+# =========================
+# ⚙️ TOOLS
+# =========================
+tools:
+
+  web_search:
+    enabled: true
+
+  database:
+    type: sqlite
+    path: ./data/main.db
+
+  python_executor:
+    enabled: true
+
+# =========================
+# 🧠 ROUTING RULES
+# =========================
+routing:
+  strategy: keyword_first
+  fallback_workflow: general_ai_flow
+
+# =========================
+# 📊 CONTROL TOWER CONFIG
+# =========================
+dashboard:
+  enabled: true
+  port: 8080
+  features:
+    - workflow_monitor
+    - agent_status
+    - logs_viewer
+
+# =========================
+# 🔐 SAFETY / GOVERNANCE
+# =========================
+safety:
+  policy:
+    hallucination_check: true
+    log_all_outputs: true
+    require_confidence_score: true

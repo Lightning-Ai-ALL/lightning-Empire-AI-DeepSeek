@@ -1,0 +1,34 @@
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+tflite_model = converter.convert()
+open("mode_predictor.tflite", "wb").write(tflite_model)
+class TFLiteEngine(context: Context) {
+    private val model = Interpreter(context.assets.open("mode_predictor.tflite").readBytes())
+    fun predict(input: FloatArray): FloatArray {
+        val output = Array(1) { FloatArray(3) }
+        model.run(arrayOf(input), output)
+        return output[0]
+    }
+}
+fun decideMode(prob: FloatArray, battery: Int): String {
+    return when {
+        battery < 15 -> "ULTRA"
+        prob[2] > 0.7 -> "ULTRA"
+        prob[1] > 0.6 -> "SAVE"
+        else -> "NORMAL"
+    }
+}
+
+object PowerRules {
+    fun apply(battery: Int, cpu: Int, temp: Int): String {
+        if (temp > 42) return "ULTRA"
+        if (battery < 20) return "SAVE"
+        if (cpu > 80) return "SAVE"
+        return "NORMAL"
+    }
+}
+class OnlineLearner {
+    fun record(state: State, userAction: String) {
+        // 儲存至 DataStore 或 SQLite，做為未來 Retrain 的基礎
+    }
+}

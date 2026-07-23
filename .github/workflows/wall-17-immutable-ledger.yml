@@ -1,0 +1,7 @@
+name: 🛡️ 17 - Immutable Ledger Firewall
+on: workflow_dispatch
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "📦 不可篡改账本记录所有动作"

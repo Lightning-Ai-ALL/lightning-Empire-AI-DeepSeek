@@ -1,0 +1,124 @@
+
+name: [DeepSeek.yml]
+name: 🧠 github 主控核心（电脑版）手機版網頁瀏覽器
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      task:
+        description: '执行任务 (wind / eco / 6g)'
+        required: true
+        default: 'wind'
+      region:
+        description: '区域 (cn/tw/us)'
+        required: true
+        default: 'cn'
+
+jobs:
+  sovereign_gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查提交者邮箱（仅限 Wshao777opscenter@gmail.com）
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
+          else
+            AUTHOR_EMAIL="${{ github.actor }}@users.noreply.github.com"
+            # 手动触发时，使用 github.actor 结合固定域名模拟（实际可通过 PAT 验证）
+          fi
+          ALLOWED_EMAIL="Wshao777opscenter@gmail.com"
+          if [ "$AUTHOR_EMAIL" != "$ALLOWED_EMAIL" ]; then
+            echo "❌ 未授权邮箱: $AUTHOR_EMAIL"
+            echo "仅允许 $ALLOWED_EMAIL 触发此工作流"
+            exit 1
+          fi
+          echo "✅ 主权验证通过: $AUTHOR_EMAIL"
+
+      - uses: actions/checkout@v4
+
+      - name: 安装通用依赖（Python + Node.js）
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip nodejs npm
+          pip3 install --upgrade pip
+          pip3 install requests numpy pandas scikit-learn
+
+      - name: 多语言能力演示（Python 风电预测模块）
+        run: |
+          python3 -c "
+import json
+task = '${{ github.event.inputs.task }}'
+region = '${{ github.event.inputs.region }}'
+print(f'⚡ 执行任务: {task}, 区域: {region}')
+# 模拟风电功率预测
+if task == 'wind':
+    print('🌬️ 启动风电预测模型（LSTM/RF）')
+    print('预测结果: 未来24小时总发电量 12680 kWh')
+elif task == 'eco':
+    print('🚗 启动霹雳车节能驾驶优化')
+    print('建议: 油门限幅60%，预期节能 8.5%')
+elif task == '6g':
+    print('📡 启动6G-AI边缘调度模拟')
+    print('算力分配方案: 边缘节点权重调整完成')
+else:
+    print('未知任务，使用默认AI路由')
+"
+
+      - name: 可选 Node.js 脚本（用于调用外部 API）
+        run: |
+          node -e "
+          console.log('📡 Node.js 调用外部API演示');
+          const task = '${{ github.event.inputs.task }}';
+          if (task === 'wind') {
+            console.log('向风电预测API发送请求...');
+          } else if (task === 'eco') {
+            console.log('获取车辆节能策略...');
+          }
+          "
+
+      - name: PowerShell Core（可选，用于 Windows 远程管理）
+        shell: pwsh
+        run: |
+          Write-Host "🔧 PowerShell 模块已就绪"
+          Write-Host "当前任务: ${{ github.event.inputs.task }}"
+          if ("${{ github.event.inputs.task }}" -eq "wind") {
+            Write-Host "✅ 可对接电脑版 D:\Lightning-ALL 本地数据库"
+          }
+
+      - name: 记录执行日志
+        run: |
+          echo "✅ DeepSeek4 主控完成" >> execution.log
+          echo "时间: $(date -Iseconds)" >> execution.log
+          echo "任务: ${{ github.event.inputs.task }}" >> execution.log
+          git config user.name "Sovereign-Bot"
+          git config user.email "Wshao777opscenter@gmail.com"
+          git add execution.log
+          git commit -m "Auto log from DeepSeek4 workflow" || true
+          git push origin main || true
+on:
+schedule:
+- cron: '*/5 * * * *'   # 每5分鐘執行一次
+workflow_dispatch:
+jobs:
+block:
+runs-on: ubuntu-latest
+steps:
+- name: 載入囚犯名單
+run: |
+echo "PRISONERS=(
+'gtp4.1'
+'grok3'
+'game2.5'
+'gmail3'
+'jules-google'
+)" >> $GITHUB_ENV
+
+- name: 執行 GitHub 層級封鎖  
+    run: |  
+      for prisoner in ${PRISONERS[@]}; do  
+        echo "🔒 封鎖 $prisoner"  
+          
+        # 1. Block 用戶（讓他看不到你）  
+        gh api -X PUT /user/blocks/$prisoner 2>/dev/null || true  

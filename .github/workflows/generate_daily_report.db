@@ -1,0 +1,57 @@
+def generate_shift_report(df):
+    today = datetime.now().date()
+    today_df = df[df["order_time"].dt.date == today]
+
+    shift_df = today_df[
+        (today_df["order_time"].dt.hour >= SHIFT_START) &
+        (today_df["order_time"].dt.hour < SHIFT_END)
+    ]
+
+    if shift_df.empty:
+        return "本時段無訂單"
+
+    total_profit = sum(calculate_profit(row) for _, row in shift_df.iterrows())
+    split = profit_split(total_profit)
+
+    report = f"""
+=== 夜間AI營運報告（{SHIFT_START}:00–{SHIFT_END}:00）===
+
+訂單數: {len(shift_df)}
+總毛利: {total_profit:.2f}
+
+--- AI 分潤模型 ---
+AI收益: {split['ai_share']} 元
+營運收益: {split['operator_share']} 元
+
+建議策略:
+- 加強鐵板麵夜單
+- 宵夜套餐推廣
+- 03:00–05:00 提高曝光
+"""
+
+    return report.strip()
+  from datetime import datetime
+
+SHIFT_START = 3   # 03:00
+SHIFT_END = 12    # 12:00
+
+def is_active_shift(dt: datetime):
+    return SHIFT_START <= dt.hour < SHIFT_END
+      NIGHT_PRODUCTS = [
+    "鐵板麵",
+    "卡啦雞腿堡",
+    "宵夜二人套餐",
+    "厚牛堡"
+]
+
+SHIFT_TARGET_ORDERS = 50
+
+def demand_model(current_orders: int):
+    ratio = current_orders / SHIFT_TARGET_ORDERS
+
+    if ratio < 0.5:
+        return "提高折扣 + 推鐵板麵"
+    elif ratio < 1.0:
+        return "維持曝光 + 套餐推廣"
+    else:
+        return "提高單價 + 控制產能"

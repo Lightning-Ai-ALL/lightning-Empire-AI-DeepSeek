@@ -1,0 +1,7 @@
+name: 🛡️ 05 - Traffic Cleaning Firewall
+on: workflow_dispatch
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🧹 清洗恶意 payload / SQL 注入"

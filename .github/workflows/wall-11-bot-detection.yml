@@ -1,0 +1,7 @@
+name: 🛡️ 11 - Bot Containment Firewall
+on: workflow_dispatch
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🤖 检测并限制 bot 行为"

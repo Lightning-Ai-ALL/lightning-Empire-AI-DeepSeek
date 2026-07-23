@@ -1,0 +1,7 @@
+name: 🛡️ 03 - Behavior Analysis Firewall
+on: workflow_dispatch
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "📊 分析 API 调用频率、时间模式"

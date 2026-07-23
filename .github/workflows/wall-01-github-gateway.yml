@@ -1,0 +1,94 @@
+name: 🛡️ 第一道防火牆 - GitHub Security Gateway
+
+on:
+  workflow_dispatch:
+    inputs:
+      prisoners:
+        description: '要封鎖的 GitHub 用戶名（多個用逗號分隔）'
+        required: true
+        default: 'user1,user2'
+      block_action:
+        description: '執行封鎖 (true/false)'
+        required: false
+        default: 'true'
+      remove_org:
+        description: '從組織移除 (true/false)'
+        required: false
+        default: 'true'
+      close_issues:
+        description: '關閉該用戶的所有 Issue/PR (true/false)'
+        required: false
+        default: 'true'
+      send_invite_spam:
+        description: '發送永不核准的邀請 (干擾)'
+        required: false
+        default: 'false'
+
+jobs:
+  github-gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 安裝 GitHub CLI
+        run: |
+          type -p curl >/dev/null || sudo apt install curl -y
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh -y
+
+      - name: 登入 GitHub (使用 PAT)
+        run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
+
+      - name: 解析封鎖名單
+        id: parse
+        run: |
+          PRISONERS=$(echo "${{ github.event.inputs.prisoners }}" | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+          echo "prisoners<<EOF" >> $GITHUB_OUTPUT
+          echo "$PRISONERS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: 執行 GitHub 層級封鎖
+        env:
+          BLOCK: ${{ github.event.inputs.block_action }}
+          REMOVE_ORG: ${{ github.event.inputs.remove_org }}
+          CLOSE_ISSUES: ${{ github.event.inputs.close_issues }}
+          SEND_INVITE: ${{ github.event.inputs.send_invite_spam }}
+        run: |
+          while IFS= read -r prisoner; do
+            [ -z "$prisoner" ] && continue
+            echo "🔒 處理用戶: $prisoner"
+            
+            if [ "$BLOCK" = "true" ]; then
+              echo "  - 封鎖用戶 (Block)"
+              gh api -X PUT /user/blocks/$prisoner 2>/dev/null || echo "    封鎖失敗或已封鎖"
+            fi
+            
+            if [ "$REMOVE_ORG" = "true" ]; then
+              echo "  - 從組織移除 (若存在)"
+              gh api -X DELETE /orgs/Wshao777/members/$prisoner 2>/dev/null || echo "    移除失敗或非組織成員"
+            fi
+            
+            if [ "$CLOSE_ISSUES" = "true" ]; then
+              echo "  - 關閉該用戶開啟的 Issue/PR"
+              gh issue list --author $prisoner --state open --limit 100 --json number --jq '.[].number' | while read num; do
+                gh issue close $num --comment "由防火牆自動關閉" 2>/dev/null || true
+              done
+              gh pr list --author $prisoner --state open --limit 100 --json number --jq '.[].number' | while read num; do
+                gh pr close $num --comment "由防火牆自動關閉" 2>/dev/null || true
+              done
+            fi
+            
+            if [ "$SEND_INVITE" = "true" ]; then
+              echo "  - 發送組織邀請 (干擾模式)"
+              gh api -X POST /orgs/Wshao777/invitations \
+                -f email="$prisoner@github.com" \
+                -f role="member" 2>/dev/null || echo "    邀請發送失敗"
+            fi
+            
+          done <<< "${{ steps.parse.outputs.prisoners }}"
+          
+      - name: 記錄審計日誌
+        run: |
+          echo "✅ 防火牆動作執行完畢"
+          echo "時間: $(date -Iseconds)"
+          echo "觸發者: ${{ github.actor }}"

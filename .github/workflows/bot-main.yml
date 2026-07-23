@@ -1,0 +1,35 @@
+name: 🤖 Bot Main Trigger (AI Factory Safe)
+
+on:
+  push:
+    branches: [ "bot-main" ]
+    paths:
+      - "bot/**"
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
+jobs:
+  bot-trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🤖 Run Bot Entry Validation
+        run: |
+          python -m validator.ai_os_validator
+
+      - name: 📡 Trigger Bot Layer (non-blocking)
+        run: |
+          python bot/bot_manager.py --mode=event

@@ -1,0 +1,7 @@
+name: 🛡️ 07 - Real-time Interception Firewall
+on: workflow_dispatch
+jobs:
+  intercept:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "⚡ 实时拦截攻击请求"

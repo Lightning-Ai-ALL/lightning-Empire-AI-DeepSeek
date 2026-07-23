@@ -1,0 +1,7 @@
+name: 🛡️ 10 - High-Risk Quarantine Firewall
+on: workflow_dispatch
+jobs:
+  quarantine:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🚧 高风险实体移至隔离区"

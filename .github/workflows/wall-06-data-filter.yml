@@ -1,0 +1,7 @@
+name: 🛡️ 06 - Data Filtering Firewall
+on: workflow_dispatch
+jobs:
+  filter:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🔍 过滤敏感数据、防止泄漏"

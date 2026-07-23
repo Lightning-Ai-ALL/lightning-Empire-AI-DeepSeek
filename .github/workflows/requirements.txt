@@ -1,2 +1,14 @@
-python-docx
-gtts
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+tensorflow-cpu==2.12.0        # 輕量 CPU 版 LSTM（適合你的 i3）
+python-multipart
+python-dotenv
+sqlalchemy
+openpyxl
+joblib
+google-cloud-firestore>=2.10.0
+slack-sdk>=3.21.0
+pandas>=2.0.0

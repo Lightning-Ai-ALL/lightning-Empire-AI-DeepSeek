@@ -1,0 +1,15 @@
+app/
+ ├── ui/
+ │    ├── ControlCenterScreen.kt
+ │    ├── Dashboard.xml
+ ├── ai/
+ │    ├── TFLiteEngine.kt
+ │    ├── HybridAI.kt
+ │    ├── PowerRules.kt
+ ├── model/
+ │    ├── mode_predictor.tflite
+ ├── data/
+ │    ├── OnlineLearner.kt
+ ├── service/
+ │    ├── MonitorService.kt
+ └── MainActivity.kt
