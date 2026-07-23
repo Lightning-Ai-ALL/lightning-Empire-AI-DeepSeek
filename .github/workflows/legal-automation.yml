@@ -1,17 +1,18 @@
-name: Lightning-Legal-AI
+name: Lightning-Legal-AI-Draft
 
 on:
   workflow_dispatch:
     inputs:
       case_file:
-        description: '案件原始檔案路徑 (例如 cases/115簡238_raw.txt)'
+        description: '案件原始檔案路徑（例如 cases/115簡238_raw.txt）'
         required: true
         default: 'cases/115簡238_raw.txt'
   schedule:
-    - cron: '0 8 * * *'   # 台灣時間下午4點（UTC+8 轉 UTC），可自行調整
+    # UTC 08:00 = 台灣時間 16:00，每日下午四點自動產出草稿提醒（可依需求關閉）
+    - cron: '0 8 * * *'
 
 jobs:
-  run-legal-assistant:
+  generate-legal-draft:
     runs-on: ubuntu-latest
     steps:
       - name: 檢出程式碼
@@ -22,47 +23,52 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 安裝依賴套件
+      - name: 檢查必要檔案是否存在
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "❌ 缺少 requirements.txt，無法安裝依賴。"
+            exit 1
+          fi
+          if [ ! -d cases ]; then
+            echo "❌ 缺少 cases/ 目錄。"
+            exit 1
+          fi
+
+      - name: 安裝依賴
         run: pip install -r requirements.txt
 
-      - name: 執行法律助理管線
+      - name: 執行法律草稿產生器
         env:
+          # Email 寄送為選用功能，若未設定 Secrets 會跳過寄信（程式內部已處理）
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
-          # 取得案件檔案路徑
           CASE_FILE="${{ github.event.inputs.case_file }}"
-          
-          # 若為排程觸發，CASE_FILE 為空，自動尋找第一個 _raw.txt
+          # 排程觸發時，自動選取 cases/ 內第一個 _raw.txt
           if [ -z "$CASE_FILE" ]; then
-            echo "排程觸發，自動選取第一個案件檔案..."
             CASE_FILE=$(ls cases/*_raw.txt 2>/dev/null | head -1)
             if [ -z "$CASE_FILE" ]; then
-              echo "❌ 錯誤：cases/ 目錄下沒有任何 *_raw.txt 檔案，工作流程中斷。"
+              echo "❌ 找不到任何案件檔案（cases/*_raw.txt），無法產生草稿。"
               exit 1
             fi
           fi
-          
-          # 確認檔案存在
           if [ ! -f "$CASE_FILE" ]; then
-            echo "❌ 錯誤：指定的案件檔案不存在：$CASE_FILE"
+            echo "❌ 指定的案件檔案不存在：$CASE_FILE"
             exit 1
           fi
-          
           echo "📄 開始處理案件：$CASE_FILE"
           python run_pipeline.py "$CASE_FILE"
-          
-          # 檢查主要輸出檔案是否成功產生（可選）
-          if [ -f "output/appeal_draft.docx" ]; then
-            echo "✅ appeal_draft.docx 已產生"
+          # 檢查主要產出
+          if [ -f output/appeal_draft.docx ]; then
+            echo "✅ 草稿已產生：output/appeal_draft.docx"
           else
-            echo "⚠️ 警告：appeal_draft.docx 未產生，請檢查程式日誌"
+            echo "⚠️ 草稿未產生，請檢查原始檔案內容或程式日誌。"
           fi
 
-      - name: 上傳產出檔案（選用）
+      - name: 上傳草稿供人工審核
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: legal-outputs
+          name: legal-draft-review
           path: output/
