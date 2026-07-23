@@ -1,0 +1,11 @@
+# 敏感法律文件
+cases/*_raw.txt
+output/*
+logs/*.log
+
+# 環境變數
+.env
+
+# Python
+__pycache__/
+*.pyc
