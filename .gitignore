@@ -71,3 +71,196 @@ data/
 checkpoints/
 outputs/
 runs/
+如果你的目標是：
+
+docs/*.md
+
+src/
+
+app/
+
+.gitignore
+
+
+都不公開
+
+禁止別人下載
+
+顯示成亂碼
+
+
+那單靠 .gitignore 做不到。
+
+原因：
+
+1. .gitignore 只控制「Git 是否追蹤檔案」
+
+它不能限制 GitHub 使用者下載。
+
+Public Repo 裡的任何已上傳檔案，都可以被瀏覽、Clone、下載。
+
+
+
+2. GitHub Public Repo 沒有「禁止下載」功能。
+
+只要是公開原始碼，就代表別人可以取得。
+
+
+
+
+如果要達到你的效果，建議：
+
+方法 1：改 Private Repo（最安全）
+
+設定：
+
+Repository → Settings → General → Change repository visibility → Private
+
+結果：
+
+✅ 外人看不到
+✅ 不能 Clone
+✅ 不能下載
+✅ 只有授權帳號可存取
+
+
+---
+
+方法 2：公開展示版 + 私人核心
+
+公開：
+
+Lightning-Empire-Ai-TTS
+│
+├── README.md
+├── LICENSE
+└── demo/
+
+私人：
+
+Lightning-Empire-Ai-TTS-Private
+│
+├── src/
+├── app/
+├── docs/
+├── models/
+├── configs/
+└── secrets/
+
+
+---
+
+方法 3：加密檔案（需要分享但不公開）
+
+例如：
+
+private/
+ ├── src.zip.enc
+ ├── models.enc
+ └── docs.enc
+
+使用：
+
+GPG 加密
+
+Git-crypt
+
+SOPS
+
+
+GitHub 只看到亂碼：
+
+-----BEGIN PGP MESSAGE-----
+x8A91k2Lm0...
+-----END PGP MESSAGE-----
+
+沒有金鑰的人無法還原。
+
+
+---
+
+如果你要的是「GitHub 公開頁看得到專案存在，但所有核心內容都是亂碼」，最佳方案是：
+
+Public Repo
+├── README.md
+├── LICENSE
+└── encrypted/
+
+Private Key
+└── 解密核心程式
+
+不要把真正的 src/、app/、模型直接放 Public Repo。
+# =========================
+# 預設全部隱藏
+# =========================
+*
+
+# =========================
+# 公開 Markdown 文件
+# =========================
+!*.md
+!README.md
+
+# Git 設定保留
+!.gitignore
+
+# =========================
+# 公開程式碼
+# =========================
+!src/
+!src/**
+!app/
+!app/**
+
+# =========================
+# 私人資料
+# =========================
+private/
+secret/
+secrets/
+
+.env
+.env.*
+*.key
+*.pem
+config_private.*
+
+# =========================
+# AI TTS 私人資源
+# =========================
+models/
+model/
+checkpoints/
+weights/
+
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+
+# =========================
+# 資料與輸出
+# =========================
+datasets/
+data/
+outputs/
+results/
+runs/
+
+# 音訊
+*.wav
+*.mp3
+*.flac
+
+# =========================
+# 開發環境
+# =========================
+__pycache__/
+*.pyc
+
+.vscode/
+.idea/
+
+*.log
+.cache/
