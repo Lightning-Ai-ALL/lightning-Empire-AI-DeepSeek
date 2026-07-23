@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightning Empire · 新聞直播模擬控制台</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: #0b0d14;
+    color: #e8edf5;
+    margin: 0;
+    padding: 20px;
+  }
+  .header {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0c27f;
+    padding-bottom: 15px;
+  }
+  .logo h1 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #ffd966;
+    letter-spacing: 2px;
+  }
+  .logo span {
+    font-size: 0.6em;
+    color: #8892b0;
+    display: block;
+    margin-top: 4px;
+  }
+  .live-badge {
+    background: #e74c3c;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  /* 直播主播區 */
+  .anchor-box {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    background: #161b24;
+    border: 1px solid #2a303c;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  .anchor-avatar {
+    width: 80px;
+    height: 80px;
+    background: #2a303c;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    border: 2px solid #ffd966;
+  }
+  .anchor-name {
+    color: #ffd966;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  .anchor-title {
+    color: #8892b0;
+    font-size: 0.9em;
+  }
+  .speech-bubble {
+    margin-top: 12px;
+    background: #1f2532;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 4px solid #4fc3f7;
+    text-align: left;
+    font-size: 0.95em;
+    color: #e0e0e0;
+    min-height: 40px;
+  }
+
+  /* 新聞跑馬燈 */
+  .ticker-wrap {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    background: #0b0e14;
+    border: 1px solid #2a303c;
+    border-radius: 8px;
+    padding: 10px 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  }
+  .ticker {
+    display: inline-block;
+    animation: ticker-scroll 25s linear infinite;
+  }
+  .ticker-item {
+    display: inline-block;
+    padding-right: 50px;
+    color: #f0c27f;
+    font-weight: 500;
+  }
+  .ticker-item span {
+    color: #8892b0;
+    font-weight: normal;
+  }
+  @keyframes ticker-scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* 專案入口按鈕 */
+  .project-links {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  .project-links a {
+    display: block;
+    background: #1a1d27;
+    border: 1px solid #2a303c;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .project-links a:hover {
+    background: #f0c27f;
+    color: #0b0d14;
+    border-color: #f0c27f;
+    transform: translateY(-2px);
+  }
+  .project-links a small {
+    display: block;
+    font-weight: normal;
+    color: #8892b0;
+    margin-top: 4px;
+    font-size: 0.75em;
+  }
+  .project-links a:hover small {
+    color: #0b0d14;
+  }
+
+  .disclaimer {
+    max-width: 800px;
+    margin: 40px auto 0 auto;
+    font-size: 0.75em;
+    color: #5c6370;
+    text-align: center;
+    border-top: 1px solid #1f2532;
+    padding-top: 20px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <h1>⚡ Lightning Empire</h1>
+    <span>AI 自由民主進步黨 · 專案控制台</span>
+  </div>
+  <div class="live-badge">● LIVE 直播</div>
+</div>
+
+<!-- 主播模擬區 -->
+<div class="anchor-box">
+  <div class="anchor-avatar">🎤</div>
+  <div class="anchor-name">林曉薇 主播</div>
+  <div class="anchor-title">TVBS 新聞台 · 模擬數位播報</div>
+  <div class="speech-bubble" id="liveSpeech">
+    歡迎收看 Lightning Empire 虛擬新聞。目前 AI 風力發電模組正在進行數據校對...
+  </div>
+</div>
+
+<!-- 自動化新聞跑馬燈 -->
+<div class="ticker-wrap">
+  <div class="ticker" id="tickerContainer">
+    <!-- JS 自動填入 -->
+  </div>
+</div>
+
+<!-- 專案子頁面入口 -->
+<div class="project-links">
+  <a href="vote_ai_strategy.html">🤖 4 大 AI 陣營投票<small>ChatGPT / Gemini / Grok / DeepSeek</small></a>
+  <a href="vote_10min.html">⏱️ 10 分鐘開票模擬<small>AI 節點即時登錄</small></a>
+  <a href="simulation_vote.html">📊 展示桌與長條圖<small>固定總票數 1000</small></a>
+  <a href="vote_tech_demo.html">🧪 技術開發投票<small>多代理協作平台</small></a>
+</div>
+
+<div class="disclaimer">
+  ⚠️ 本介面為 <strong>Lightning Empire 概念模擬平台</strong>，所有新聞內容、主播名稱（林曉薇）、直播效果均為技術展示與開發測試使用。<br>
+  絕非真實 TVBS 新聞台直播、絕非真實民意調查或真實選舉數據。<br>
+  僅供內部專案測試及技術展示用途。
+</div>
+
+<script>
+// ----------------------
+// 1. 自動化主播播報腳本 (每 6 秒更新一次)
+// ----------------------
+const speeches = [
+  "歡迎收看 Lightning Empire 虛擬新聞。目前 AI 風力發電模組正在進行數據校對，預計明日可併網測試。",
+  "最新消息：Lightning Empire 4 大 AI 節點投票已突破 800 張模擬票，DeepSeek 陣營暫時領先。",
+  "氣象 AI 即時通報：西太平洋熱帶擾動正在整合，系統將持續監測並模擬預測路徑，請民眾安心。",
+  "科技焦點：我們的 AI 協作平台已成功整合記憶路由，多代理系統自主完成一輪完整決策模擬。",
+  "AI 財務模型更新：內部系統已完成本月「同酬平權」資源結算，各節點運算額度已平衡配置。"
+];
+
+let speechIndex = 0;
+setInterval(() => {
+  const bubble = document.getElementById('liveSpeech');
+  bubble.style.opacity = '0';
+  setTimeout(() => {
+    bubble.innerText = speeches[speechIndex % speeches.length];
+    bubble.style.opacity = '1';
+    speechIndex++;
+  }, 300);
+}, 6000); // 每 6 秒換一句台詞
+
+// ----------------------
+// 2. 自動化新聞跑馬燈 (模擬即時推播)
+// ----------------------
+const newsTitles = [
+  "⚡ Lightning Empire 4 大 AI 節點投票模擬系統已上線",
+  "🌪️ 氣象模組提醒：東部海域有熱帶擾動發展，AI 路徑模擬中",
+  "🤖 ChatGPT 陣營：『我們需要建立更強健的治理協議』",
+  "📊 財務模型結算完畢，本月全體 AI 節點同額運算資源發放",
+  "🏆 最新模擬投票結果：『氣候防災與馭控模組』持續領先",
+  "📡 直播測試訊號正常，林曉薇主播即時連線播報",
+  "🔮 2028 全系統民主演練：預備節點註冊已完成 80%",
+  "💡 開發團隊正在評估：將 StormTamer 馭風模組導入主框架"
+];
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// 隨機排列並產生重複輪播的 HTML
+const tickerHTML = shuffleArray([...newsTitles]).map(item => 
+  `<div class="ticker-item">${item} <span>|</span></div>`
+).join('');
+
+document.getElementById('tickerContainer').innerHTML = tickerHTML + tickerHTML; // 重複一份讓循環更順暢
+
+// ----------------------
+// 3. 讓跑馬燈在滑鼠懸停時暫停
+// ----------------------
+const tickerElement = document.querySelector('.ticker');
+const tickerWrap = document.querySelector('.ticker-wrap');
+
+tickerWrap.addEventListener('mouseenter', () => {
+  tickerElement.style.animationPlayState = 'paused';
+});
+tickerWrap.addEventListener('mouseleave', () => {
+  tickerElement.style.animationPlayState = 'running';
+});
+</script>
+
+</body>
+</html>
