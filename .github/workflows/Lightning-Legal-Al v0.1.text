@@ -1,0 +1,22 @@
+Lightning-Empire-Ai-TTS/
+├── .github/
+│   └── workflows/
+│       └── legal-automation.yml
+├── cases/
+│   ├── .gitkeep
+│   └── 115簡238_raw.txt          ← 放置你的裁判書原文
+├── scripts/
+│   ├── case_parser.py
+│   ├── draft_generator.py
+│   ├── tts_generator.py
+│   ├── email_report.py
+│   └── document_sender.py
+├── output/                       ← 程式自動產生，記得 .gitignore
+│   └── .gitkeep
+├── logs/
+│   └── .gitkeep
+├── run_pipeline.py               ← 主程式（一鍵執行全流程）
+├── README.md
+├── requirements.txt
+└── .gitignore
+
