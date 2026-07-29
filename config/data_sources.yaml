@@ -1,0 +1,14 @@
+weather:
+  provider: OpenWeatherMap
+  enabled: true
+
+earthquake:
+  provider: CWA
+  enabled: true
+
+radar:
+  enabled: true
+
+notification:
+  telegram: true
+  voice: true
