@@ -1,0 +1,520 @@
+name: Lightning bot-main.yml
+
+on:
+  push:
+    branches:
+      -[" main", "bot-main"]
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - run:
+        pip install -r requirements.txt
+
+    - run:
+        python -m compileall src
+        #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+閃電帝國 - 語音指揮中心 (TTS + 雷達 + 對話記憶)
+"""
+
+import os
+import json
+import requests
+from datetime import datetime
+from TTS.api import TTS
+
+# ========== 1. TTS 初始化 ==========
+tts = TTS("tts_models/zh-CN/baker/tacotron2-DDC", progress_bar=False)
+
+def speak(text: str):
+    """語音輸出"""
+    print(f"🗣️ {text}")
+    tts.tts_to_file(text=text, file_path="output/speech.wav")
+    # 播放 (依系統不同)
+    os.system("aplay output/speech.wav")  # Linux
+    # os.system("start output/speech.wav")  # Windows
+
+# ========== 2. 節點指令對應 ==========
+NODES = {
+    "bt01": {"name": "北投", "type": "UAV", "status": "ready"},
+    "nt01": {"name": "埔里", "type": "UGV", "status": "observing"},
+    "ch01": {"name": "瑞士", "type": "USV", "status": "deployed"},
+    "fc01": {"name": "逢甲", "type": "AI_CORE", "status": "online"},
+}
+
+def parse_command(text: str) -> dict:
+    """解析語音指令 (簡易版)"""
+    text = text.lower()
+    
+    # 關鍵字比對
+    if "啟動" in text or "起飛" in text:
+        for node_id, info in NODES.items():
+            if node_id in text or info["name"] in text:
+                return {"action": "deploy", "node": node_id}
+    
+    if "回報" in text or "狀態" in text:
+        for node_id, info in NODES.items():
+            if node_id in text or info["name"] in text:
+                return {"action": "status", "node": node_id}
+    
+    if "雷達" in text or "雲圖" in text:
+        return {"action": "radar", "region": "taiwan"}
+    
+    if "分析" in text or "天氣" in text:
+        return {"action": "weather_analysis"}
+    
+    if "報告" in text:
+        return {"action": "report"}
+    
+    return {"action": "unknown", "text": text}
+
+# ========== 3. 雷達/衛星雲圖擷取 ==========
+def fetch_radar():
+    """從 CWA 或 RainViewer 取得雷達資料 (模擬)"""
+    # 實際使用可串接 CWA API 或 RainViewer
+    return {
+        "source": "RainViewer",
+        "timestamp": datetime.now().isoformat(),
+        "image_url": "https://api.rainviewer.com/map/current/radar.png",
+        "status": "ok"
+    }
+
+def fetch_satellite():
+    """從 NOAA GOES 取得衛星雲圖 (模擬)"""
+    return {
+        "source": "NOAA GOES",
+        "timestamp": datetime.now().isoformat(),
+        "image_url": "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/SECTOR/taiwan/GOES16-TAIWAN-900x540.jpg",
+        "status": "ok"
+    }
+
+# ========== 4. 對話記憶 (整合本頁對話) ==========
+class DialogueMemory:
+    def __init__(self):
+        self.history = []
+    
+    def add(self, user: str, assistant: str):
+        self.history.append({"user": user, "assistant": assistant, "time": datetime.now().isoformat()})
+    
+    def get_context(self, limit: int = 5) -> str:
+        recent = self.history[-limit:]
+        return "\n".join([f"使用者: {h['user']}\nAI: {h['assistant']}" for h in recent])
+
+memory = DialogueMemory()
+
+# ========== 5. 指令執行器 ==========
+def execute_command(cmd: dict) -> str:
+    """執行指令並回傳結果"""
+    action = cmd.get("action")
+    result = ""
+    
+    if action == "deploy":
+        node = NODES.get(cmd.get("node"))
+        if node:
+            result = f"✅ {node['name']} ({node['type']}) 已部署，狀態: {node['status']}"
+            speak(f"{node['name']} 無人載具部署完成")
+        else:
+            result = "❌ 找不到該節點"
+    
+    elif action == "status":
+        node = NODES.get(cmd.get("node"))
+        if node:
+            result = f"📊 {node['name']} 狀態: {node['status']}，類型: {node['type']}"
+            speak(f"{node['name']} 狀態回報，{node['status']}")
+        else:
+            result = "❌ 找不到該節點"
+    
+    elif action == "radar":
+        radar = fetch_radar()
+        satellite = fetch_satellite()
+        result = f"📡 雷達: {radar['image_url']}\n🛰️ 衛星: {satellite['image_url']}"
+        speak("雷達與衛星雲圖已載入，請查看畫面")
+    
+    elif action == "weather_analysis":
+        result = "🌤️ 當前天氣分析: 風速中等，無異常，建議持續監測"
+        speak("天氣分析完成，無異常")
+    
+    elif action == "report":
+        nodes_status = "\n".join([f"  {k}: {v['status']}" for k, v in NODES.items()])
+        result = f"📋 巡檢報告\n{'-' * 20}\n節點狀態:\n{nodes_status}\n時間: {datetime.now().isoformat()}"
+        speak("報告產生完成")
+    
+    else:
+        result = f"❓ 無法識別指令: {cmd.get('text', '')}"
+    
+    # 加入對話記憶
+    memory.add(cmd.get("text", ""), result)
+    return result
+
+# ========== 6. 主程式 (語音輸入模擬) ==========
+def main():
+    print("⚡ 閃電帝國語音指揮中心")
+    speak("閃電帝國語音指揮中心已啟動")
+    
+    # 模擬語音輸入 (實際可用 speech_recognition)
+    test_commands = [
+        "啟動北投無人機",
+        "回報瑞士狀態",
+        "顯示雷達雲圖",
+        "分析天氣",
+        "產生報告"
+    ]
+    
+    for cmd_text in test_commands:
+        print(f"\n🎤 語音輸入: {cmd_text}")
+        cmd = parse_command(cmd_text)
+        result = execute_command(cmd)
+        print(f"🤖 回應: {result}")
+        
+        # 顯示對話記憶
+        print(f"\n📝 對話記錄 ({len(memory.history)} 筆)")
+        print(memory.get_context(3))
+        print("-" * 40)
+
+if __name__ == "__main__":
+    main()
+    registry:
+  name: Lightning_Empire_AI_Model_Registry
+  version: "1.0"
+  total_models: 1000
+
+  categories:
+    - Land_AI
+    - Navy_AI
+    - Air_AI
+    - Joint_AI
+
+models:
+models:
+
+  - id: LE-AR-S1-001
+    name: Sentinel Ground Observer
+    type: Land_AI
+    module: Sensor
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-P1-002
+    name: Patrol Ground Unit
+    type: Land_AI
+    module: Patrol
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-G1-003
+    name: Guardian Protection Core
+    type: Land_AI
+    module: Guardian
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-C1-004
+    name: Command Battlefield AI
+    type: Land_AI
+    module: Command
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-R1-005
+    name: Rescue Support AI
+    type: Land_AI
+    module: Rescue
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-Q1-006
+    name: Quantum Defense Simulator
+    type: Land_AI
+    module: Quantum
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-S1-007
+    name: Terrain Intelligence Node
+    type: Land_AI
+    module: Sensor
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-P1-008
+    name: Autonomous Patrol Core
+    type: Land_AI
+    module: Patrol
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-G1-009
+    name: Safety Guardian Node
+    type: Land_AI
+    module: Guardian
+    generation: 1
+    status: simulation
+
+  - id: LE-AR-C1-010
+    name: Tactical Decision AI
+    type: Land_AI
+    module: Command
+    generation: 1
+    status: simulation
+    registry:
+  name: Lightning_Empire_AI_Model_Registry
+  version: "1.0"
+  total_models: 1000
+  classification:
+    - Land_AI
+    - Navy_AI
+    - Air_AI
+    - Joint_AI
+    - Quantum_AI
+
+models:
+
+# ===================================
+# 001-250 Land AI
+# ===================================
+
+{% for i in range(1,251) %}
+
+  - id: LE-AR-{{ "%04d"|format(i) }}
+    name: Lightning Land Guardian {{ i }}
+    category: Land_AI
+    generation: {{ ((i-1)//50)+1 }}
+    module:
+      - Sentinel
+      - Patrol
+      - Guardian
+      - Command
+      - Rescue
+    mission:
+      - environment_monitoring
+      - patrol_management
+      - emergency_response
+    control:
+      human_authority_required: true
+      autonomous_level: simulation
+    status: prototype
+
+{% endfor %}
+
+
+# ===================================
+# 251-500 Navy AI
+# ===================================
+
+{% for i in range(251,501) %}
+
+  - id: LE-NV-{{ "%04d"|format(i) }}
+    name: Lightning Ocean Guardian {{ i }}
+    category: Navy_AI
+    generation: {{ ((i-251)//50)+1 }}
+    module:
+      - OceanSensor
+      - FleetMonitor
+      - RescueAI
+      - CommandAI
+    mission:
+      - ocean_monitoring
+      - disaster_support
+      - navigation_assist
+    control:
+      human_authority_required: true
+      autonomous_level: simulation
+    status: prototype
+
+{% endfor %}
+
+
+# ===================================
+# 501-750 Air AI
+# ===================================
+
+{% for i in range(501,751) %}
+
+  - id: LE-AF-{{ "%04d"|format(i) }}
+    name: Lightning Sky Guardian {{ i }}
+    category: Air_AI
+    generation: {{ ((i-501)//50)+1 }}
+    module:
+      - AirSensor
+      - FlightMonitor
+      - WeatherAI
+      - CommandAI
+    mission:
+      - airspace_monitoring
+      - weather_analysis
+      - rescue_support
+    control:
+      human_authority_required: true
+      autonomous_level: simulation
+    status: prototype
+
+{% endfor %}
+
+
+# ===================================
+# 751-1000 Joint / Quantum AI
+# ===================================
+
+{% for i in range(751,1001) %}
+
+  - id: LE-SX-{{ "%04d"|format(i) }}
+    name: Lightning Unified Intelligence {{ i }}
+    category: Joint_AI
+    generation: {{ ((i-751)//50)+1 }}
+    module:
+      - MultiAgent
+      - AI_Fusion
+      - DecisionSupport
+      - EthicsGuard
+    mission:
+      - multi_domain_coordination
+      - risk_analysis
+      - disaster_management
+    control:
+      human_authority_required: true
+      autonomous_level: simulation
+    status: research
+
+{% endfor %}
+name: Lightning Empire CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+
+  validate:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+
+      - name: YAML Check
+        run: |
+          python - <<EOF
+          import os
+          import yaml
+
+          for root, dirs, files in os.walk(".github"):
+              for f in files:
+                  if f.endswith(".yml") or f.endswith(".yaml"):
+                      path=os.path.join(root,f)
+                      print("Checking:",path)
+                      with open(path) as file:
+                          yaml.safe_load(file)
+
+          print("YAML OK")
+          EOF
+
+
+      - name: Python Syntax Check
+        run: |
+          python -m compileall .
+          system:
+  name: Lightning Empire Voice AI
+  version: 1.0
+
+voice:
+  engine: Coqui-TTS
+  language:
+    - zh-TW
+    - en-US
+
+bot:
+  telegram: enabled
+  discord: enabled
+
+data_sources:
+
+  weather:
+    enabled: true
+
+  radar:
+    enabled: true
+
+  satellite:
+    enabled: true
+
+
+decision:
+
+  mode:
+    - analysis
+    - notification
+
+  human_confirmation:
+    required: true
+    name: Lightning bot-main.yml
+
+on:
+  push:
+    branches:
+      -[" main", "bot-main"]
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - run:
+        pip install -r requirements.txt
+
+    - run:
+        python -m compileall src
+        val nodes = listOf(
+"🇨🇭 Switzerland",
+"🇹🇼 南投埔里",
+"🇹🇼 逢甲福上巷",
+"🇹🇼 北投"
