@@ -1,0 +1,34 @@
+system:
+  name: Lightning Empire Voice AI
+  version: 1.0
+
+voice:
+  engine: Coqui-TTS
+  language:
+    - zh-TW
+    - en-US
+
+bot:
+  telegram: enabled
+  discord: enabled
+
+data_sources:
+
+  weather:
+    enabled: true
+
+  radar:
+    enabled: true
+
+  satellite:
+    enabled: true
+
+
+decision:
+
+  mode:
+    - analysis
+    - notification
+
+  human_confirmation:
+    required: true
