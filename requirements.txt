@@ -1,4 +1,9 @@
-# core deps
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pydantic>=2.0
+pyyaml>=6.0
+TTS>=0.14.0
+#core deps
 numpy==1.22.0;python_version<="3.10"
 numpy>=1.24.3;python_version>"3.10"
 cython>=0.29.30
