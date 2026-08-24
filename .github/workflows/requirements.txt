@@ -1,0 +1,47 @@
+langgraph==0.2.0
+langchain-openai==0.2.0
+streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.14.0
+fastapi==0.115.0
+uvicorn[standard]==0.30.1
+pydantic==2.8.2
+python-dotenv==1.0.1
+httpx==0.27.0
+aiofiles==24.1.0
+aiosqlite==0.20.0
+fastapi
+uvicorn
+pydantic
+torch>=2.0.0
+ultralytics>=8.0.0
+fastapi>=0.100.0
+uvicorn>=0.23.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# ==========================================
+# Lightning Empire Python 依賴
+# 編輯首席部長：徐志曆 Chih Li Hus
+# ==========================================
+
+# 核心框架
+python-telegram-bot>=20.7
+apscheduler>=3.10.4
+python-dotenv>=1.0.0
+PyYAML>=6.0.1
+
+# Web 服務
+Flask>=3.0.0
+flask-cors>=4.0.0
+
+# 數據分析
+numpy>=1.24.0
+pandas>=2.0.0
+
+# HTTP 請求
+requests>=2.31.0
+
+# 系統工具
+psutil>=5.9.5

@@ -1,0 +1,2509 @@
+{
+  "schema_version": "1.0",
+  "title": "Ghost Month Metadata Tags",
+  "description": "250 個民俗／虛構鬼怪角色標籤，僅供故事、模擬與資料分類。",
+  "scientific_status": "FICTIONAL_OR_FOLKLORE_ONLY",
+  "count": 250,
+  "entities": [
+    {
+      "id": "GHOST-001",
+      "name": "影行者",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-002",
+      "name": "夜巡鬼",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-003",
+      "name": "門影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-004",
+      "name": "窗影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-005",
+      "name": "鏡中客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-006",
+      "name": "紙傘客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-007",
+      "name": "紅燈影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-008",
+      "name": "白衣客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-009",
+      "name": "黑傘影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-010",
+      "name": "井邊客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-011",
+      "name": "橋下影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-012",
+      "name": "古井娘",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-013",
+      "name": "山霧客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-014",
+      "name": "林間影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-015",
+      "name": "渡口鬼",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-016",
+      "name": "河燈客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-017",
+      "name": "雨夜客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-018",
+      "name": "風鈴影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-019",
+      "name": "空屋客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-020",
+      "name": "舊宅影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-021",
+      "name": "廟埕客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-022",
+      "name": "香火影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-023",
+      "name": "鐘聲客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-024",
+      "name": "鼓樓影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-025",
+      "name": "石階客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-026",
+      "name": "長廊影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-027",
+      "name": "古樹客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-028",
+      "name": "竹林影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-029",
+      "name": "荒亭客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-030",
+      "name": "古道影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-031",
+      "name": "驛站客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-032",
+      "name": "夜船客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-033",
+      "name": "渡船影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-034",
+      "name": "燈籠客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-035",
+      "name": "紙人影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-036",
+      "name": "紙馬客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-037",
+      "name": "木偶影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-038",
+      "name": "泥偶客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-039",
+      "name": "繡鞋影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-040",
+      "name": "紅衣影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-041",
+      "name": "青衣客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-042",
+      "name": "灰衣影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-043",
+      "name": "黃燈客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-044",
+      "name": "冷月客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-045",
+      "name": "霧中客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-046",
+      "name": "雪夜影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-047",
+      "name": "秋風客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-048",
+      "name": "春雨影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-049",
+      "name": "夏雷客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-050",
+      "name": "冬霜影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-051",
+      "name": "檐下客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-052",
+      "name": "屋脊影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-053",
+      "name": "樓梯客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-054",
+      "name": "閣樓影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-055",
+      "name": "地下影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-056",
+      "name": "井台客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-057",
+      "name": "石橋影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-058",
+      "name": "河岸客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-059",
+      "name": "湖心影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-060",
+      "name": "海霧客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-061",
+      "name": "潮聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-062",
+      "name": "浪花客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-063",
+      "name": "礁石影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-064",
+      "name": "沙灘客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-065",
+      "name": "港口影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-066",
+      "name": "燈塔客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-067",
+      "name": "漁火影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-068",
+      "name": "船艙客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-069",
+      "name": "船尾影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-070",
+      "name": "海門客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-071",
+      "name": "山門客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-072",
+      "name": "古寺影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-073",
+      "name": "塔影客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-074",
+      "name": "鐘樓客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-075",
+      "name": "鼓樓客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-076",
+      "name": "香案影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-077",
+      "name": "香爐客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-078",
+      "name": "紙燭影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-079",
+      "name": "木門客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-080",
+      "name": "鐵門影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-081",
+      "name": "窗簾客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-082",
+      "name": "簷鈴影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-083",
+      "name": "雨傘客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-084",
+      "name": "鞋印影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-085",
+      "name": "腳步客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-086",
+      "name": "回聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-087",
+      "name": "低語客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-088",
+      "name": "歌聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-089",
+      "name": "笑聲客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-090",
+      "name": "哭聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-091",
+      "name": "鈴聲客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-092",
+      "name": "鐘聲客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-093",
+      "name": "笛聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-094",
+      "name": "琴音客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-095",
+      "name": "鼓聲影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-096",
+      "name": "紙笛客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-097",
+      "name": "夜歌影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-098",
+      "name": "夢中客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-099",
+      "name": "夢門影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-100",
+      "name": "夢行者",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-101",
+      "name": "夢語客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-102",
+      "name": "月影客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-103",
+      "name": "星光影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-104",
+      "name": "晨霧客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-105",
+      "name": "暮色影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-106",
+      "name": "黃昏客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-107",
+      "name": "黎明影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-108",
+      "name": "午夜客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-109",
+      "name": "子夜影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-110",
+      "name": "三更客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-111",
+      "name": "四更影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-112",
+      "name": "五更客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-113",
+      "name": "街角影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-114",
+      "name": "巷口客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-115",
+      "name": "屋後影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-116",
+      "name": "牆邊客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-117",
+      "name": "樹下影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-118",
+      "name": "井旁客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-119",
+      "name": "橋頭影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-120",
+      "name": "路口客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-121",
+      "name": "轉角影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-122",
+      "name": "電梯客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-123",
+      "name": "樓道影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-124",
+      "name": "地下室客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-125",
+      "name": "閣樓客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-126",
+      "name": "空房影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-127",
+      "name": "舊椅客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-128",
+      "name": "舊鐘影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-129",
+      "name": "舊鏡客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-130",
+      "name": "舊門影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-131",
+      "name": "老窗客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-132",
+      "name": "古櫃影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-133",
+      "name": "木箱客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-134",
+      "name": "書架影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-135",
+      "name": "紙頁客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-136",
+      "name": "墨香影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-137",
+      "name": "書房客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-138",
+      "name": "畫中影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-139",
+      "name": "屏風客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-140",
+      "name": "簾後影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-141",
+      "name": "燭影客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-142",
+      "name": "燈芯影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-143",
+      "name": "油燈客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-144",
+      "name": "煤燈影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-145",
+      "name": "路燈客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-146",
+      "name": "霓虹影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-147",
+      "name": "月台客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-148",
+      "name": "車站影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-149",
+      "name": "候車客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-150",
+      "name": "夜車影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-151",
+      "name": "隧道客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-152",
+      "name": "山洞影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-153",
+      "name": "洞口客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-154",
+      "name": "石窟影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-155",
+      "name": "溪谷客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-156",
+      "name": "峽谷影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-157",
+      "name": "瀑布客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-158",
+      "name": "溪橋影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-159",
+      "name": "水井客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-160",
+      "name": "水面影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-161",
+      "name": "湖畔客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-162",
+      "name": "池邊影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-163",
+      "name": "荷塘客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-164",
+      "name": "竹橋影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-165",
+      "name": "花園客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-166",
+      "name": "庭院影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-167",
+      "name": "後院客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-168",
+      "name": "前廳影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-169",
+      "name": "偏廳客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-170",
+      "name": "廚房影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-171",
+      "name": "餐桌客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-172",
+      "name": "空椅影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-173",
+      "name": "衣櫃客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-174",
+      "name": "衣架影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-175",
+      "name": "鞋櫃客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-176",
+      "name": "樓梯影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-177",
+      "name": "扶手客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-178",
+      "name": "門把影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-179",
+      "name": "鑰匙客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-180",
+      "name": "鎖影客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-181",
+      "name": "鐘擺客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-182",
+      "name": "指針影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-183",
+      "name": "日曆客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-184",
+      "name": "相框影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-185",
+      "name": "照片客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-186",
+      "name": "錄音影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-187",
+      "name": "收音客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-188",
+      "name": "電波影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-189",
+      "name": "雜訊客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-190",
+      "name": "訊號影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-191",
+      "name": "手機客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-192",
+      "name": "螢幕影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-193",
+      "name": "鍵盤客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-194",
+      "name": "游標影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-195",
+      "name": "網頁客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-196",
+      "name": "伺服器影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-197",
+      "name": "終端客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-198",
+      "name": "程式影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-199",
+      "name": "資料客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-200",
+      "name": "封包影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-201",
+      "name": "雲端客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-202",
+      "name": "記憶影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-203",
+      "name": "快取客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-204",
+      "name": "日誌影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-205",
+      "name": "索引客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-206",
+      "name": "搜尋影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-207",
+      "name": "模型客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-208",
+      "name": "代理影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-209",
+      "name": "機器客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-210",
+      "name": "代碼影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-211",
+      "name": "資料幽客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-212",
+      "name": "夜網客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-213",
+      "name": "訊息影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-214",
+      "name": "回傳客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-215",
+      "name": "接口影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-216",
+      "name": "入口客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-217",
+      "name": "路由客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-218",
+      "name": "佇列影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-219",
+      "name": "任務客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-220",
+      "name": "狀態影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-221",
+      "name": "守門客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-222",
+      "name": "巡邏影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-223",
+      "name": "休息客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-224",
+      "name": "沉睡影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-225",
+      "name": "等待客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-226",
+      "name": "觀察影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-227",
+      "name": "記錄客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-228",
+      "name": "採集客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-229",
+      "name": "驗證影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-230",
+      "name": "審計客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-231",
+      "name": "守護影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "路徑標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-232",
+      "name": "靜默客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "空間記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-233",
+      "name": "避雨客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "時間標記",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-234",
+      "name": "避風影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "物件觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-235",
+      "name": "借燈客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "訊號感知",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-236",
+      "name": "借傘影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "資料索引",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-237",
+      "name": "引路客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "事件記錄",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-238",
+      "name": "迷路影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "靜默等待",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-239",
+      "name": "回家客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "場景切換",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-240",
+      "name": "遠行影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "沙盒休眠",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-241",
+      "name": "無名客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夜間巡行",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-242",
+      "name": "古老影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "環境觀察",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-243",
+      "name": "傳說客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "霧中顯影",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-244",
+      "name": "民俗影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "影子移動",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-245",
+      "name": "故事客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "鏡面映像",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-246",
+      "name": "紙上影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "聲音回響",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-247",
+      "name": "夢境客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "燈影變化",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-248",
+      "name": "想像影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "夢境敘事",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-249",
+      "name": "沙盒客",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "故事引導",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    },
+    {
+      "id": "GHOST-250",
+      "name": "休息室影",
+      "category": "FOLKLORE_SIMULATION",
+      "ability": "民俗守護",
+      "status": "RESTING",
+      "is_real_claim": false,
+      "is_simulation": true,
+      "room": "ghost_month_rest_room"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "registry_name": "Tw_ch_us_cvv_registry",
+  "registry_type": "MULTI_JURISDICTION_CVV_POLICY_REGISTRY",
+  "registry_version": "2026_08",
+
+  "purpose": [
+    "jurisdiction_mapping",
+    "payment_compliance_reference",
+    "cvv_security_policy",
+    "cross_border_risk_classification"
+  ],
+
+  "jurisdictions": {
+    "TW": {
+      "role": "Taiwan jurisdiction reference",
+      "payment_controller": "Lightning_Al_Full.json"
+    },
+
+    "CN": {
+      "role": "China jurisdiction reference",
+      "payment_execution": false
+    },
+
+    "US": {
+      "role": "United States jurisdiction reference",
+      "payment_execution": false
+    }
+  },
+
+  "cvv_policy": {
+    "real_cvv_storage": false,
+    "real_cvv_logging": false,
+    "real_cvv_export": false,
+    "real_cvv_publication": false,
+    "real_cvv_ai_memory": false,
+
+    "simulation": {
+      "allowed": true,
+      "must_use_synthetic_data": true,
+      "real_payment_execution": false
+    }
+  },
+
+  "cross_border_payment": {
+    "automatic_execution": false,
+    "automatic_legal_selection": false,
+    "human_review_required": true,
+    "compliance_verification_required": true
+  },
+
+  "ai_access": {
+    "Gemini": "REFERENCE_ONLY",
+    "Oper": "REFERENCE_ONLY",
+    "DeepSeek": "REFERENCE_ONLY"
+  },
+
+  "controller_boundary": {
+    "Lightning_Al_Full": {
+      "scope": "Taiwan payment and CVV control",
+      "override_allowed": false
+    }
+  },
+
+  "security": {
+    "least_privilege": true,
+    "audit_logging": true,
+    "credential_storage": false,
+    "secret_storage": false
+  },
+
+  "statement": "本 Registry 僅作為 TW × CN × US 法域、支付與 CVV 安全政策的系統設計參考，不自行執行金融交易、不保存真實 CVV，也不取代實際適用法律、金融機構規則或支付服務商要求。"
+}

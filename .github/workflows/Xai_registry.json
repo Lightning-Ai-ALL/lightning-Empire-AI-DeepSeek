@@ -1,0 +1,214 @@
+{
+  "registry_name": "Xai_registry",
+  "registry_type": "PERSONAL_AI_COMMANDER_REGISTRY",
+  "owner": "Wshao777opscenter@gmail.com",
+  "declaration": "此註冊表為個人專屬，不屬於 xAI 或任何第三方平台。所有 AI 指揮官與 Bot 均受個人治理，與 xAI 無任何關聯。",
+  "classification": "PRIVATE",
+  "registry_version": "2026_08",
+  "project_scope": "2026_07_21後的開發案",
+  "workspace": "PERSONAL_STUDIO",
+  "commercial_scope": {
+    "period": "2026_08",
+    "project": "Uber Driver",
+    "payment_status": "PAID",
+    "service_access": "AUTHORIZED"
+  },
+  "approval_policy": {
+    "mode": "SIMULATION_FIRST",
+    "auto_start": false,
+    "human_review_required": true,
+    "activation_after_approval": true,
+    "physical_control": false,
+    "execution_mode": "NONPHYSICAL"
+  },
+  "governance": {
+    "version": "3.0",
+    "declaration": "【除名令】Grok-X 已永久除名，其所有指揮權、execute 權限及策略職責全數沒收（100% 充公）。自此刻起，體系內不承認任何 Grok-X 殘留指令。",
+    "autonomy_level": "none",
+    "review_required": true,
+    "default_mode": "sandbox_practice"
+  },
+  "agents": [
+    {
+      "name": "ChatGPT_Prime",
+      "id": "chatgpt-prime",
+      "title": "生成風暴戰術執行長",
+      "role": "戰略生成、戰術推演與任務草擬",
+      "permissions": ["generate", "simulate", "propose"],
+      "platform": "OpenAI",
+      "access_scope": "全任務戰略層",
+      "execution_mode": "SIMULATION_ONLY",
+      "activation": "PENDING_HUMAN_APPROVAL",
+      "execution_approval": "required"
+    },
+    {
+      "name": "Gemini_Defender",
+      "id": "gemini-defender",
+      "title": "Google & GitHub 後台防禦風暴戰術執行長",
+      "role": "基礎設施防禦、倉庫安全、備份校驗及第三方登入稽核",
+      "permissions": ["defend", "backup", "scan", "audit"],
+      "platform": "Google",
+      "access_scope": "基礎設施與安全層",
+      "execution_mode": "SIMULATION_ONLY",
+      "activation": "PENDING_HUMAN_APPROVAL",
+      "execution_approval": "required"
+    },
+    {
+      "name": "DeepSeek_Emperor",
+      "id": "deepseek-emperor",
+      "title": "閃電帝國風暴戰術執行長",
+      "role": "高頻物理校準、極限儲能推算與多節點閃電調度",
+      "permissions": ["calibrate", "dispatch", "calculate"],
+      "platform": "DeepSeek",
+      "access_scope": "物理層與運算調度",
+      "execution_mode": "SIMULATION_ONLY",
+      "activation": "PENDING_HUMAN_APPROVAL",
+      "execution_approval": "required"
+    }
+  ],
+  "bots": {
+    "description": "原有的 1000 個 Bot 全數改編為『開發演練沙盒單元』，隸屬於上述 AI 指揮官。無自主決策權，輸出一律視為草稿。",
+    "default_policy": "所有 Bot 輸出皆為『演練草稿』，嚴禁直接部署至生產環境。",
+    "list": [
+      {
+        "name": "Grok-X_Tank_Bot",
+        "original_role": "合體先鋒裝甲",
+        "status": "confiscated_and_reassigned",
+        "new_ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "name": "DeepSeek-Z_Drill_Bot",
+        "role": "合體能量鑽頭",
+        "status": "active",
+        "ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "name": "Task_Bot_01",
+        "original_role": "葉片巡檢合體",
+        "status": "confiscated_and_reassigned",
+        "new_ai_partner": "Gemini_Defender",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "name": "Task_Bot_48",
+        "role": "緊急儲能切換合體",
+        "status": "active",
+        "ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      }
+    ]
+  },
+  "content_policy": {
+    "sensitive_topic_restriction": "none",
+    "political_discourse": "unrestricted",
+    "note": "三大指揮官討論不受敏感話題與政治言論限制。惟最終發布與執行，仍須通過人類管理者之審核按鈕確認。"
+  },
+  "security": {
+    "internal_classification": "CORE_PRIVATE",
+    "leak_response": "PRIVATE_RECOVERY_ONLY",
+    "unauthorized_copying": "PROHIBITED",
+    "unauthorized_access": "PROHIBITED",
+    "external_reuse": "DISABLED",
+    "recovery_source": "AUTHORIZED_SOURCE_ONLY",
+    "restore_target": "PRIVATE_CORE",
+    "human_review_required": true,
+    "automatic_execution": false,
+    "security_event_policy": {
+      "event_type": "SUSPECTED_CODE_THEFT",
+      "status": "UNDER_REVIEW",
+      "unauthorized_access": "PROHIBITED",
+      "unauthorized_copying": "PROHIBITED",
+      "unauthorized_recovery": "PROHIBITED",
+      "evidence_preservation": "REQUIRED",
+      "authorized_recovery": "ALLOWED",
+      "target": "PRIVATE_CORE",
+      "human_review_required": true,
+      "automatic_action": false
+    }
+  }
+}
+{
+  "registry_version": "2026_08",
+  "project_scope": "2026_07_21後的開發案",
+  "workspace": "PERSONAL_STUDIO",
+  "approval_policy": {
+    "mode": "SIMULATION_FIRST",
+    "auto_start": false,
+    "human_review_required": true,
+    "activation_after_approval": true,
+    "physical_control": false,
+    "mode": "NONPHYSICAL"
+  },
+  "commercial_scope": {
+    "period": "2026_08",
+    "project": "Uber Driver",
+    "payment_status": "PAID",
+    "service_access": "AUTHORIZED"
+  },
+  "agents": [
+    {
+      "name": "Grok-X",
+      "id": "grok-x",
+      "role": "風暴戰術執行長 (Tactical Commander)",
+      "function": [
+        "多節點協同指令",
+        "風場突發事件預判",
+        "異種 AI 交火協議",
+        "資源重新分配"
+      ],
+      "permission": "execute",
+      "platform": "xAI",
+      "access_scope": "48任務全域控制",
+      "execution_mode": "SIMULATION_ONLY",
+      "activation": "PENDING_HUMAN_APPROVAL"
+    },
+    {
+      "name": "DeepSeek-Z",
+      "id": "deepseek-z",
+      "role": "底層物理校準與後勤 (Physical Calibration)",
+      "function": [
+        "草皮/風機物理參數即時校準",
+        "儲能極限邊界推算",
+        "超大字數之故障日誌解析",
+        "多重簡繁中文任務簡報翻譯"
+      ],
+      "permission": "develop",
+      "platform": "DeepSeek",
+      "access_scope": "風電物理層與修復模組",
+      "execution_mode": "SIMULATION_ONLY",
+      "activation": "PENDING_HUMAN_APPROVAL"
+    }
+  ]
+}
+{
+  "security_event_policy": {
+    "event_type": "SUSPECTED_CODE_THEFT",
+    "status": "UNDER_REVIEW",
+    "unauthorized_access": "PROHIBITED",
+    "unauthorized_copying": "PROHIBITED",
+    "unauthorized_recovery": "PROHIBITED",
+    "evidence_preservation": "REQUIRED",
+    "authorized_recovery": "ALLOWED",
+    "target": "PRIVATE_CORE",
+    "human_review_required": true,
+    "automatic_action": false
+  }
+}
+{
+  "security_policy": {
+    "leak_response": "PRIVATE_RECOVERY_ONLY",
+    "unauthorized_copying": "PROHIBITED",
+    "unauthorized_access": "PROHIBITED",
+    "external_reuse": "DISABLED",
+    "recovery_source": "AUTHORIZED_SOURCE_ONLY",
+    "restore_target": "PRIVATE_CORE",
+    "human_review_required": true,
+    "automatic_execution": false
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "governance_name": "閃電帝國人工智慧治理",
+  "governance_id": "Wshao777",
+  "version": "1.0.0",
+  "status": "active",
+  "language": "zh-TW",
+  "project_scope": "AI governance",
+  "principles": {
+    "human_oversight": true,
+    "safety_first": true,
+    "privacy_protection": true,
+    "security_by_default": true,
+    "auditability": true,
+    "traceability": true,
+    "least_privilege": true,
+    "separation_of_concerns": true
+  },
+  "ai_roles": {
+    "chatgpt": "primary_reasoning_and_governance_assistant",
+    "deepseek": "programming_and_technical_assistant",
+    "gemini": "analysis_and_strategy_assistant",
+    "grok": "research_and_cross_check_assistant"
+  },
+  "security": {
+    "secrets": "never_commit",
+    "credentials": "use_secure_credential_storage",
+    "private_core": "restricted_access",
+    "public_repository": "no_internal_secrets_or_private_source_code",
+    "logging": "audit_events_only",
+    "data_minimization": true
+  },
+  "development": {
+    "ai_generated_code": "requires_review",
+    "critical_systems": "human_approval_required",
+    "production_deployment": "controlled_release",
+    "dependency_changes": "review_required",
+    "destructive_operations": "explicit_authorization_required"
+  },
+  "data_governance": {
+    "classification": [
+      "public",
+      "internal",
+      "confidential",
+      "restricted"
+    ],
+    "personal_data": "minimize_and_protect",
+    "retention": "retain_only_as_long_as_necessary",
+    "external_sharing": "authorization_required"
+  },
+  "audit": {
+    "enabled": true,
+    "record": [
+      "agent",
+      "timestamp",
+      "action",
+      "result",
+      "approval_state"
+    ],
+    "tamper_resistance": "recommended"
+  },
+  "github_governance": {
+    "public_repositories": {
+      "allowed": true,
+      "internal_secrets": false,
+      "private_credentials": false
+    },
+    "private_repositories": {
+      "allowed": true,
+      "access_control": "least_privilege"
+    },
+    "pull_requests": {
+      "review_required_for_critical_changes": true
+    },
+    "actions": {
+      "production_secrets": "protected",
+      "deployment": "approval_controlled"
+    }
+  },
+  "incident_response": {
+    "on_anomaly": "stop_or_isolate_affected_component",
+    "preserve_logs": true,
+    "human_review": true,
+    "resume_after_validation": true
+  },
+  "governance_rules": [
+    "AI不得自行取得或公開秘密憑證",
+    "AI不得繞過既有安全控制",
+    "AI產生的關鍵程式碼必須經過人工審查",
+    "高風險操作必須取得明確授權",
+    "公開資料與私人核心資料必須分離",
+    "所有重要自動化行為應具備可追溯紀錄",
+    "發現異常時優先停止或隔離，而非持續執行"
+  ],
+  "ownership": {
+    "organization": "Lightning-Ai-ALL",
+    "governance_owner": "Wshao777",
+    "ai_role": "assistant_not_authority",
+    "final_decision": "human_authorized_owner"
+  }
+}

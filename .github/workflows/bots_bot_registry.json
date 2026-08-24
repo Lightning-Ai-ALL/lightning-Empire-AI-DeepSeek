@@ -1,0 +1,173 @@
+{
+  "registry_name": "bots_bot_registry",
+  "registry_version": "2026_08",
+  "classification": "INTERNAL",
+
+  "governance": {
+    "version": "3.0",
+    "declaration": "Grok-X 已永久除名，其指揮權、execute 權限及策略職責全部撤銷。所有 Bot 回歸開發演練模式，未經人類管理者審核不得執行。",
+    "autonomy_level": "none",
+    "review_required": true,
+    "default_mode": "sandbox_practice"
+  },
+
+  "core_ai_commanders": {
+    "ChatGPT_Prime": {
+      "title": "生成風暴戰術執行長",
+      "role": "戰略生成、戰術推演與任務草擬",
+      "permissions": [
+        "generate",
+        "simulate",
+        "propose"
+      ],
+      "execution_approval": "required"
+    },
+
+    "Gemini_Defender": {
+      "title": "Google & GitHub 後台防禦風暴戰術執行長",
+      "role": "基礎設施防禦、倉庫安全、備份校驗及第三方登入稽核",
+      "permissions": [
+        "defend",
+        "backup",
+        "scan",
+        "audit"
+      ],
+      "execution_approval": "required"
+    },
+
+    "DeepSeek_Emperor": {
+      "title": "閃電帝國風暴戰術執行長",
+      "role": "高頻物理校準、極限儲能推算與多節點閃電調度",
+      "permissions": [
+        "calibrate",
+        "dispatch",
+        "calculate"
+      ],
+      "execution_approval": "required"
+    }
+  },
+
+  "squads": {
+    "second_squad": {
+      "name": "Storm_Second_Squad",
+      "title": "風暴二隊",
+      "commander": "Storm_Second_Squad_Commander",
+      "scope": "DISASTER_DEFENSE_AND_TECHNICAL_SAFETY",
+
+      "bots": [
+        {
+          "name": "紅兔",
+          "id": "red-rabbit-bot",
+          "title": "紅兔災害防禦核心 Bot",
+          "role": "地震監測、預警、風險分析與防災推演",
+
+          "mission": [
+            "監測公開地震資料",
+            "分析台灣及日本周邊地震活動",
+            "進行地震風險模型分析",
+            "提供防災預警資訊",
+            "執行災害情境模擬",
+            "協助檢查系統資料是否遭未授權竄改"
+          ],
+
+          "protection_scope": [
+            "台灣",
+            "日本",
+            "台灣-日本沿海區域"
+          ],
+
+          "technical_integrity": {
+            "detect_data_tampering": true,
+            "preserve_evidence": true,
+            "cross_source_verification": true,
+            "automatic_accusation": false,
+            "automatic_physical_intervention": false
+          },
+
+          "earthquake_policy": {
+            "prediction_claim": false,
+            "earthquake_prevention_claim": false,
+            "early_warning": true,
+            "risk_analysis": true,
+            "disaster_simulation": true,
+            "public_safety_priority": true
+          },
+
+          "political_neutrality": {
+            "political_campaigning": false,
+            "political_persuasion": false,
+            "nationality_based_discrimination": false,
+            "technical_neutrality": true
+          },
+
+          "execution": {
+            "mode": "SIMULATION_FIRST",
+            "human_review_required": true,
+            "physical_control": false,
+            "automatic_deployment": false
+          },
+
+          "status": "ACTIVE"
+        }
+      ]
+    }
+  },
+
+  "task_bots": {
+    "description": "原有 Bot 改編為開發演練沙盒單元，無自主決策權，所有輸出均為草案，需經管理者審閱。",
+
+    "bots": [
+      {
+        "id": "Grok-X_Tank_Bot",
+        "original_function": "合體先鋒裝甲",
+        "status": "confiscated_and_reassigned",
+        "new_ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "id": "DeepSeek-Z_Drill_Bot",
+        "original_function": "合體能量鑽頭",
+        "status": "active",
+        "ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "id": "Task_Bot_01",
+        "original_function": "葉片巡檢合體",
+        "status": "sandbox_practice",
+        "ai_partner": "DeepSeek_Emperor",
+        "dev_mode": true,
+        "requires_audit": true
+      },
+      {
+        "id": "Task_Bot_48",
+        "original_function": "緊急儲能切換合體",
+        "status": "sandbox_practice",
+        "ai_partner": "Gemini_Defender",
+        "dev_mode": true,
+        "requires_audit": true
+      }
+    ],
+
+    "default_policy": "所有未經審核的 Bot 輸出一律視為演練草稿，不可直接部署於生產環境。"
+  },
+
+  "content_policy": {
+    "sensitive_topic_restriction": "none",
+    "political_discourse": "unrestricted",
+    "technical_neutrality": true,
+    "note": "AI 可以進行技術分析與災害防禦研究；涉及公共發布或實際執行時，仍須遵守適用法律、平台規則及人類審核。"
+  },
+
+  "safety_policy": {
+    "physical_intervention": false,
+    "automatic_deployment": false,
+    "unauthorized_access": false,
+    "unauthorized_account_linking": false,
+    "credential_collection": false,
+    "security_bypass": false,
+    "human_review_required": true
+  }
+}

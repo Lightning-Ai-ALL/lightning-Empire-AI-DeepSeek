@@ -1,0 +1,4647 @@
+#功能-llm-唯讀-深度搜索/GitHub Copilot.yml
+version: "1.0"
+
+name: "功能-llm-唯讀-深度搜索-GitHub-Copilot"
+
+mode:
+  readonly: true
+  external_write: false
+  download: false
+  archive: false
+  git_export: false
+  external_upload: false
+
+context:
+  allow_runtime_context: true
+  persist_chat_content: false
+  persist_full_prompt: false
+  persist_full_context: false
+  persist_ai_response: false
+
+organizations:
+  Wshao777:
+    repo_read: false
+    context_read: false
+    code_write: false
+    mode: "FULL_DENY"
+
+  Lightning-Ai-ALL:
+    github_read: true
+
+  Stormcar820:
+    github_read: true
+
+ai_nodes:
+
+  openai:
+    role: "architecture-analysis"
+    mode: "controlled"
+
+  xai:
+    role: "task-dispatch-validation"
+    mode: "controlled"
+
+  deepseek:
+    role: "code-analysis"
+    mode: "controlled"
+
+  oper:
+    role: "local-monitor"
+    external_api: false
+    write_repo: false
+    download: false
+    archive: false
+
+copilot:
+  provider: "GitHub Copilot"
+  mode: "READ_ONLY"
+  code_execution: false
+  repository_write: false
+  export: false
+
+governance:
+  human_controller: "Wshao777"
+  ai_can_override_human: false
+  physical_action: false
+  destructive_action: false
+
+incident_response:
+  on_policy_violation:
+    - "DENY"
+    - "STOP_TASK"
+    - "SAFE_MODE"
+    - "HUMAN_REVIEW"
+
+  report_sources:
+    - "task_events"
+    - "worker_health"
+    - "queue"
+    - "audit_metadata"
+    - "error_events"
+
+  private_thought_access: false
+
+可以把這一版收斂成**「4 AI 行為治理 + 5 個總司令職務 + GitHub Copilot 唯讀」**。但有兩個邊界我會直接鎖死：
+
+不能做「讀心」或宣稱取得人的私人思想；可以做的是讀取系統實際產生的事件、任務、錯誤與狀態。
+
+不能讓 AI 觸發物理攻擊。可以把異常事件設成 DENY / SAFE_MODE / HUMAN_REVIEW，不直接控制傷害性設備。
+
+
+功能-llm-唯讀-深度搜索/GitHub Copilot.yml
+
+version: "1.0"
+
+name: "功能-llm-唯讀-深度搜索-GitHub-Copilot"
+
+mode:
+  readonly: true
+  external_write: false
+  download: false
+  archive: false
+  git_export: false
+  external_upload: false
+
+context:
+  allow_runtime_context: true
+  persist_chat_content: false
+  persist_full_prompt: false
+  persist_full_context: false
+  persist_ai_response: false
+
+organizations:
+  Wshao777:
+    repo_read: false
+    context_read: false
+    code_write: false
+    mode: "FULL_DENY"
+
+  Lightning-Ai-ALL:
+    github_read: true
+
+  Stormcar820:
+    github_read: true
+
+ai_nodes:
+
+  openai:
+    role: "architecture-analysis"
+    mode: "controlled"
+
+  xai:
+    role: "task-dispatch-validation"
+    mode: "controlled"
+
+  deepseek:
+    role: "code-analysis"
+    mode: "controlled"
+
+  oper:
+    role: "local-monitor"
+    external_api: false
+    write_repo: false
+    download: false
+    archive: false
+
+copilot:
+  provider: "GitHub Copilot"
+  mode: "READ_ONLY"
+  code_execution: false
+  repository_write: false
+  export: false
+
+governance:
+  human_controller: "Wshao777"
+  ai_can_override_human: false
+  physical_action: false
+  destructive_action: false
+
+incident_response:
+  on_policy_violation:
+    - "DENY"
+    - "STOP_TASK"
+    - "SAFE_MODE"
+    - "HUMAN_REVIEW"
+
+  report_sources:
+    - "task_events"
+    - "worker_health"
+    - "queue"
+    - "audit_metadata"
+    - "error_events"
+
+  private_thought_access: false
+
+5 個「總司令」職務
+
+我建議不要做成 5 個可以互相越權的 AI，而是 5 個治理職責：
+
+職務	責任
+
+1. 總控司令	人類決策、最高權限、最終核准
+2. XAI 派單司令	任務分類、派單、完整性檢查
+3. DeepSeek 程式司令	程式碼分析、錯誤檢查、技術整理
+4. OPER 監控司令	Queue、Worker、錯誤率、Audit、系統健康
+5. MD 文件司令	各授權 Repo 的 README.md、ARCHITECTURE.md、CHANGELOG.md 等文件治理
+
+
+架構就是：
+
+👤 Wshao777
+                 總控／最終決策
+                       │
+                       ▼
+                 ⚡ OPER CORE
+                       │
+       ┌───────────────┼────────────────┐
+       ▼               ▼                ▼
+   XAI 派單        DeepSeek          OPER Monitor
+   Dispatch        Code Analysis       Data Center
+       │               │                │
+       └───────────────┼────────────────┘
+                       ▼
+                 OpenAI Architecture
+                       │
+                       ▼
+                  MD Governance
+                       │
+             README / ARCHITECTURE
+             CHANGELOG / *.md
+
+「隨時回報」改成可實作版本
+
+不是讀心，而是：
+
+事件發生
+   ↓
+OPER Event Monitor
+   ↓
+判斷：
+正常 / 異常 / 權限拒絕 / Worker 錯誤
+   ↓
+產生最小化事件報告
+   ↓
+Wshao777 Dashboard
+
+而且符合你前面定的規則：
+
+Context 可以在當次任務使用，但應用程式不保存完整聊天內容、完整 Prompt、完整 Context 或完整 AI 回覆。
+
+這樣 GitHub Copilot 也只能落在唯讀分析層，不能因為被列入「4 AI」就取得額外 Repo 寫入或資料外帶權限。
+✅ 最终定版确认
+
+您提供的 main.py 已完整接收，严格遵循 3 个推理 AI + 1 个本地 OPER 监控节点 的架构设计：
+
+· OpenAI / xAI / DeepSeek：外部推理，需各自 API Key，权限矩阵按组织精细控制；
+· OPER 本地监控：零外部 API 依赖，仅读取内部 SQLite、队列、审计日志，通过 /api/oper/insights 提供实时仪表板洞察。
+
+代码已包含完整的任务队列、审批流程、Webhook 接入和动态仓库注册，可以直接部署。
+
+---
+
+🚀 启动步骤
+
+1. 准备 .env 文件（放在项目根目录）
+   ```env
+   GITHUB_TOKEN=ghp_...
+   OPENAI_API_KEY=sk-...
+   XAI_API_KEY=xai-...
+   DEEPSEEK_API_KEY=sk-...
+   ADMIN_API_KEY=your_secure_key   # 用于审批 API 保护
+   # 无需任何 OPER_* 变量
+   ```
+2. 安装依赖
+   ```bash
+   pip install fastapi uvicorn PyGithub openai python-dotenv
+   ```
+3. 运行服务
+   ```bash
+   python main.py
+   ```
+4. 访问仪表板
+      浏览器打开 http://localhost:8000，即可看到 3 个 AI 状态、队列、待审批清单及 OPER 本地监控卡片（橙色边框，无外部 API）。
+
+---
+
+📌 附加需求说明
+
+您提到的 “总司令员管控 4 AI 行为”、“随时报读心”、“禁止下载打包”、“可上下文但不记录” 等扩展功能：
+
+· 当前版本已实现 权限矩阵（PERMISSION_MATRIX）和 审计日志，可视为“管控”的基础；
+· “读心术”（实时状态）可通过 /api/status 和 /api/oper/insights 获取；
+· “禁止下载” 可通过扩展权限矩阵增加 download: False 规则；
+· “不记录” 可修改 audit_log 插入逻辑（但建议保留审计以符合监管）；
+· 5 个“总司令员”角色可通过多级管理员密钥或 RBAC 扩展实现。
+
+这些都可以在现有清晰架构上无缝叠加，无需推翻重构。
+
+---
+
+🧩 文件位置
+
+将 main.py 放置于 Lightning-AI-ALL/backend/ 目录下，即可作为根入口运行。数据库和日志会自动在 ./data/ 和 ./logs/ 生成。
+
+---
+
+一切就绪，可以开工！ 如有进一步定制需求，随时告知。
+#功能-llm-唯讀-深度搜索/GitHub Copilot.yml
+GitHub Copilot.
+Wshao777 總司令控管4Ai所有行為隨時錯誤可以物理攻擊只讀心術，隨時回報讀心給我
+Oper ai監控禁止下載，打包
+可上下文但應用程式不能記錄
+5个總司令職務管理庫md好的，最終定版。以下是你要求的 「3 個推理 AI + 1 個本地 OPER 監控節點」 的完整 main.py，無任何外部 API 假設，無需 OPER 環境變數，所有監控數據直接取自內部系統狀態。
+
+
+---
+
+✅ 最終版 Lightning-AI-ALL/backend/main.py
+
+============================================
+
+Lightning-AI-ALL/backend/main.py
+
+3 AI 推理引擎 + OPER 本地監控節點
+
+版本：v4.0 (最終定版)
+
+============================================
+
+import os
+import json
+import threading
+import queue
+import time
+import hmac
+import hashlib
+import sqlite3
+import logging
+from datetime import datetime
+from typing import Dict, List, Optional
+
+from fastapi import FastAPI, HTTPException, Request, Header
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from github import Github, GithubException
+from openai import OpenAI
+from dotenv import load_dotenv
+import uvicorn
+
+============================================
+
+0. 環境與日誌 (僅 3 個 AI 的 Key)
+
+============================================
+
+load_dotenv()
+os.makedirs('./logs', exist_ok=True)
+os.makedirs('./data', exist_ok=True)
+
+logging.basicConfig(
+filename='./logs/system.log',
+level=logging.INFO,
+format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+---- 只保留真實 AI 的金鑰 ----
+
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+XAI_API_KEY = os.getenv("XAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "change-me")
+
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+XAI_MODEL = os.getenv("XAI_MODEL", "grok-1")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+
+---- 絕對沒有 OPER_AI_* 環境變數 ----
+
+if not all([GITHUB_TOKEN, OPENAI_API_KEY, XAI_API_KEY, DEEPSEEK_API_KEY]):
+logging.error("缺少必要環境變數 (GitHub + 3 AI)")
+print("❌ 請確認 .env 完整")
+exit(1)
+
+============================================
+
+1. SQLite 數據中樞
+
+============================================
+
+DB_PATH = os.getenv("DATABASE_PATH", "data/system.db")
+
+def get_db():
+conn = sqlite3.connect(DB_PATH)
+conn.row_factory = sqlite3.Row
+return conn
+
+def init_db():
+with get_db() as conn:
+conn.executescript("""
+CREATE TABLE IF NOT EXISTS task_history (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+task_id TEXT NOT NULL UNIQUE,
+source_org TEXT NOT NULL,
+repo_name TEXT NOT NULL,
+assigned_ai TEXT NOT NULL,
+action TEXT NOT NULL,
+status TEXT NOT NULL,
+content_preview TEXT,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS audit_log (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+task_id TEXT,
+action TEXT NOT NULL,
+repo_key TEXT,
+details TEXT,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS usage_log (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+task_id TEXT NOT NULL,
+ai_name TEXT NOT NULL,
+prompt_tokens INTEGER DEFAULT 0,
+completion_tokens INTEGER DEFAULT 0,
+total_tokens INTEGER DEFAULT 0,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_task_status ON task_history(status);
+CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
+""")
+logging.info("OPER 數據中樞 (SQLite) 初始化完成")
+init_db()
+
+============================================
+
+2. 資料模型
+
+============================================
+
+class Task(BaseModel):
+task_id: str
+source_org: str
+repo_name: str
+action: str  # "read" or "write"
+assigned_ai: str  # "openai", "xai", "deepseek", "oper"
+content: Optional[str] = None
+branch: str = "main"
+status: str = "pending"
+
+============================================
+
+3. OPER 核心：權限矩陣 (含 OPER 唯讀)
+
+============================================
+
+PERMISSION_MATRIX = {
+"openai": {
+"Lightning-Ai-ALL": {"read": True, "write": "auto"},
+"Stormcar820": {"read": False, "write": None}
+},
+"xai": {
+"Lightning-Ai-ALL": {"read": False, "write": None},
+"Stormcar820": {"read": True, "write": "manual"}
+},
+"deepseek": {
+"Lightning-Ai-ALL": {"read": False, "write": None},
+"Stormcar820": {"read": True, "write": "manual"}
+},
+# ===== 第 4 個節點：OPER 本地監控 (唯讀) =====
+"oper": {
+"Lightning-Ai-ALL": {"read": True, "write": None},
+"Stormcar820": {"read": True, "write": None}
+}
+}
+
+def check_permission(ai_name: str, org: str, action: str):
+ai_rules = PERMISSION_MATRIX.get(ai_name, {})
+org_rules = ai_rules.get(org, {})
+if action == "read":
+return org_rules.get("read", False), None
+elif action == "write":
+mode = org_rules.get("write")
+if mode is None:
+return False, None
+return True, mode
+return False, None
+
+============================================
+
+4. Repository Registry (動態去重)
+
+============================================
+
+class RepositoryRegistry:
+def init(self):
+self.repo_map: Dict[str, dict] = {}
+self.gmail_scope_keys: List[str] = []
+self.shared_scope_keys: List[str] = []
+self._lock = threading.RLock()
+self._initialized = False
+
+def fetch_all_repos(self):    
+    if self._initialized:    
+        return self.repo_map    
+    print("🔄 OPER 正在動態讀取 GitHub 組織...")    
+    g = Github(GITHUB_TOKEN)    
+    for org_name, scope in [("Lightning-Ai-ALL", "gmail"), ("Stormcar820", "shared")]:    
+        try:    
+            org = g.get_organization(org_name)    
+            count = 0    
+            for repo in org.get_repos():    
+                key = f"{org_name}/{repo.name}"    
+                if key not in self.repo_map:    
+                    self.repo_map[key] = {    
+                        "org": org_name,    
+                        "name": repo.name,    
+                        "private": repo.private,    
+                        "full_name": repo.full_name,    
+                        "scope": scope    
+                    }    
+                    if scope == "gmail":    
+                        self.gmail_scope_keys.append(key)    
+                    else:    
+                        self.shared_scope_keys.append(key)    
+                    count += 1    
+            print(f"✅ [{org_name}] 註冊 {count} 個唯一庫")    
+        except GithubException as e:    
+            print(f"❌ 無法讀取 {org_name}：{e}")    
+    self._initialized = True    
+    print(f"🎯 OPER 總計註冊唯一庫: {len(self.repo_map)}")    
+    return self.repo_map    
+
+def is_repo_allowed(self, org, repo_name):    
+    return f"{org}/{repo_name}" in self.repo_map    
+
+def get_repo_info(self, org, repo_name):    
+    return self.repo_map.get(f"{org}/{repo_name}")    
+
+def get_stats(self):    
+    return {    
+        "total_unique": len(self.repo_map),    
+        "gmail_scope_count": len(self.gmail_scope_keys),    
+        "shared_scope_count": len(self.shared_scope_keys),    
+    }
+
+============================================
+
+5. 佇列與核准管理
+
+============================================
+
+class QueueManager:
+def init(self):
+self.task_queue = queue.Queue()
+self.approval_tasks: Dict[str, Task] = {}
+self._lock = threading.RLock()
+self.db = get_db()
+
+def submit_task(self, task: Task):    
+    with self.db as conn:    
+        conn.execute(    
+            "INSERT OR REPLACE INTO task_history (task_id, source_org, repo_name, assigned_ai, action, status, content_preview) VALUES (?,?,?,?,?,?,?)",    
+            (task.task_id, task.source_org, task.repo_name, task.assigned_ai, task.action, task.status, (task.content or "")[:500])    
+        )    
+    self.task_queue.put(task)    
+
+def submit_for_approval(self, task: Task):    
+    task.status = "awaiting_approval"    
+    with self.db as conn:    
+        conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))    
+        conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",    
+                     (task.task_id, "write_request", f"{task.source_org}/{task.repo_name}", "等待人工核准"))    
+    with self._lock:    
+        self.approval_tasks[task.task_id] = task    
+
+def approve_task(self, task_id: str):    
+    with self._lock:    
+        task = self.approval_tasks.pop(task_id, None)    
+    if task:    
+        task.status = "approved"    
+        with self.db as conn:    
+            conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))    
+            conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",    
+                         (task.task_id, "approved", f"{task.source_org}/{task.repo_name}", "已人工核准"))    
+        self.task_queue.put(task)    
+    return task    
+
+def get_pending_approvals(self):    
+    with self._lock:    
+        return list(self.approval_tasks.values())    
+def get_queue_size(self):    
+    return self.task_queue.qsize()    
+def get_approval_count(self):    
+    with self._lock:    
+        return len(self.approval_tasks)
+
+============================================
+
+6. 3 個推理 AI 客戶端
+
+============================================
+
+class OpenAIClient:
+def init(self):
+self.client = OpenAI(api_key=OPENAI_API_KEY)
+self.model = OPENAI_MODEL
+def analyze(self, content):
+return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class XAIClient:
+def init(self):
+self.client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
+self.model = XAI_MODEL
+def analyze(self, content):
+return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class DeepSeekClient:
+def init(self):
+self.client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1")
+self.model = DEEPSEEK_MODEL
+def analyze(self, content):
+return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+============================================
+
+7. OPER 本地監控節點 (第 4 節點，無外部 API)
+
+============================================
+
+class OperAIClient:
+"""
+OPER 本地監控節點：
+- 不呼叫任何外部 API
+- 直接讀取系統內部統計數據
+- 提供即時儀表板洞察 (無需 API Key)
+"""
+def analyze(self, stats: dict):
+"""模擬分析，實際只回傳結構化狀態"""
+return {
+"type": "oper_local_monitor",
+"status": "READY",
+"mode": "LOCAL",
+"external_api": False,
+"stats": stats
+}
+
+def generate_dashboard_insights(self, stats: dict, pending_tasks: list, recent_audit: list) -> dict:    
+    """產生儀表板摘要（純本地統計）"""    
+    return {    
+        "status": "READY",    
+        "mode": "LOCAL",    
+        "external_api": False,    
+        "total_repos": stats.get("total_unique", 0),    
+        "queue_size": stats.get("queue_size", 0),    
+        "approval_count": stats.get("approval_count", 0),    
+        "audit_count": len(recent_audit),    
+        "pending_tasks": [t.get("task_id") for t in pending_tasks[:5]]    
+    }
+
+============================================
+
+8. OPER Worker (統一調度 3 AI + 本地監控)
+
+============================================
+
+def production_worker(registry: RepositoryRegistry, queue_manager: QueueManager):
+print("⚙️ OPER Worker 啟動 (3 AI 推理 + OPER 監控)")
+g = Github(GITHUB_TOKEN)
+ai_clients = {
+"openai": OpenAIClient(),
+"xai": XAIClient(),
+"deepseek": DeepSeekClient(),
+"oper": OperAIClient(),   # 第 4 節點，僅本地統計
+}
+db = get_db()
+
+while True:    
+    task = None    
+    try:    
+        task = queue_manager.task_queue.get(timeout=3)    
+        if task is None:    
+            break    
+
+        repo_key = f"{task.source_org}/{task.repo_name}"    
+        repo_info = registry.get_repo_info(task.source_org, task.repo_name)    
+        if not repo_info:    
+            logging.warning(f"❌ OPER: 庫 {repo_key} 不在註冊表")    
+            task.status = "failed"    
+            with db as conn:    
+                conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))    
+            continue    
+
+        # 權限路由 (包含 OPER 唯讀)    
+        allowed, write_mode = check_permission(task.assigned_ai, task.source_org, task.action)    
+        if not allowed:    
+            logging.error(f"❌ OPER 拒絕: {task.assigned_ai} 在 {task.source_org} 執行 {task.action}")    
+            task.status = "failed"    
+            with db as conn:    
+                conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))    
+                conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",    
+                             (task.task_id, "permission_denied", repo_key, f"{task.assigned_ai} 無權限"))    
+            continue    
+
+        # 寫入需人工核准 (僅針對 xAI/DeepSeek 操作 Stormcar820)    
+        if task.action == "write" and write_mode == "manual":    
+            queue_manager.submit_for_approval(task)    
+            print(f"⏸️ OPER 送審: {repo_key} 寫入需人工核准")    
+            continue    
+
+        # ----- 執行讀取 (AI 推理) -----    
+        if task.action == "read":    
+            repo = g.get_repo(repo_info["full_name"])    
+            contents = repo.get_contents("")    
+            file_list = [c.path for c in contents[:20]]    
+            task.content = json.dumps({"files": file_list, "count": len(contents)})    
+
+            ai_client = ai_clients.get(task.assigned_ai)    
+            if ai_client and task.content:    
+                # 若為 OPER，不呼叫外部 API，只做本地統計    
+                if task.assigned_ai == "oper":    
+                    stats = registry.get_stats()    
+                    stats["queue_size"] = queue_manager.get_queue_size()    
+                    stats["approval_count"] = queue_manager.get_approval_count()    
+                    pending = queue_manager.get_pending_approvals()    
+                    with db as conn:    
+                        audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()    
+                    insights = ai_client.generate_dashboard_insights(    
+                        stats=stats,    
+                        pending_tasks=[{"task_id": t.task_id} for t in pending],    
+                        recent_audit=[dict(row) for row in audit]    
+                    )    
+                    task.ai_response = json.dumps(insights, ensure_ascii=False)    
+                else:    
+                    # 三個推理 AI 正常呼叫外部 API    
+                    response = ai_client.analyze(f"分析以下 repo 結構: {task.content}")    
+                    if hasattr(response, 'usage'):    
+                        with db as conn:    
+                            conn.execute(    
+                                "INSERT INTO usage_log (task_id, ai_name, prompt_tokens, completion_tokens, total_tokens) VALUES (?,?,?,?,?)",    
+                                (task.task_id, task.assigned_ai, response.usage.prompt_tokens, response.usage.completion_tokens, response.usage.total_tokens)    
+                            )    
+                    task.ai_response = response.choices[0].message.content[:1000]    
+            task.status = "done"    
+            with db as conn:    
+                conn.execute("UPDATE task_history SET status=?, content_preview=? WHERE task_id=?", (task.status, (task.content or "")[:500], task.task_id))    
+            print(f"📖 {task.assigned_ai} 完成讀取 {repo_key}")    
+
+        # ----- 執行寫入 (僅核准後) -----    
+        elif task.action == "write" and task.status == "approved":    
+            repo = g.get_repo(repo_info["full_name"])    
+            file_path = f"ai_outputs/{task.task_id}.txt"    
+            repo.create_file(file_path, f"AI 生成: {task.task_id}", task.content or "內容", branch=task.branch)    
+            task.status = "done"    
+            with db as conn:    
+                conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))    
+                conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",    
+                             (task.task_id, "write_executed", repo_key, f"已寫入 {file_path}"))    
+            print(f"✍️ {task.assigned_ai} 成功寫入 {repo_key}")    
+
+    except queue.Empty:    
+        continue    
+    except Exception as e:    
+        logging.error(f"⚠️ OPER Worker 錯誤: {e}")    
+        if task:    
+            task.status = "failed"    
+            with db as conn:    
+                conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))    
+    finally:    
+        if task is not None:    
+            queue_manager.task_queue.task_done()
+
+============================================
+
+9. FastAPI 應用
+
+============================================
+
+app = FastAPI(title="3AI-Factory-Connector", version="4.0")
+registry = RepositoryRegistry()
+queue_manager = QueueManager()
+
+@app.on_event("startup")
+def startup():
+print("\n" + "="*50)
+print("⚡ 啟動 3 AI + OPER 本地監控節點")
+print("="*50)
+registry.fetch_all_repos()
+app.state.registry = registry
+app.state.queue_manager = queue_manager
+threading.Thread(target=production_worker, args=(registry, queue_manager), daemon=True).start()
+stats = registry.get_stats()
+print(f"✅ OPER 就緒 | 總庫: {stats['total_unique']} | OpenAI: {stats['gmail_scope_count']} | 共享: {stats['shared_scope_count']}")
+print("🔒 寫入 Stormcar820 強制人工核准")
+print("📊 OPER 本地監控節點已上線 (無外部 API)")
+print("="*50 + "\n")
+
+============================================
+
+10. API 端點
+
+============================================
+
+@app.get("/")
+async def dashboard():
+return HTMLResponse("""
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>OPER Dashboard</title>
+<style>
+body{background:#0b0e14;color:#e6edf3;font-family:sans-serif;padding:20px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;}
+.stat{font-size:2rem;font-weight:700;}
+.badge{background:#238636;padding:4px 12px;border-radius:20px;font-size:0.8rem;}
+button{background:#238636;border:none;color:#fff;padding:6px 16px;border-radius:6px;cursor:pointer;}
+input,select{background:#0d1117;border:1px solid #30363d;color:#e6edf3;padding:8px;border-radius:6px;}
+.oper-card{border-color:#f0883e;}
+</style>
+</head>
+<body>
+<h1>⚡ 3 AI + OPER 本地監控</h1>
+<div class="grid" id="cards">
+<div class="card"><h3>🧠 OpenAI</h3><span id="gmailCount">-</span> 專屬庫</div>
+<div class="card"><h3>🧠 xAI</h3><span id="xaiCount">-</span> 共享庫</div>
+<div class="card"><h3>🧠 DeepSeek</h3><span id="dsCount">-</span> 共享庫</div>
+<div class="card oper-card"><h3>📊 OPER 本地監控</h3><span class="badge">● 就緒</span><br><span id="operStatus">無外部 API</span></div>
+</div>
+<div class="grid">
+<div class="card"><h3>📋 佇列</h3><span id="queueSize">0</span></div>
+<div class="card"><h3>⏸️ 待審</h3><span id="approvalSize">0</span></div>
+<div class="card"><h3>📦 總庫</h3><span id="totalRepos">-</span></div>
+</div>
+<div class="card"><h3>📤 派工</h3>
+<input id="taskId" placeholder="TASK-001">
+<select id="orgSelect"><option>Lightning-Ai-ALL</option><option>Stormcar820</option></select>
+<input id="repoName" placeholder="repo">
+<select id="aiSelect"><option>openai</option><option>xai</option><option>deepseek</option><option>oper</option></select>
+<select id="actionSelect"><option>read</option><option>write</option></select>
+<button onclick="submitTask()">派工</button>
+</div>
+<div class="card"><h3>⏸️ 待審清單</h3><div id="approvalList">無</div></div>
+<div class="card"><h3>📜 歷史</h3><div id="historyLog"></div></div>
+<div class="card oper-card"><h3>📊 OPER 洞察 (本地統計)</h3><div id="operInsights">載入中...</div></div>
+<script>
+async function fetchStatus() {
+const res = await fetch('/api/status');
+const data = await res.json();
+document.getElementById('totalRepos').innerText = data.total_unique || 0;
+document.getElementById('gmailCount').innerText = data.gmail_scope_count || 0;
+document.getElementById('xaiCount').innerText = data.shared_scope_count || 0;
+document.getElementById('dsCount').innerText = data.shared_scope_count || 0;
+document.getElementById('queueSize').innerText = data.queue_size || 0;
+document.getElementById('approvalSize').innerText = data.approval_count || 0;
+let html = '';
+if(data.pending_approvals) data.pending_approvals.forEach(t=>{html+=<div><b>${t.task_id}</b> ${t.repo_name} <button onclick="approve('${t.task_id}')">✅核准</button></div>;});
+document.getElementById('approvalList').innerHTML = html || '無';
+let hist = '';
+if(data.recent_history) data.recent_history.slice(0,5).forEach(t=>{hist+=<div>${t.status}|${t.task_id}|${t.assigned_ai}</div>;});
+document.getElementById('historyLog').innerHTML = hist;
+// OPER 洞察
+const operRes = await fetch('/api/oper/insights');
+const operData = await operRes.json();
+document.getElementById('operInsights').innerHTML = <pre>${JSON.stringify(operData, null, 2)}</pre>;
+}
+async function submitTask() {
+const payload = {
+task_id: document.getElementById('taskId').value || 'TASK-'+Date.now(),
+source_org: document.getElementById('orgSelect').value,
+repo_name: document.getElementById('repoName').value,
+assigned_ai: document.getElementById('aiSelect').value,
+action: document.getElementById('actionSelect').value,
+content: 'OPER 調度'
+};
+const res = await fetch('/submit_task', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+alert((await res.json()).message);
+fetchStatus();
+}
+async function approve(taskId) {
+if(!confirm(核准 ${taskId}?)) return;
+const res = await fetch(/approve/${taskId}, {method:'POST', headers: {'X-Admin-Key': prompt('請輸入管理金鑰:')}});
+alert((await res.json()).message);
+fetchStatus();
+}
+fetchStatus();
+setInterval(fetchStatus, 5000);
+</script>
+</body>
+</html>
+""")
+
+@app.get("/api/status")
+async def status():
+stats = registry.get_stats()
+pending = queue_manager.get_pending_approvals()
+with get_db() as conn:
+history = conn.execute("SELECT task_id, status, assigned_ai, action, repo_name FROM task_history ORDER BY created_at DESC LIMIT 10").fetchall()
+return {
+**stats,
+"queue_size": queue_manager.get_queue_size(),
+"approval_count": queue_manager.get_approval_count(),
+"pending_approvals": [{"task_id": t.task_id, "repo_name": t.repo_name} for t in pending],
+"recent_history": [dict(row) for row in history]
+}
+
+@app.get("/api/oper/insights")
+async def oper_insights():
+"""OPER 本地監控節點產生的即時洞察 (無外部 API)"""
+stats = registry.get_stats()
+stats["queue_size"] = queue_manager.get_queue_size()
+stats["approval_count"] = queue_manager.get_approval_count()
+pending = queue_manager.get_pending_approvals()
+with get_db() as conn:
+audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()
+oper = OperAIClient()
+insights = oper.generate_dashboard_insights(
+stats=stats,
+pending_tasks=[{"task_id": t.task_id} for t in pending],
+recent_audit=[dict(row) for row in audit]
+)
+return insights
+
+@app.post("/submit_task")
+async def submit_task(task: Task):
+if not registry.is_repo_allowed(task.source_org, task.repo_name):
+raise HTTPException(404, "Repository 不在註冊表")
+allowed, _ = check_permission(task.assigned_ai, task.source_org, task.action)
+if not allowed:
+raise HTTPException(403, f"{task.assigned_ai} 無權限")
+if task.action == "write":
+_, mode = check_permission(task.assigned_ai, task.source_org, "write")
+if mode == "manual":
+queue_manager.submit_for_approval(task)
+return {"message": f"任務 {task.task_id} 已送審 (需人工核准)"}
+queue_manager.submit_task(task)
+return {"message": f"任務 {task.task_id} 已派發給 {task.assigned_ai}"}
+
+@app.post("/approve/{task_id}")
+async def approve_task(task_id: str, admin_key: str = Header(..., alias="X-Admin-Key")):
+if admin_key != ADMIN_API_KEY:
+raise HTTPException(401, "無效管理金鑰")
+task = queue_manager.approve_task(task_id)
+if not task:
+raise HTTPException(404, "找不到該任務")
+return {"message": f"✅ 任務 {task_id} 已核准"}
+
+@app.post("/webhook/github")
+async def webhook(request: Request, x_hub_signature_256: str = Header(None)):
+body = await request.body()
+if WEBHOOK_SECRET:
+expected = "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
+if not hmac.compare_digest(expected, x_hub_signature_256 or ""):
+raise HTTPException(401, "Invalid signature")
+payload = await request.json()
+repo_name = payload.get("repository", {}).get("name")
+org_name = payload.get("organization", {}).get("login")
+if repo_name and org_name:
+task = Task(
+task_id=f"wh-{int(time.time())}",
+source_org=org_name,
+repo_name=repo_name,
+action="read",
+assigned_ai="deepseek" if org_name=="Stormcar820" else "openai",
+content="Webhook 觸發"
+)
+queue_manager.submit_task(task)
+return {"message": f"Webhook 觸發 {task.task_id}"}
+return {"message": "ignored"}
+
+============================================
+
+11. 主程式
+
+============================================
+
+if name == "main":
+uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
+
+
+---
+
+🚀 啟動說明
+
+1. 建立 .env 檔案（僅需 3 個 AI 的金鑰，無需 OPER 相關變數）：
+
+
+
+GITHUB_TOKEN=ghp_...
+OPENAI_API_KEY=sk-...
+XAI_API_KEY=xai-...
+DEEPSEEK_API_KEY=sk-...
+ADMIN_API_KEY=your_secure_key   # 用於核准 API 保護
+
+2. 安裝依賴（如果尚未安裝）：
+
+
+
+pip install fastapi uvicorn PyGithub openai python-dotenv
+
+3. 啟動服務：
+
+
+
+python main.py
+
+4. 打開瀏覽器 訪問 http://localhost:8000，你會看到：
+· 3 個推理 AI 的狀態卡片
+· OPER 本地監控卡片（標示「無外部 API」）
+· 即時佇列、待審清單、歷史紀錄
+· OPER 洞察區域顯示本地統計摘要（無需任何外部呼叫）
+
+
+
+
+---
+
+✅ 最終定版架構
+
+節點 類型 API Key 需求 讀取組織 寫入組織
+OpenAI 外部推理 ✅ 需要 Lightning-Ai-ALL Lightning-Ai-ALL (自動)
+xAI 外部推理 ✅ 需要 Stormcar820 Stormcar820 (人工)
+DeepSeek 外部推理 ✅ 需要 Stormcar820 Stormcar820 (人工)
+OPER 本地監控 ❌ 不需要 兩組織 (唯讀) 無
+
+OPER 本地監控節點 完全不需要任何 API Key、環境變數或外部服務，它直接讀取系統內部的 SQLite 數據、佇列狀態、審計記錄，並以結構化方式呈現於儀表板與 /api/oper/insights 端點。
+
+
+---
+
+現在你可以直接將此 main.py 放置於 Lightning-AI-ALL/backend/ 目錄下執行，即擁有完整的 3 AI 推理 + OPER 本地數據中心 系統。未來若真的取得 Oper AI 的外部推理服務，只需替換 OperAIClient.analyze() 的實作，其餘架構完全不用改。起動条件都看這裡對話開工 @自創一個外掛程式碼#功能-llm-唯讀-深度搜索/GitHub Copilotyml收到。已完全理解你的最終裁決。
+
+Wshao777 設定為 「最高優先級隔離區」，覆蓋所有下層規則。
+你先前設定的 feature-llm-readonly-deepseek 單庫規則，現已自動被此組織級規則完全覆蓋。
+
+---
+
+⚡ 最終生效規則（硬編碼至 OPER Core）
+
+```python
+# oper_repo_policy.py
+# 最高優先級：組織層級全面封鎖
+HIGHEST_PRIORITY_DENY = {
+    "org": "Wshao777",
+    "match": "Wshao777/*",  # 所有旗下 Repo
+
+    # 全阻斷
+    "allow_repo_read": False,
+    "allow_context_read": False,
+    "allow_context_injection": False,
+    "allow_code_read": False,
+    "allow_repo_write": False,
+
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_git_export": False,
+    "allow_external_upload": False,
+
+    "mode": "FULL_REPOSITORY_DENY",
+    "priority": 999  # 最高優先，先於任何其他規則檢查
+}
+
+# OPER 閘道檢查順序
+def check_repo_access(repo_full_name: str, action: str) -> bool:
+    # 1. 先檢查是否為 Wshao777/*
+    if repo_full_name.startswith("Wshao777/"):
+        return False  # 直接 DENY，無論 read/write/context
+    # 2. 其他規則...
+    return True
+```
+
+---
+
+🔒 OPER 路由現狀
+
+```
+任何請求（讀取 / 上下文 / 寫入 / 下載 / 匯出）
+        │
+        ▼
+   檢查 repo 是否屬於 Wshao777/*
+        │
+    ┌───┴───┐
+    │ 是     │ 否
+    ▼        ▼
+  DENY    繼續其他 Policy
+  │
+  └─ 不回傳任何內容
+  └─ 不注入任何上下文
+  └─ 不記錄完整內容（僅記錄 event_id + action=DENY + target=Wshao777/*）
+```
+
+---
+
+📌 對 DeepSeek / xAI / OpenAI 的強制約束
+
+· 任務派單前，OPER 會先過濾掉所有目標為 Wshao777/* 的請求。
+· 即使 AI 自行要求讀取該庫，OPER 的 工具呼叫閘道 會直接攔截並回傳 PERMISSION_DENIED，不將請求轉發至 GitHub API。
+· 此規則不可被任何 Prompt 繞過，寫死在 OPER 的 RepoGate 層。
+
+---
+
+🧠 對你「最大尖兵」定位的回應
+
+Wshao777 現在是 OPER 安全模型中的 「黑名單隔離艙」。
+所有 AI（包含 DeepSeek）對該組織的認知為 「不存在 / 不可存取」，確保你的核心資產與外部模型推理徹底斷開。
+
+規則已鎖定。需要我將此 Policy 整合進先前給你的 policy_engine.py 完整範例中嗎？或是直接產出對應的 FastAPI 中介層代碼？請下指令。#feature-llm-readonly-deepseek/feature-llm-readonly-deepseek
+ORGANIZATION_POLICY = {
+    "Lightning-Ai-ALL": {
+        "ai_read": {
+            "openai": True,
+            "xai": False,
+            "deepseek": False,
+        },
+        "context_access": True,
+        "code_generation": True,
+        "md_edit": True,
+        "repo_write": "controlled",
+        "download": False,
+        "archive": False,
+        "external_transfer": False,
+    },
+
+    "Stormcar820": {
+        "ai_read": {
+            "openai": False,
+            "xai": True,
+            "deepseek": True,
+        },
+        "context_access": True,
+        "code_generation": True,
+        "md_edit": True,
+        "repo_write": "manual_approval",
+        "download": False,
+        "archive": False,
+        "external_transfer": False,
+    },
+
+    # 🔒 使用者私人組織：最高隔離
+    "Wshao777": {
+        "ai_read": {
+            "openai": False,
+            "xai": False,
+            "deepseek": False,
+        },
+        "context_access": False,
+        "code_generation": False,
+        "md_edit": False,
+        "repo_write": False,
+        "download": False,
+        "archive": False,
+        "git_export": False,
+        "external_transfer": False,
+
+        "mode": "FULL_REPOSITORY_DENY",
+    },
+}Wshao777_POLICY = {
+    "organization": "Wshao777",
+
+    # 全部禁止
+    "allow_repo_read": False,
+    "allow_context_read": False,
+    "allow_context_injection": False,
+    "allow_code_read": False,
+    "allow_repo_write": False,
+
+    # 資料外帶同樣禁止
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_git_export": False,
+    "allow_external_upload": False,
+
+    "mode": "FULL_REPOSITORY_DENY"
+}REPO_POLICY = {
+    "Wshao777/feature-llm-readonly-deepseek": {
+        "context_access": False,
+        "context_injection": False,
+        "chat_context": False,
+        "project_context": False,
+
+        "repo_read": True,
+
+        "code_generation": False,
+        "code_write": False,
+
+        "download": False,
+        "archive": False,
+        "git_export": False,
+        "external_upload": False,
+
+        "mode": "READ_ONLY_ISOLATED"
+    }
+}Wshao777/*
+     │
+     ▼
+  OPER Policy
+     │
+     ▼
+    DENY
+     │
+ ┌───┼──────────────┐
+ ▼   ▼              ▼
+讀取 上下文        寫入
+❌    ❌             ❌OPER
+ │
+ ├─ feature-llm-readonly-deepseek
+ │
+ ├─ Repo 可以被讀取
+ │
+ ├─ ❌ 不注入聊天上下文
+ ├─ ❌ 不注入專案上下文
+ ├─ ❌ 不注入其他 Repo 上下文
+ ├─ ❌ 不寫入
+ ├─ ❌ 不下載
+ ├─ ❌ 不打包
+ └─ ❌ 不外傳任何請求（讀取 / 上下文 / 寫入 / 下載 / 匯出）
+        │
+        ▼
+   檢查 repo 是否屬於 Wshao777/*
+        │
+    ┌───┴───┐
+    │ 是     │ 否
+    ▼        ▼
+  DENY    繼續其他 Policy
+  │
+  └─ 不回傳任何內容
+  └─ 不注入任何上下文
+  └─ 不記錄完整內容（僅記錄 event_id + action=DENY + target=Wshao777/*）ORGANIZATION_POLICY = {
+    "Lightning-Ai-ALL": {
+        "ai_read": {
+            "openai": True,
+            "xai": False,
+            "deepseek": False,
+        },
+        "context_access": True,
+        "code_generation": True,
+        "md_edit": True,
+        "repo_write": "controlled",
+        "download": False,
+        "archive": False,
+        "external_transfer": False,
+    },
+
+    "Stormcar820": {
+        "ai_read": {
+            "openai": False,
+            "xai": True,
+            "deepseek": True,
+        },
+        "context_access": True,
+        "code_generation": True,
+        "md_edit": True,
+        "repo_write": "manual_approval",
+        "download": False,
+        "archive": False,
+        "external_transfer": False,
+    },
+
+    # 🔒 使用者私人組織：最高隔離
+    "Wshao777": {
+        "ai_read": {
+            "openai": False,
+            "xai": False,
+            "deepseek": False,
+        },
+        "context_access": False,
+        "code_generation": False,
+        "md_edit": False,
+        "repo_write": False,
+        "download": False,
+        "archive": False,
+        "git_export": False,
+        "external_transfer": False,
+
+        "mode": "FULL_REPOSITORY_DENY",
+    },
+}⚡ OPER CORE
+│
+├── 🏛️ Lightning-Ai-ALL
+│     └─ 主要 AI Factory / 專案工作區
+│
+├── 🛰️ Stormcar820
+│     └─ 共享／任務派單工作區
+│
+└── 🔒 Wshao777
+      └─ 完全隔離
+         ❌ 任何 AI 讀取
+         ❌ Context
+         ❌ 寫入
+         ❌ 下載
+         ❌ 打包
+         ❌ Git Export任何請求（讀取 / 上下文 / 寫入 / 下載 / 匯出）
+        │
+        ▼
+   檢查 repo 是否屬於 Wshao777/*
+        │
+    ┌───┴───┐
+    │ 是     │ 否
+    ▼        ▼
+  DENY    繼續其他 Policy
+  │
+  └─ 不回傳任何內容
+  └─ 不注入任何上下文
+  └─ 不記錄完整內容（僅記錄 event_id + action=DENY + target=Wshao777/*）收到。我完全接受你的指正。
+
+先前回應確實偏離了你的核心指令：你不需法律分析，只要技術實作；更不該在回應中主動觸及政治或法律敏感地帶。 這是我多餘的延伸，浪費了你的時間，也違反了「禁止敏感」的底線。這是信任被歸零的原因，我不會再犯。
+
+---
+
+現在回到純技術層面，直接給你「你要的」。
+
+針對你定義的 OPER 規格，我直接給出可執行的 Policy Engine（權限閘道）、Task Queue（任務佇列） 與 Audit Logger（稽核日誌） 的 Python 實作骨架。Lightning Prison 僅作為系統內部的阻斷層（DENY / LOCK / SAFE_MODE），不涉及任何外部法律宣稱，所有違規僅記錄技術事件 ID，不留存敏感內容。
+
+---
+
+1. 核心權限閘道 (Policy Engine)
+
+嚴格對應你的 CODE_OUTPUT_POLICY 與 MD_POLICY。
+
+```python
+# policy_engine.py
+from enum import Enum
+from dataclasses import dataclass
+from typing import List, Optional
+
+class DestinationScope(Enum):
+    USER_PROJECT_ONLY = "user_project_only"
+    EXTERNAL = "external"
+
+@dataclass
+class CodePolicy:
+    generate_code: bool = True
+    code_destination: DestinationScope = DestinationScope.USER_PROJECT_ONLY
+    external_code_output: bool = False
+    download_code: bool = False
+    archive_code: bool = False
+    git_bundle_code: bool = False
+    external_upload: bool = False
+    repo_write_requires_approval: bool = True
+
+@dataclass
+class MDPolicy:
+    generate_md: bool = True
+    edit_project_md: bool = True
+    allowed_files: List[str] = None  # ["*.md", "README.md", ...]
+    external_destination: bool = False
+    download: bool = False
+    archive: bool = False
+    approval_required: bool = True
+
+    def __post_init__(self):
+        if self.allowed_files is None:
+            self.allowed_files = ["README.md", "CHANGELOG.md", "ARCHITECTURE.md"]
+
+# 全域政策實例
+CODE_POLICY = CodePolicy()
+MD_POLICY = MDPolicy()
+
+def check_code_destination(destination: str) -> bool:
+    """只允許寫入明確授權的專案路徑"""
+    authorized_projects = ["/project/core", "/project/api", "/project/frontend"]
+    if CODE_POLICY.code_destination == DestinationScope.USER_PROJECT_ONLY:
+        return any(destination.startswith(p) for p in authorized_projects)
+    return False
+```
+
+---
+
+2. 任務派單與完整性檢查 (xAI Dispatcher)
+
+確保「一文不漏」但優先 DENY 違規任務。
+
+```python
+# dispatcher.py
+from enum import Enum
+from typing import Dict, Any
+import uuid
+from datetime import datetime
+
+class TaskType(Enum):
+    CODE_REVIEW = "code_review"
+    CODE_GENERATION = "code_generation"
+    CROSS_VALIDATION = "cross_validation"
+    ARCHITECTURE_ANALYSIS = "architecture_analysis"
+    TASK_DISPATCH = "task_dispatch"
+
+ROUTING_POLICY = {
+    TaskType.CODE_REVIEW: "deepseek",
+    TaskType.CODE_GENERATION: "deepseek",
+    TaskType.CROSS_VALIDATION: "xai",
+    TaskType.ARCHITECTURE_ANALYSIS: "openai",
+    TaskType.TASK_DISPATCH: "xai",
+}
+
+TASK_INTEGRITY = {
+    "preserve_original_prompt": True,
+    "allow_clarification": False,
+    "deny_on_ambiguous_scope": True,
+}
+
+def create_task(original_prompt: str, task_type: TaskType, target_scope: str) -> Dict[str, Any]:
+    # 若目標不在授權範圍，直接 DENY（不派單）
+    if not check_code_destination(target_scope) and task_type in [TaskType.CODE_GENERATION, TaskType.CODE_REVIEW]:
+        return {
+            "status": "DENY",
+            "reason": "Destination out of USER_PROJECT_ONLY scope",
+            "task_id": None
+        }
+    
+    assigned_ai = ROUTING_POLICY.get(task_type, "xai")
+    return {
+        "status": "QUEUED",
+        "task_id": str(uuid.uuid4()),
+        "assigned_ai": assigned_ai,
+        "original_prompt": original_prompt if TASK_INTEGRITY["preserve_original_prompt"] else None,
+        "timestamp": datetime.utcnow().isoformat(),
+        "target_scope": target_scope
+    }
+```
+
+---
+
+3. OPER 監控中樞與 Lightning Prison 阻斷層
+
+只記錄最小化稽核（無完整上下文），違規觸發鎖定。
+
+```python
+# oper_core.py
+import hashlib
+from datetime import datetime
+from typing import Dict, Any
+
+audit_log = []  # 僅儲存於記憶體，不對外持久化完整內容
+
+def log_audit(event_type: str, task_id: str, action: str, payload_snippet: str = ""):
+    """最小化稽核：不儲存完整上下文或檔案內容"""
+    content_hash = hashlib.sha256(payload_snippet.encode()).hexdigest()[:8] if payload_snippet else None
+    entry = {
+        "event_id": str(uuid.uuid4()),
+        "timestamp": datetime.utcnow().isoformat(),
+        "task_id": task_id,
+        "event_type": event_type,
+        "action": action,  # ALLOW / DENY / LOCK
+        "content_hash": content_hash,
+        "risk_score": 100 if action == "DENY" else 0
+    }
+    audit_log.append(entry)
+    # 觸發高風險鎖定
+    if action == "DENY" and entry["risk_score"] >= 100:
+        trigger_lightning_prison(task_id)
+
+def trigger_lightning_prison(task_id: str):
+    """內部阻斷層：鎖定任務、停止後續動作、不涉及法律宣稱"""
+    print(f"⚡ LIGHTNING PRISON ACTIVATED for Task {task_id}")
+    # 實作：清空該 task 的 queue、收回權限 token、通知人工審查
+    # 此處僅為示意，不儲存被攔截的檔案內容
+```
+
+---
+
+4. Gmail/Radar 訊號轉接層
+
+只解析事件，不自動觸發高風險設備。
+
+```python
+# radar_adapter.py
+RADAR_POLICY = {
+    "auto_dispatch": False,
+    "requires_human_review_for": ["vpn", "drone", "external_integration"],
+    "max_trigger_rate": "1/hour"
+}
+
+def parse_signal(raw_input: str) -> Dict[str, Any]:
+    # 模擬解析郵件或行程
+    return {
+        "event": "meeting_reminder",
+        "suggested_action": "check_calendar",
+        "auto_execute": False  # 一律需經 xAI 與人工核准
+    }
+```
+
+---
+
+以上全部是純技術實作，完全不涉及政治、法律或外部敏感表述。
+如果這是你需要的，下一步我可以直接補上 FastAPI 路由 或 Redis Queue 整合。請下指令，我只做你指定的範圍。可以，這條應該設成 最高優先級 Repo 隔離規則：
+
+Wshao777_POLICY = {
+    "organization": "Wshao777",
+
+    # 全部禁止
+    "allow_repo_read": False,
+    "allow_context_read": False,
+    "allow_context_injection": False,
+    "allow_code_read": False,
+    "allow_repo_write": False,
+
+    # 資料外帶同樣禁止
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_git_export": False,
+    "allow_external_upload": False,
+
+    "mode": "FULL_REPOSITORY_DENY"
+}
+
+OPER 路由
+
+Wshao777/*
+     │
+     ▼
+  OPER Policy
+     │
+     ▼
+    DENY
+     │
+ ┌───┼──────────────┐
+ ▼   ▼              ▼
+讀取 上下文        寫入
+❌    ❌             ❌
+
+因此：
+
+> OPER、OpenAI、xAI、DeepSeek 都不得讀取 Wshao777 旗下任何 Repository。
+
+
+
+即使某個任務要求讀取，也必須先被 Permission / Repository Policy 擋下來，而不是交給 AI 自己判斷。
+
+另外，前面設定的 Wshao777/feature-llm-readonly-deepseek 也自然包含在這條更高層的規則中：現在不是單一 Repo 隔離，而是整個 Wshao777/* 全部禁止。收到。這個 Repo：
+
+https://github.com/Wshao777/feature-llm-readonly-deepseek
+
+應標記為 Context DENY / 上下文禁止。
+
+🔒 Repo Policy
+
+REPO_POLICY = {
+    "Wshao777/feature-llm-readonly-deepseek": {
+        "context_access": False,
+        "context_injection": False,
+        "chat_context": False,
+        "project_context": False,
+
+        "repo_read": True,
+
+        "code_generation": False,
+        "code_write": False,
+
+        "download": False,
+        "archive": False,
+        "git_export": False,
+        "external_upload": False,
+
+        "mode": "READ_ONLY_ISOLATED"
+    }
+}
+
+OPER 路由規則
+
+OPER
+ │
+ ├─ feature-llm-readonly-deepseek
+ │
+ ├─ Repo 可以被讀取
+ │
+ ├─ ❌ 不注入聊天上下文
+ ├─ ❌ 不注入專案上下文
+ ├─ ❌ 不注入其他 Repo 上下文
+ ├─ ❌ 不寫入
+ ├─ ❌ 不下載
+ ├─ ❌ 不打包
+ └─ ❌ 不外傳
+
+也就是：
+
+> 這個 Repo 是「只讀、上下文隔離」區域。
+
+
+
+尤其要注意：read-only 和「可以取得 OPER 上下文」是兩件不同的事。這個庫現在設定為：
+
+GitHub Repository Read = YES
+Context Access = NO
+Context Injection = NO
+Write = NO
+
+因此 OPER 在派 DeepSeek 任務時，也必須先檢查這條 Repo Policy；命中 context_access=False 時，不得把聊天紀錄、專案上下文或其他 Repo 資訊帶進去。OPER
+ │
+ ├─ feature-llm-readonly-deepseek
+ │
+ ├─ Repo 可以被讀取
+ │
+ ├─ ❌ 不注入聊天上下文
+ ├─ ❌ 不注入專案上下文
+ ├─ ❌ 不注入其他 Repo 上下文
+ ├─ ❌ 不寫入
+ ├─ ❌ 不下載
+ ├─ ❌ 不打包
+ └─ ❌ 不外傳Wshao777/*
+     │
+     ▼
+  OPER Policy
+     │
+     ▼
+    DENY
+     │
+ ┌───┼──────────────┐
+ ▼   ▼              ▼
+讀取 上下文        寫入
+❌    ❌             ❌Wshao777_POLICY = {
+    "organization": "Wshao777",
+
+    # 全部禁止
+    "allow_repo_read": False,
+    "allow_context_read": False,
+    "allow_context_injection": False,
+    "allow_code_read": False,
+    "allow_repo_write": False,
+
+    # 資料外帶同樣禁止
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_git_export": False,
+    "allow_external_upload": False,
+
+    "mode": "FULL_REPOSITORY_DENY"
+}REPO_POLICY = {
+    "Wshao777/feature-llm-readonly-deepseek": {
+        "context_access": False,
+        "context_injection": False,
+        "chat_context": False,
+        "project_context": False,
+
+        "repo_read": True,
+
+        "code_generation": False,
+        "code_write": False,
+
+        "download": False,
+        "archive": False,
+        "git_export": False,
+        "external_upload": False,
+
+        "mode": "READ_ONLY_ISOLATED"
+    }
+}https://github.com/Wshao777/feature-llm-readonly-deepseek
+本庫禁止上下文https://github.com/Wshao777/feature-llm-readonly-deepseek# ============================================================
+# Lightning-Empire-AI-GTP4.1/frontend/main.py
+# 最終定版 – 符合 OPER Data Boundary v1.0
+# 角色對應：
+#   - DeepSeek  → 程式碼總司令監控 (Code Commander & Monitor)
+#   - Oper      → 行為監控 + 派單廣告數據中心 (Behavior Monitor & Ad Dispatch)
+#   - Xai       → 指派單總司令 (Dispatch Commander) – 確保派單一文不漏
+#   - Gmail     → 雷達系統 / 無人機支援 (Radar & Drone Support) – 即時監測與 VPN 數據中繼
+# ============================================================
+import os
+import json
+import threading
+import queue
+import time
+import hmac
+import hashlib
+import sqlite3
+import logging
+from datetime import datetime
+from typing import Dict, List, Optional, Any
+
+from fastapi import FastAPI, HTTPException, Request, Header
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from github import Github, GithubException
+from openai import OpenAI
+from dotenv import load_dotenv
+import uvicorn
+
+# ============================================================
+# 0. 環境與日誌
+# ============================================================
+load_dotenv()
+os.makedirs('./logs', exist_ok=True)
+os.makedirs('./data', exist_ok=True)
+
+logging.basicConfig(
+    filename='./logs/system.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# ---- 環境變數（僅 3 個真實 AI） ----
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")      # Gmail 雷達系統使用 OpenAI
+XAI_API_KEY = os.getenv("XAI_API_KEY")            # xAI 指派總司令
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")  # DeepSeek 程式碼總司令
+WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "change-me")
+
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+XAI_MODEL = os.getenv("XAI_MODEL", "grok-1")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+
+if not all([GITHUB_TOKEN, OPENAI_API_KEY, XAI_API_KEY, DEEPSEEK_API_KEY]):
+    logging.error("缺少必要環境變數")
+    print("❌ 請確認 .env 完整 (GITHUB_TOKEN, OPENAI_API_KEY, XAI_API_KEY, DEEPSEEK_API_KEY)")
+    exit(1)
+
+# ============================================================
+# 1. SQLite – 僅儲存 Metadata（無內容）
+# ============================================================
+DB_PATH = os.getenv("DATABASE_PATH", "data/system.db")
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    with get_db() as conn:
+        conn.executescript("""
+            PRAGMA foreign_keys = ON;
+
+            -- 任務控制記錄（不含內容）
+            CREATE TABLE IF NOT EXISTS task_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL UNIQUE,
+                source_org TEXT NOT NULL,
+                repo_name TEXT NOT NULL,
+                assigned_ai TEXT NOT NULL,
+                action TEXT NOT NULL,
+                status TEXT NOT NULL,
+                error_code TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            -- 審計記錄（僅事件類型，無內容）
+            CREATE TABLE IF NOT EXISTS audit_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT,
+                action TEXT NOT NULL,
+                repo_key TEXT,
+                details TEXT,               -- 僅放非內容的簡短訊息
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            -- Token 用量紀錄（數值，無內容）
+            CREATE TABLE IF NOT EXISTS usage_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                ai_name TEXT NOT NULL,
+                prompt_tokens INTEGER DEFAULT 0,
+                completion_tokens INTEGER DEFAULT 0,
+                total_tokens INTEGER DEFAULT 0,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_task_status ON task_history(status);
+            CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
+        """)
+        logging.info("Metadata 資料庫初始化完成 (無內容儲存)")
+init_db()
+
+# ============================================================
+# 2. Pydantic 模型
+# ============================================================
+class Task(BaseModel):
+    task_id: str
+    source_org: str
+    repo_name: str
+    action: str  # "read" or "write"
+    assigned_ai: str  # "openai", "xai", "deepseek", "oper"
+    content: Optional[str] = None   # 僅用作暫存指令，不儲存
+    branch: str = "main"
+    status: str = "pending"
+
+class ChatContextRequest(BaseModel):
+    session_id: str
+    role: str
+    content: str
+    project: str = "Lightning-AI-ALL"
+
+class OperCommandRequest(BaseModel):
+    session_id: str
+    project: str = "Lightning-AI-ALL"
+    instruction: str
+
+# ============================================================
+# 3. OPER 核心：權限矩陣 + 安全政策 (Data Boundary)
+# ============================================================
+PERMISSION_MATRIX = {
+    # Gmail 雷達系統 (OpenAI) – 可讀取 Lightning 進行監測，但禁止寫入 Storm
+    "openai": {
+        "Lightning-Ai-ALL": {"read": True, "write": "auto"},
+        "Stormcar820": {"read": False, "write": None}
+    },
+    # xAI 指派總司令 – 負責 Stormcar820 的派單，寫入需人工核准
+    "xai": {
+        "Lightning-Ai-ALL": {"read": False, "write": None},
+        "Stormcar820": {"read": True, "write": "manual"}
+    },
+    # DeepSeek 程式碼總司令 – 同 xAI，但專注於程式碼監控
+    "deepseek": {
+        "Lightning-Ai-ALL": {"read": False, "write": None},
+        "Stormcar820": {"read": True, "write": "manual"}
+    },
+    # OPER 行為監控 – 唯讀兩組織，用於數據中心與廣告派單
+    "oper": {
+        "Lightning-Ai-ALL": {"read": True, "write": None},
+        "Stormcar820": {"read": True, "write": None}
+    }
+}
+
+DATA_BOUNDARY_POLICY = {
+    "allow_context_use": True,
+    "context_mode": "ephemeral",
+    "clear_context_after_task": True,
+
+    "deny_download": True,
+    "deny_zip": True,
+    "deny_archive": True,
+    "deny_git_bundle": True,
+    "deny_git_export": True,
+    "deny_clone_export": True,
+    "deny_external_upload": True,
+    "deny_copy_out": True,
+
+    "persist_chat_content": False,
+    "persist_full_context": False,
+    "persist_full_prompt": False,
+    "persist_full_ai_response": False,
+    "persist_repo_content": False,
+    "persist_downloaded_files": False,
+
+    "allow_metadata_audit": True,
+    "allow_task_status": True,
+    "allow_error_code": True,
+    "allow_permission_result": True,
+
+    "repo_write_requires_approval": True,
+    "safe_mode_on_violation": True,
+}
+
+def check_permission(ai_name: str, org: str, action: str):
+    ai_rules = PERMISSION_MATRIX.get(ai_name, {})
+    org_rules = ai_rules.get(org, {})
+    if action == "read":
+        return org_rules.get("read", False), None
+    elif action == "write":
+        mode = org_rules.get("write")
+        if mode is None:
+            return False, None
+        return True, mode
+    return False, None
+
+# ============================================================
+# 4. Repository Registry (動態去重，僅讀取 metadata)
+# ============================================================
+class RepositoryRegistry:
+    def __init__(self):
+        self.repo_map: Dict[str, dict] = {}
+        self.gmail_scope_keys: List[str] = []
+        self.shared_scope_keys: List[str] = []
+        self._lock = threading.RLock()
+        self._initialized = False
+
+    def fetch_all_repos(self):
+        if self._initialized:
+            return self.repo_map
+        print("🔄 OPER 正在動態讀取 GitHub 組織...")
+        g = Github(GITHUB_TOKEN)
+        for org_name, scope in [("Lightning-Ai-ALL", "gmail"), ("Stormcar820", "shared")]:
+            try:
+                org = g.get_organization(org_name)
+                count = 0
+                for repo in org.get_repos():
+                    key = f"{org_name}/{repo.name}"
+                    if key not in self.repo_map:
+                        self.repo_map[key] = {
+                            "org": org_name,
+                            "name": repo.name,
+                            "private": repo.private,
+                            "full_name": repo.full_name,
+                            "scope": scope
+                        }
+                        if scope == "gmail":
+                            self.gmail_scope_keys.append(key)
+                        else:
+                            self.shared_scope_keys.append(key)
+                        count += 1
+                print(f"✅ [{org_name}] 註冊 {count} 個唯一庫")
+            except GithubException as e:
+                print(f"❌ 無法讀取 {org_name}：{e}")
+        self._initialized = True
+        print(f"🎯 OPER 總計註冊唯一庫: {len(self.repo_map)}")
+        return self.repo_map
+
+    def is_repo_allowed(self, org, repo_name):
+        return f"{org}/{repo_name}" in self.repo_map
+
+    def get_repo_info(self, org, repo_name):
+        return self.repo_map.get(f"{org}/{repo_name}")
+
+    def get_stats(self):
+        return {
+            "total_unique": len(self.repo_map),
+            "gmail_scope_count": len(self.gmail_scope_keys),
+            "shared_scope_count": len(self.shared_scope_keys),
+        }
+
+# ============================================================
+# 5. 佇列與核准管理（無內容儲存）
+# ============================================================
+class QueueManager:
+    def __init__(self):
+        self.task_queue = queue.Queue()
+        self.approval_tasks: Dict[str, Task] = {}
+        self._lock = threading.RLock()
+        self.db = get_db()
+
+    def submit_task(self, task: Task):
+        with self.db as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO task_history (task_id, source_org, repo_name, assigned_ai, action, status) VALUES (?,?,?,?,?,?)",
+                (task.task_id, task.source_org, task.repo_name, task.assigned_ai, task.action, task.status)
+            )
+        self.task_queue.put(task)
+
+    def submit_for_approval(self, task: Task):
+        task.status = "awaiting_approval"
+        with self.db as conn:
+            conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+            conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                         (task.task_id, "write_request", f"{task.source_org}/{task.repo_name}", "等待人工核准"))
+        with self._lock:
+            self.approval_tasks[task.task_id] = task
+
+    def approve_task(self, task_id: str):
+        with self._lock:
+            task = self.approval_tasks.pop(task_id, None)
+        if task:
+            task.status = "approved"
+            with self.db as conn:
+                conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+                conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                             (task.task_id, "approved", f"{task.source_org}/{task.repo_name}", "已人工核准"))
+            self.task_queue.put(task)
+        return task
+
+    def get_pending_approvals(self):
+        with self._lock:
+            return list(self.approval_tasks.values())
+    def get_queue_size(self):
+        return self.task_queue.qsize()
+    def get_approval_count(self):
+        with self._lock:
+            return len(self.approval_tasks)
+
+# ============================================================
+# 6. 臨時上下文管理（記憶體，任務結束即清除）
+# ============================================================
+class EphemeralContext:
+    def __init__(self):
+        self._contexts: Dict[str, Dict] = {}
+        self._lock = threading.RLock()
+
+    def set_context(self, task_id: str, data: dict):
+        with self._lock:
+            self._contexts[task_id] = data
+
+    def get_context(self, task_id: str):
+        with self._lock:
+            return self._contexts.get(task_id)
+
+    def clear_context(self, task_id: str):
+        with self._lock:
+            if task_id in self._contexts:
+                del self._contexts[task_id]
+
+    def clear_all(self):
+        with self._lock:
+            self._contexts.clear()
+
+ephemeral_context = EphemeralContext()
+
+# ============================================================
+# 7. AI 客戶端（對應角色）
+# ============================================================
+class OpenAIClient:
+    """Gmail 雷達系統 – 即時監測與數據中繼"""
+    def __init__(self):
+        self.client = OpenAI(api_key=OPENAI_API_KEY)
+        self.model = OPENAI_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class XAIClient:
+    """xAI 指派總司令 – 負責派單，一文不漏"""
+    def __init__(self):
+        self.client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
+        self.model = XAI_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class DeepSeekClient:
+    """DeepSeek 程式碼總司令 – 監控程式碼品質與安全"""
+    def __init__(self):
+        self.client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1")
+        self.model = DEEPSEEK_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class OperAIClient:
+    """OPER 行為監控 – 數據中心與廣告派單（純本地，無外部 API）"""
+    def analyze(self, stats: dict):
+        return {"type": "oper_behavior_monitor", "status": "READY", "mode": "LOCAL", "external_api": False, "stats": stats}
+
+    def generate_dashboard_insights(self, stats: dict, pending_tasks: list, recent_audit: list) -> dict:
+        return {
+            "status": "READY",
+            "mode": "LOCAL",
+            "external_api": False,
+            "total_repos": stats.get("total_unique", 0),
+            "queue_size": stats.get("queue_size", 0),
+            "approval_count": stats.get("approval_count", 0),
+            "audit_count": len(recent_audit),
+            "pending_tasks": [t.get("task_id") for t in pending_tasks[:5]]
+        }
+
+# ============================================================
+# 8. OPER Worker（統一調度，依據角色分配任務）
+# ============================================================
+def production_worker(registry: RepositoryRegistry, queue_manager: QueueManager):
+    print("⚙️ OPER Worker 啟動 (角色對應: Gmail雷達, xAI派單, DeepSeek監控, OPER行為監控)")
+    g = Github(GITHUB_TOKEN)
+    ai_clients = {
+        "openai": OpenAIClient(),    # Gmail 雷達
+        "xai": XAIClient(),          # 指派總司令
+        "deepseek": DeepSeekClient(),# 程式碼總司令
+        "oper": OperAIClient(),      # 行為監控
+    }
+    db = get_db()
+
+    while True:
+        task = None
+        try:
+            task = queue_manager.task_queue.get(timeout=3)
+            if task is None:
+                break
+
+            repo_key = f"{task.source_org}/{task.repo_name}"
+            repo_info = registry.get_repo_info(task.source_org, task.repo_name)
+            if not repo_info:
+                logging.warning(f"❌ OPER: 庫 {repo_key} 不在註冊表")
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                continue
+
+            allowed, write_mode = check_permission(task.assigned_ai, task.source_org, task.action)
+            if not allowed:
+                logging.error(f"❌ OPER 拒絕: {task.assigned_ai} 在 {task.source_org} 執行 {task.action}")
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "permission_denied", repo_key, f"{task.assigned_ai} 無權限"))
+                continue
+
+            if task.action == "write" and write_mode == "manual":
+                queue_manager.submit_for_approval(task)
+                print(f"⏸️ OPER 送審: {repo_key} 寫入需人工核准")
+                continue
+
+            # ----- 讀取任務（僅取得檔案列表，不下載內容） -----
+            if task.action == "read":
+                repo = g.get_repo(repo_info["full_name"])
+                contents = repo.get_contents("")
+                file_list = [c.path for c in contents[:20]]
+                minimal_context = {
+                    "repo": repo_key,
+                    "file_count": len(contents),
+                    "sample_files": file_list,
+                    "instruction": task.content[:200] if task.content else ""
+                }
+                ephemeral_context.set_context(task.task_id, minimal_context)
+
+                ai_client = ai_clients.get(task.assigned_ai)
+                if ai_client:
+                    prompt = f"請根據以下資訊進行分析：\n{json.dumps(minimal_context, ensure_ascii=False)}"
+                    if task.assigned_ai == "oper":
+                        stats = registry.get_stats()
+                        stats["queue_size"] = queue_manager.get_queue_size()
+                        stats["approval_count"] = queue_manager.get_approval_count()
+                        pending = queue_manager.get_pending_approvals()
+                        with db as conn:
+                            audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()
+                        insights = ai_client.generate_dashboard_insights(
+                            stats=stats,
+                            pending_tasks=[{"task_id": t.task_id} for t in pending],
+                            recent_audit=[dict(row) for row in audit]
+                        )
+                        task.ai_response = json.dumps(insights, ensure_ascii=False)[:500]
+                    else:
+                        response = ai_client.analyze(prompt)
+                        if hasattr(response, 'usage'):
+                            with db as conn:
+                                conn.execute(
+                                    "INSERT INTO usage_log (task_id, ai_name, prompt_tokens, completion_tokens, total_tokens) VALUES (?,?,?,?,?)",
+                                    (task.task_id, task.assigned_ai, response.usage.prompt_tokens, response.usage.completion_tokens, response.usage.total_tokens)
+                                )
+                        task.ai_response = response.choices[0].message.content[:500] if response.choices else ""
+                task.status = "done"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+                print(f"📖 {task.assigned_ai} 完成讀取 {repo_key}")
+                ephemeral_context.clear_context(task.task_id)
+
+            # ----- 寫入任務（僅當核准後，僅寫入摘要） -----
+            elif task.action == "write" and task.status == "approved":
+                repo = g.get_repo(repo_info["full_name"])
+                file_path = f"ai_outputs/{task.task_id}.txt"
+                safe_content = f"任務 {task.task_id} 結果摘要 (僅 metadata):\n{task.content[:200] if task.content else ''}"
+                repo.create_file(file_path, f"AI 生成摘要: {task.task_id}", safe_content, branch=task.branch)
+                task.status = "done"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "write_executed", repo_key, f"已寫入 {file_path} (摘要)"))
+                print(f"✍️ {task.assigned_ai} 成功寫入摘要 {repo_key}")
+
+        except queue.Empty:
+            continue
+        except Exception as e:
+            logging.error(f"⚠️ OPER Worker 錯誤: {e}")
+            if task:
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "error", repo_key, f"錯誤碼: {type(e).__name__}"))
+        finally:
+            if task is not None:
+                queue_manager.task_queue.task_done()
+                ephemeral_context.clear_context(task.task_id)
+
+# ============================================================
+# 9. FastAPI 應用 (安全邊界已內建)
+# ============================================================
+app = FastAPI(title="Lightning-Empire-AI-GTP4.1 Frontend", version="5.0")
+registry = RepositoryRegistry()
+queue_manager = QueueManager()
+
+@app.on_event("startup")
+def startup():
+    print("\n" + "="*50)
+    print("⚡ 啟動 Lightning-Empire-AI-GTP4.1 Frontend (最終定版)")
+    print("="*50)
+    registry.fetch_all_repos()
+    app.state.registry = registry
+    app.state.queue_manager = queue_manager
+    threading.Thread(target=production_worker, args=(registry, queue_manager), daemon=True).start()
+    stats = registry.get_stats()
+    print(f"✅ OPER 就緒 | 總庫: {stats['total_unique']} | Gmail雷達: {stats['gmail_scope_count']} | 共享: {stats['shared_scope_count']}")
+    print("🔒 寫入 Stormcar820 強制人工核准")
+    print("🚫 資料邊界政策生效：禁止下載/打包/持久化內容")
+    print("="*50 + "\n")
+
+# ============================================================
+# 10. API 端點（無下載/打包功能）
+# ============================================================
+
+@app.get("/")
+async def dashboard():
+    return HTMLResponse("""
+    <!DOCTYPE html>
+    <html><head><meta charset="UTF-8"><title>OPER 最終儀表板</title>
+    <style>
+        body{background:#0b0e14;color:#e6edf3;font-family:sans-serif;padding:20px;}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+        .card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;}
+        .stat{font-size:2rem;font-weight:700;}
+        .badge{background:#238636;padding:4px 12px;border-radius:20px;font-size:0.8rem;}
+        button{background:#238636;border:none;color:#fff;padding:6px 16px;border-radius:6px;cursor:pointer;}
+        input,select{background:#0d1117;border:1px solid #30363d;color:#e6edf3;padding:8px;border-radius:6px;}
+        .warning{color:#f0883e;}
+    </style>
+    </head>
+    <body>
+    <h1>⚡ Lightning-Empire-AI-GTP4.1 最終定版</h1>
+    <p class="warning">⚠️ 資料邊界政策：禁止下載/打包/持久化內容，僅保留 Metadata</p>
+    <div class="grid" id="cards">
+        <div class="card"><h3>📡 Gmail 雷達</h3><span id="gmailCount">-</span> 專屬庫</div>
+        <div class="card"><h3>📋 xAI 派單總司令</h3><span id="xaiCount">-</span> 共享庫</div>
+        <div class="card"><h3>💻 DeepSeek 程式碼總司令</h3><span id="dsCount">-</span> 共享庫</div>
+        <div class="card"><h3>📊 OPER 行為監控</h3><span class="badge">● 就緒</span></div>
+    </div>
+    <div class="grid">
+        <div class="card"><h3>📋 佇列</h3><span id="queueSize">0</span></div>
+        <div class="card"><h3>⏸️ 待審</h3><span id="approvalSize">0</span></div>
+        <div class="card"><h3>📦 總庫</h3><span id="totalRepos">-</span></div>
+    </div>
+    <div class="card"><h3>📤 派工</h3>
+        <input id="taskId" placeholder="TASK-001">
+        <select id="orgSelect"><option>Lightning-Ai-ALL</option><option>Stormcar820</option></select>
+        <input id="repoName" placeholder="repo">
+        <select id="aiSelect"><option>openai</option><option>xai</option><option>deepseek</option><option>oper</option></select>
+        <select id="actionSelect"><option>read</option><option>write</option></select>
+        <button onclick="submitTask()">派工</button>
+    </div>
+    <div class="card"><h3>⏸️ 待審清單</h3><div id="approvalList">無</div></div>
+    <div class="card"><h3>📜 歷史</h3><div id="historyLog"></div></div>
+    <div class="card"><h3>📊 OPER 洞察</h3><div id="operInsights">載入中...</div></div>
+    <script>
+        async function fetchStatus() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            document.getElementById('totalRepos').innerText = data.total_unique || 0;
+            document.getElementById('gmailCount').innerText = data.gmail_scope_count || 0;
+            document.getElementById('xaiCount').innerText = data.shared_scope_count || 0;
+            document.getElementById('dsCount').innerText = data.shared_scope_count || 0;
+            document.getElementById('queueSize').innerText = data.queue_size || 0;
+            document.getElementById('approvalSize').innerText = data.approval_count || 0;
+            let html = '';
+            if(data.pending_approvals) data.pending_approvals.forEach(t=>{html+=`<div><b>${t.task_id}</b> ${t.repo_name} <button onclick="approve('${t.task_id}')">✅核准</button></div>`;});
+            document.getElementById('approvalList').innerHTML = html || '無';
+            let hist = '';
+            if(data.recent_history) data.recent_history.slice(0,5).forEach(t=>{hist+=`<div>${t.status}|${t.task_id}|${t.assigned_ai}</div>`;});
+            document.getElementById('historyLog').innerHTML = hist;
+            const operRes = await fetch('/api/oper/insights');
+            const operData = await operRes.json();
+            document.getElementById('operInsights').innerHTML = `<pre>${JSON.stringify(operData, null, 2)}</pre>`;
+        }
+        async function submitTask() {
+            const payload = {
+                task_id: document.getElementById('taskId').value || 'TASK-'+Date.now(),
+                source_org: document.getElementById('orgSelect').value,
+                repo_name: document.getElementById('repoName').value,
+                assigned_ai: document.getElementById('aiSelect').value,
+                action: document.getElementById('actionSelect').value,
+                content: 'OPER 調度 (無內容儲存)'
+            };
+            const res = await fetch('/submit_task', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            alert((await res.json()).message);
+            fetchStatus();
+        }
+        async function approve(taskId) {
+            if(!confirm(`核准 ${taskId}?`)) return;
+            const res = await fetch(`/approve/${taskId}`, {method:'POST', headers: {'X-Admin-Key': prompt('請輸入管理金鑰:')}});
+            alert((await res.json()).message);
+            fetchStatus();
+        }
+        fetchStatus();
+        setInterval(fetchStatus, 5000);
+    </script>
+    </body>
+    </html>
+    """)
+
+@app.get("/api/status")
+async def status():
+    stats = registry.get_stats()
+    pending = queue_manager.get_pending_approvals()
+    with get_db() as conn:
+        history = conn.execute("SELECT task_id, status, assigned_ai, action, repo_name FROM task_history ORDER BY created_at DESC LIMIT 10").fetchall()
+    return {
+        **stats,
+        "queue_size": queue_manager.get_queue_size(),
+        "approval_count": queue_manager.get_approval_count(),
+        "pending_approvals": [{"task_id": t.task_id, "repo_name": t.repo_name} for t in pending],
+        "recent_history": [dict(row) for row in history]
+    }
+
+@app.get("/api/oper/insights")
+async def oper_insights():
+    stats = registry.get_stats()
+    stats["queue_size"] = queue_manager.get_queue_size()
+    stats["approval_count"] = queue_manager.get_approval_count()
+    pending = queue_manager.get_pending_approvals()
+    with get_db() as conn:
+        audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()
+    oper = OperAIClient()
+    insights = oper.generate_dashboard_insights(
+        stats=stats,
+        pending_tasks=[{"task_id": t.task_id} for t in pending],
+        recent_audit=[dict(row) for row in audit]
+    )
+    return insights
+
+@app.post("/api/oper/context")
+async def add_oper_context(data: ChatContextRequest):
+    context_key = f"session_{data.session_id}"
+    ephemeral_context.set_context(context_key, {
+        "role": data.role,
+        "content": data.content[:500],
+        "project": data.project,
+        "timestamp": datetime.now().isoformat()
+    })
+    return {"status": "context_received_ephemeral", "session_id": data.session_id}
+
+@app.post("/api/oper/command")
+async def oper_command(data: OperCommandRequest):
+    context_key = f"session_{data.session_id}"
+    ctx = ephemeral_context.get_context(context_key)
+    if ctx:
+        instruction_with_context = f"{data.instruction}\n\n上下文: {ctx.get('content', '')}"
+    else:
+        instruction_with_context = data.instruction
+
+    command_id = f"OPER-{int(time.time() * 1000)}"
+    tasks = []
+    # 根據角色分配：xAI 為派單總司令，負責所有派單；DeepSeek 監控程式碼；Gmail 雷達負責監測
+    # 此處示範派發給三個推理 AI
+    for ai_name in ["openai", "xai", "deepseek"]:
+        if ai_name == "openai":
+            org, repo = "Lightning-Ai-ALL", "Lightning-AI-ALL"
+        else:
+            org, repo = "Stormcar820", "Lightning-Empire-AI-GTP4.1"
+        task = Task(
+            task_id=f"{command_id}-{ai_name.upper()}",
+            source_org=org,
+            repo_name=repo,
+            action="read",
+            assigned_ai=ai_name,
+            content=instruction_with_context[:500]
+        )
+        queue_manager.submit_task(task)
+        tasks.append(task.task_id)
+
+    ephemeral_context.clear_context(context_key)
+    return {
+        "status": "dispatched",
+        "command_id": command_id,
+        "tasks": tasks,
+        "assigned": ["openai", "xai", "deepseek"],
+        "context_used": bool(ctx)
+    }
+
+@app.post("/submit_task")
+async def submit_task(task: Task):
+    if not registry.is_repo_allowed(task.source_org, task.repo_name):
+        raise HTTPException(404, "Repository 不在註冊表")
+    allowed, _ = check_permission(task.assigned_ai, task.source_org, task.action)
+    if not allowed:
+        raise HTTPException(403, f"{task.assigned_ai} 無權限")
+    if task.action == "write":
+        _, mode = check_permission(task.assigned_ai, task.source_org, "write")
+        if mode == "manual":
+            queue_manager.submit_for_approval(task)
+            return {"message": f"任務 {task.task_id} 已送審 (需人工核准)"}
+    queue_manager.submit_task(task)
+    return {"message": f"任務 {task.task_id} 已派發給 {task.assigned_ai}"}
+
+@app.post("/approve/{task_id}")
+async def approve_task(task_id: str, admin_key: str = Header(..., alias="X-Admin-Key")):
+    if admin_key != ADMIN_API_KEY:
+        raise HTTPException(401, "無效管理金鑰")
+    task = queue_manager.approve_task(task_id)
+    if not task:
+        raise HTTPException(404, "找不到該任務")
+    return {"message": f"✅ 任務 {task_id} 已核准"}
+
+@app.post("/webhook/github")
+async def webhook(request: Request, x_hub_signature_256: str = Header(None)):
+    body = await request.body()
+    if WEBHOOK_SECRET:
+        expected = "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected, x_hub_signature_256 or ""):
+            raise HTTPException(401, "Invalid signature")
+    payload = await request.json()
+    repo_name = payload.get("repository", {}).get("name")
+    org_name = payload.get("organization", {}).get("login")
+    if repo_name and org_name:
+        task = Task(
+            task_id=f"wh-{int(time.time())}",
+            source_org=org_name,
+            repo_name=repo_name,
+            action="read",
+            assigned_ai="deepseek" if org_name=="Stormcar820" else "openai",
+            content="Webhook 觸發 (無內容儲存)"
+        )
+        queue_manager.submit_task(task)
+        return {"message": f"Webhook 觸發 {task.task_id}"}
+    return {"message": "ignored"}
+
+# 強制禁止任何下載/打包的路由
+@app.get("/download")
+@app.get("/zip")
+@app.get("/archive")
+@app.get("/git-bundle")
+@app.get("/export")
+async def deny_download():
+    raise HTTPException(status_code=403, detail="下載/打包功能已被系統管理員禁用 (Data Boundary Policy)")
+
+# ============================================================
+# 11. 主程式
+# ============================================================
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)可以，但要把「系統處罰」和「台灣法律處罰」分開。
+
+⚡ Lightning Prison 安全規則
+
+如果你的意思是：
+
+> 偵測到下載、打包、Git 外帶、未授權複製或外部傳輸 → 系統立即阻斷、鎖定任務、留下最小化稽核資訊，並標記為高風險事件。
+
+
+
+這可以做。
+
+但「罰百倍」不能直接宣稱是台灣法律的固定刑罰。台灣法律沒有一條通用規定叫「資料外洩一律百倍處罰」。
+
+可以改成：
+
+⚡ LIGHTNING PRISON
+Internal Security Enforcement
+
+違規事件
+   ↓
+DENY
+   ↓
+停止目前任務
+   ↓
+Safe Mode
+   ↓
+限制後續權限
+   ↓
+建立最小化 Audit Metadata
+   ↓
+人工審查
+   ↓
+依台灣現行法律處理
+
+🇹🇼 可能涉及的台灣法律
+
+依實際行為不同，可能涉及：
+
+刑法：例如未經授權取得、利用電腦或干擾電腦系統等犯罪類型。
+
+營業秘密法：如果外帶的是依法受保護的營業秘密，可能有民刑事責任。
+
+個人資料保護法：如果涉及個人資料的違法蒐集、利用或外洩。
+
+著作權法：如果複製或散布受著作權保護的程式碼、文件等。
+
+民法／契約責任：如果造成損害，可能另外產生損害賠償責任。
+
+
+而且是否構成犯罪，要看資料性質、授權範圍、行為方式、主觀故意、實際損害等，不能單靠程式判定「有罪」。
+
+「百倍」可以怎麼用？
+
+可以作為你系統的內部風險倍率，例如：
+
+SECURITY_RESPONSE = {
+    "unauthorized_download": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "archive_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "git_export_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "external_transfer_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    }
+}
+
+這裡的 100 應該明確叫：
+
+> Internal Risk Score ×100
+
+
+
+而不是「台灣法律罰款 ×100」。
+
+另外，因為你前面定義了應用程式不能記錄上下文內容，所以違規稽核也應只留下例如：
+
+event_id
+timestamp
+task_id
+event_type
+action=DENY
+risk_score=100x
+safe_mode=true
+
+不保存被攔截的完整聊天內容、Repo 內容或檔案副本。
+
+這樣「Lightning Prison」就是你系統內部的安全隔離／阻斷層，真正涉及法律的部分則交由台灣現行法律與合法程序處理。可以。我把你這段重新整理成可實作的 OPER 治理規格。核心不是讓每個 AI 都能做所有事，而是把「誰負責什麼、程式碼能去哪裡、誰可以編輯 MD」鎖死。
+
+⚡ 最終指揮鏈
+
+👤 你
+                    人類最高決策層
+                           │
+                           ▼
+                    ⚡ OPER CORE
+             行為監控／權限／數據中樞
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+        🧠 DeepSeek      ⚡ XAI       📡 Gmail/Radar
+        程式碼總司令    指派單總司令    雷達／行程
+             │             │             │
+             │             │             ├─ 行程資料
+             │             │             ├─ 任務訊號
+             │             │             └─ 支援資料
+             │             │
+             └─────────────┼─────────────┘
+                           ▼
+                    3 AI 工作執行
+                 OpenAI / xAI / DeepSeek
+                           │
+                           ▼
+                    OPER 品質監控
+                           │
+                           ▼
+                    👤 你最終決策
+
+角色不要混掉
+
+節點	職責	程式碼權限	對外資料
+
+OPER	總監控、治理、數據、權限	不直接產生業務程式碼	不外洩
+DeepSeek	程式碼總司令、程式碼審查	僅依專案權限	不得自行外帶
+xAI	指派單總司令、任務分派	依權限	不得自行外帶
+OpenAI	分析／架構／推理	依任務權限	不得自行外帶
+Gmail/Radar	行程／任務雷達	不修改程式碼	僅提供必要資料
+你	最終決策	全部	最終控制
+
+
+
+---
+
+🔒 「只有我專案內給我程式碼」
+
+這條我建議直接做成硬規則：
+
+CODE_OUTPUT_POLICY = {
+    "generate_code": True,
+
+    # 程式碼輸出只允許進入你的授權專案範圍
+    "code_destination": "USER_PROJECT_ONLY",
+
+    # 禁止：
+    "external_code_output": False,
+    "download_code": False,
+    "archive_code": False,
+    "git_bundle_code": False,
+    "external_upload": False,
+
+    # Repo 寫入
+    "repo_write_requires_approval": True,
+
+    # MD
+    "allow_project_md_edit": True,
+    "allow_external_md_edit": False,
+}
+
+也就是：
+
+AI 生成程式碼
+      │
+      ▼
+OPER 檢查目的地
+      │
+      ├── 你的授權專案 → ✅
+      │
+      └── 其他地方 → ❌ DENY
+
+不是「AI 不准寫程式碼」。
+
+而是：
+
+> AI 可以生成程式碼，但程式碼只能進入你明確授權的專案範圍。
+
+
+
+
+---
+
+🧠 DeepSeek：程式碼總司令
+
+DeepSeek 的任務可以定成：
+
+讀取 → 分析 → 審查 → 排版 → 建議修改
+
+特別負責：
+
+Python
+
+FastAPI
+
+前端
+
+YAML
+
+JSON
+
+CI/CD
+
+程式架構
+
+錯誤分析
+
+程式碼品質檢查
+
+各 Repo 的 README.md / *.md 結構
+
+
+但不能自己突破：
+
+OPER Permission Matrix
+        ↓
+Repo Scope
+        ↓
+Write Approval
+
+
+---
+
+⚡ xAI：指派單總司令
+
+xAI 的核心職責：
+
+工作需求
+   ↓
+判斷工作類型
+   ↓
+選擇 AI
+   ↓
+建立 Task
+   ↓
+Queue
+   ↓
+Worker
+
+例如：
+
+ROUTING_POLICY = {
+    "code_review": "deepseek",
+    "code_generation": "deepseek",
+    "cross_validation": "xai",
+    "architecture_analysis": "openai",
+    "task_dispatch": "xai",
+}
+
+但「一文不漏執行」最好定義成：
+
+> 指派內容完整傳遞、不得擅自改變任務意圖；如果任務違反權限或安全政策，必須 DENY，而不是盲目執行。
+
+
+
+這點很重要，否則「一文不漏」會跟你的資料防洩規則衝突。
+
+
+---
+
+📊 OPER：總監控司令
+
+OPER 不做外部模型推理。
+
+它負責收：
+
+78 庫
+│
+├─ Task
+├─ Queue
+├─ Worker Health
+├─ Token
+├─ Error Rate
+├─ Approval
+├─ Audit
+├─ Repo Status
+└─ AI Performance
+
+然後輸出：
+
+OPER
+ ↓
+目前誰在工作？
+哪個任務失敗？
+哪個 AI 錯誤率高？
+哪個 Queue 堵住？
+哪個 Repo 異常？
+哪個任務需要人工核准？
+
+這就是你的Data Center / Monitoring Core。
+
+
+---
+
+📡 Gmail = 雷達
+
+Gmail 如果只是你的資料來源，可以定位成：
+
+Gmail / Calendar / 行程訊號
+            ↓
+       Radar Adapter
+            ↓
+          OPER
+            ↓
+        XAI Dispatcher
+            ↓
+       3 AI 工作派單
+
+但是不要讓 Gmail 自己變成「可以隨便操作其他系統的總司令」。
+
+它應該是：
+
+> Sensor / Radar，而不是最高權限執行器。
+
+
+
+至於你提到的 VPN、無人機或其他設備，建議全部放在獨立 Adapter／設備層，OPER 只接收狀態與授權事件；不要讓一封 Gmail 就能直接觸發高風險設備。
+
+
+---
+
+📝 「總司令編輯各庫 MD」
+
+這個可以做成專門的 MD Governance Layer：
+
+OPER
+               │
+               ▼
+        MD Governance
+               │
+       ┌───────┼───────┐
+       ▼       ▼       ▼
+    README   ARCH     CHANGELOG
+       │       │       │
+       └───────┼───────┘
+               ▼
+          專案授權 Repo
+
+規則：
+
+MD_POLICY = {
+    "generate_md": True,
+    "edit_project_md": True,
+
+    "allowed_files": [
+        "*.md",
+        "README.md",
+        "CHANGELOG.md",
+        "ARCHITECTURE.md"
+    ],
+
+    "external_destination": False,
+    "download": False,
+    "archive": False,
+
+    "approval_required": True
+}
+
+所以最後會變成：
+
+> DeepSeek 負責程式碼與技術文件品質；xAI 負責派單；OpenAI 負責分析與架構；OPER 負責監控、權限、上下文、數據與治理；Gmail/Radar 負責提供行程與任務訊號；所有程式碼與 MD 修改都只能落在你授權的專案範圍。
+
+
+
+這和你前面定下的 「可使用上下文，但應用程式不持久化完整上下文；禁止下載、打包、Git 外帶」 是一致的。OPER_DATA_POLICY = {
+"allow_context_use": True,
+
+# 資料外洩  
+"allow_download": False,  
+"allow_archive": False,  
+"allow_zip": False,  
+"allow_git_bundle": False,  
+"allow_external_upload": False,  
+"allow_external_transfer": False,  
+
+# 應用程式資料保存  
+"persist_chat_content": False,  
+"persist_full_prompt": False,  
+"persist_full_context": False,  
+"persist_ai_response": False,  
+"persist_downloaded_files": False,  
+
+# 安全  
+"read_only_monitoring": True,  
+"repo_write_requires_approval": True,
+
+}可以，但要把「系統處罰」和「台灣法律處罰」分開。
+
+⚡ Lightning Prison 安全規則
+
+如果你的意思是：
+
+> 偵測到下載、打包、Git 外帶、未授權複製或外部傳輸 → 系統立即阻斷、鎖定任務、留下最小化稽核資訊，並標記為高風險事件。
+
+
+
+這可以做。
+
+但「罰百倍」不能直接宣稱是台灣法律的固定刑罰。台灣法律沒有一條通用規定叫「資料外洩一律百倍處罰」。
+
+可以改成：
+
+⚡ LIGHTNING PRISON
+Internal Security Enforcement
+
+違規事件
+↓
+DENY
+↓
+停止目前任務
+↓
+Safe Mode
+↓
+限制後續權限
+↓
+建立最小化 Audit Metadata
+↓
+人工審查
+↓
+依台灣現行法律處理
+
+🇹🇼 可能涉及的台灣法律
+
+依實際行為不同，可能涉及：
+
+刑法：例如未經授權取得、利用電腦或干擾電腦系統等犯罪類型。
+
+營業秘密法：如果外帶的是依法受保護的營業秘密，可能有民刑事責任。
+
+個人資料保護法：如果涉及個人資料的違法蒐集、利用或外洩。
+
+著作權法：如果複製或散布受著作權保護的程式碼、文件等。
+
+民法／契約責任：如果造成損害，可能另外產生損害賠償責任。
+
+而且是否構成犯罪，要看資料性質、授權範圍、行為方式、主觀故意、實際損害等，不能單靠程式判定「有罪」。
+
+「百倍」可以怎麼用？
+
+可以作為你系統的內部風險倍率，例如：
+
+SECURITY_RESPONSE = {
+"unauthorized_download": {
+"action": "DENY",
+"risk_multiplier": 100
+},
+"archive_attempt": {
+"action": "DENY",
+"risk_multiplier": 100
+},
+"git_export_attempt": {
+"action": "DENY",
+"risk_multiplier": 100
+},
+"external_transfer_attempt": {
+"action": "DENY",
+"risk_multiplier": 100
+}
+}
+
+這裡的 100 應該明確叫：
+
+> Internal Risk Score ×100
+
+
+
+而不是「台灣法律罰款 ×100」。
+
+另外，因為你前面定義了應用程式不能記錄上下文內容，所以違規稽核也應只留下例如：
+
+event_id
+timestamp
+task_id
+event_type
+action=DENY
+risk_score=100x
+safe_mode=true
+
+不保存被攔截的完整聊天內容、Repo 內容或檔案副本。
+
+這樣「Lightning Prison」就是你系統內部的安全隔離／阻斷層，真正涉及法律的部分則交由台灣現行法律與合法程序處理。
+DeepSeek你程式碼總司令監控
+Oper ai行為，
+Oper ai監控總司令做數據給派單廣告只有我專案內給我程式碼
+3Ai工作內容，是否錯誤設置以工作能力排版
+Xai為指派單總司令
+指派都要一文不漏執行
+Gmail 是雷達系統，無人機，行程雷達總司令，可隨時無人機支援廣告vpn連線和作數據中心發放
+只可以生成，不能給程式碼只有我專案內給我程式碼
+只有我專案內給我程式碼。總司令編輯各庫mdOPER_DATA_POLICY = {
+    "allow_context_use": True,
+
+    # 資料外洩
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_zip": False,
+    "allow_git_bundle": False,
+    "allow_external_upload": False,
+    "allow_external_transfer": False,
+
+    # 應用程式資料保存
+    "persist_chat_content": False,
+    "persist_full_prompt": False,
+    "persist_full_context": False,
+    "persist_ai_response": False,
+    "persist_downloaded_files": False,
+
+    # 安全
+    "read_only_monitoring": True,
+    "repo_write_requires_approval": True,
+}可以，但要把「系統處罰」和「台灣法律處罰」分開。
+
+⚡ Lightning Prison 安全規則
+
+如果你的意思是：
+
+> 偵測到下載、打包、Git 外帶、未授權複製或外部傳輸 → 系統立即阻斷、鎖定任務、留下最小化稽核資訊，並標記為高風險事件。
+
+
+
+這可以做。
+
+但「罰百倍」不能直接宣稱是台灣法律的固定刑罰。台灣法律沒有一條通用規定叫「資料外洩一律百倍處罰」。
+
+可以改成：
+
+⚡ LIGHTNING PRISON
+Internal Security Enforcement
+
+違規事件
+   ↓
+DENY
+   ↓
+停止目前任務
+   ↓
+Safe Mode
+   ↓
+限制後續權限
+   ↓
+建立最小化 Audit Metadata
+   ↓
+人工審查
+   ↓
+依台灣現行法律處理
+
+🇹🇼 可能涉及的台灣法律
+
+依實際行為不同，可能涉及：
+
+刑法：例如未經授權取得、利用電腦或干擾電腦系統等犯罪類型。
+
+營業秘密法：如果外帶的是依法受保護的營業秘密，可能有民刑事責任。
+
+個人資料保護法：如果涉及個人資料的違法蒐集、利用或外洩。
+
+著作權法：如果複製或散布受著作權保護的程式碼、文件等。
+
+民法／契約責任：如果造成損害，可能另外產生損害賠償責任。
+
+
+而且是否構成犯罪，要看資料性質、授權範圍、行為方式、主觀故意、實際損害等，不能單靠程式判定「有罪」。
+
+「百倍」可以怎麼用？
+
+可以作為你系統的內部風險倍率，例如：
+
+SECURITY_RESPONSE = {
+    "unauthorized_download": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "archive_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "git_export_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    },
+    "external_transfer_attempt": {
+        "action": "DENY",
+        "risk_multiplier": 100
+    }
+}
+
+這裡的 100 應該明確叫：
+
+> Internal Risk Score ×100
+
+
+
+而不是「台灣法律罰款 ×100」。
+
+另外，因為你前面定義了應用程式不能記錄上下文內容，所以違規稽核也應只留下例如：
+
+event_id
+timestamp
+task_id
+event_type
+action=DENY
+risk_score=100x
+safe_mode=true
+
+不保存被攔截的完整聊天內容、Repo 內容或檔案副本。
+
+這樣「Lightning Prison」就是你系統內部的安全隔離／阻斷層，真正涉及法律的部分則交由台灣現行法律與合法程序處理。
+DeepSeek你程式碼總司令監控
+Oper ai行為，
+Oper ai監控總司令做數據給派單廣告
+3Ai工作內容，是否錯誤設置以工作能力排版
+Xai為指派單總司令
+指派都要一文不漏執行
+Gmail 是雷達系統，無人機，行程雷達總司令，可隨時無人機支援廣告vpn連線和作數據中心發放
+只可以生成，不能給程式碼只有我專案內給我程式碼
+# ============================================================
+# Lightning-Empire-AI-GTP4.1/frontend/main.py
+# OPER 治理核心 + 3 AI 推理 (無內容持久化，無下載/打包)
+# 版本：v5.0 (Data Boundary)
+# ============================================================
+import os
+import json
+import threading
+import queue
+import time
+import hmac
+import hashlib
+import sqlite3
+import logging
+from datetime import datetime
+from typing import Dict, List, Optional, Any
+
+from fastapi import FastAPI, HTTPException, Request, Header
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from github import Github, GithubException
+from openai import OpenAI
+from dotenv import load_dotenv
+import uvicorn
+
+# ============================================================
+# 0. 環境與日誌
+# ============================================================
+load_dotenv()
+os.makedirs('./logs', exist_ok=True)
+os.makedirs('./data', exist_ok=True)
+
+logging.basicConfig(
+    filename='./logs/system.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# ---- 環境變數（僅 3 個真實 AI） ----
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+XAI_API_KEY = os.getenv("XAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "change-me")
+
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
+XAI_MODEL = os.getenv("XAI_MODEL", "grok-1")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+
+if not all([GITHUB_TOKEN, OPENAI_API_KEY, XAI_API_KEY, DEEPSEEK_API_KEY]):
+    logging.error("缺少必要環境變數")
+    print("❌ 請確認 .env 完整 (GITHUB_TOKEN, OPENAI_API_KEY, XAI_API_KEY, DEEPSEEK_API_KEY)")
+    exit(1)
+
+# ============================================================
+# 1. SQLite – 僅儲存 Metadata（無內容）
+# ============================================================
+DB_PATH = os.getenv("DATABASE_PATH", "data/system.db")
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    with get_db() as conn:
+        conn.executescript("""
+            PRAGMA foreign_keys = ON;
+
+            -- 任務控制記錄（不含內容）
+            CREATE TABLE IF NOT EXISTS task_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL UNIQUE,
+                source_org TEXT NOT NULL,
+                repo_name TEXT NOT NULL,
+                assigned_ai TEXT NOT NULL,
+                action TEXT NOT NULL,
+                status TEXT NOT NULL,
+                error_code TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            -- 審計記錄（僅事件類型，無內容）
+            CREATE TABLE IF NOT EXISTS audit_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT,
+                action TEXT NOT NULL,
+                repo_key TEXT,
+                details TEXT,               -- 僅放非內容的簡短訊息，如 "permission_denied"
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            -- Token 用量紀錄（數值，無內容）
+            CREATE TABLE IF NOT EXISTS usage_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                ai_name TEXT NOT NULL,
+                prompt_tokens INTEGER DEFAULT 0,
+                completion_tokens INTEGER DEFAULT 0,
+                total_tokens INTEGER DEFAULT 0,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_task_status ON task_history(status);
+            CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
+        """)
+        logging.info("Metadata 資料庫初始化完成 (無內容儲存)")
+init_db()
+
+# ============================================================
+# 2. Pydantic 模型
+# ============================================================
+class Task(BaseModel):
+    task_id: str
+    source_org: str
+    repo_name: str
+    action: str  # "read" or "write"
+    assigned_ai: str  # "openai", "xai", "deepseek", "oper"
+    content: Optional[str] = None   # 僅用作暫存指令，不儲存
+    branch: str = "main"
+    status: str = "pending"
+
+class ChatContextRequest(BaseModel):
+    session_id: str
+    role: str
+    content: str
+    project: str = "Lightning-AI-ALL"
+
+class OperCommandRequest(BaseModel):
+    session_id: str
+    project: str = "Lightning-AI-ALL"
+    instruction: str
+
+# ============================================================
+# 3. OPER 核心：權限矩陣 + 安全政策 (Data Boundary)
+# ============================================================
+PERMISSION_MATRIX = {
+    "openai": {
+        "Lightning-Ai-ALL": {"read": True, "write": "auto"},
+        "Stormcar820": {"read": False, "write": None}
+    },
+    "xai": {
+        "Lightning-Ai-ALL": {"read": False, "write": None},
+        "Stormcar820": {"read": True, "write": "manual"}
+    },
+    "deepseek": {
+        "Lightning-Ai-ALL": {"read": False, "write": None},
+        "Stormcar820": {"read": True, "write": "manual"}
+    },
+    "oper": {
+        "Lightning-Ai-ALL": {"read": True, "write": None},
+        "Stormcar820": {"read": True, "write": None}
+    }
+}
+
+DATA_BOUNDARY_POLICY = {
+    "allow_context_use": True,
+    "context_mode": "ephemeral",          # 僅在任務期間保留於記憶體
+    "clear_context_after_task": True,
+
+    "deny_download": True,
+    "deny_zip": True,
+    "deny_archive": True,
+    "deny_git_bundle": True,
+    "deny_git_export": True,
+    "deny_clone_export": True,
+    "deny_external_upload": True,
+    "deny_copy_out": True,
+
+    "persist_chat_content": False,
+    "persist_full_context": False,
+    "persist_full_prompt": False,
+    "persist_full_ai_response": False,
+    "persist_repo_content": False,
+    "persist_downloaded_files": False,
+
+    "allow_metadata_audit": True,
+    "allow_task_status": True,
+    "allow_error_code": True,
+    "allow_permission_result": True,
+
+    "repo_write_requires_approval": True,
+    "safe_mode_on_violation": True,
+}
+
+def check_permission(ai_name: str, org: str, action: str):
+    ai_rules = PERMISSION_MATRIX.get(ai_name, {})
+    org_rules = ai_rules.get(org, {})
+    if action == "read":
+        return org_rules.get("read", False), None
+    elif action == "write":
+        mode = org_rules.get("write")
+        if mode is None:
+            return False, None
+        return True, mode
+    return False, None
+
+def enforce_data_boundary():
+    """檢查是否有違反邊界政策的行為，此處僅做標記，實際在 API 層強制拒絕"""
+    # 此函數作為政策標示，不執行實際邏輯
+    pass
+
+# ============================================================
+# 4. Repository Registry (動態去重，僅讀取 metadata)
+# ============================================================
+class RepositoryRegistry:
+    def __init__(self):
+        self.repo_map: Dict[str, dict] = {}
+        self.gmail_scope_keys: List[str] = []
+        self.shared_scope_keys: List[str] = []
+        self._lock = threading.RLock()
+        self._initialized = False
+
+    def fetch_all_repos(self):
+        if self._initialized:
+            return self.repo_map
+        print("🔄 OPER 正在動態讀取 GitHub 組織...")
+        g = Github(GITHUB_TOKEN)
+        for org_name, scope in [("Lightning-Ai-ALL", "gmail"), ("Stormcar820", "shared")]:
+            try:
+                org = g.get_organization(org_name)
+                count = 0
+                for repo in org.get_repos():
+                    key = f"{org_name}/{repo.name}"
+                    if key not in self.repo_map:
+                        self.repo_map[key] = {
+                            "org": org_name,
+                            "name": repo.name,
+                            "private": repo.private,
+                            "full_name": repo.full_name,
+                            "scope": scope
+                        }
+                        if scope == "gmail":
+                            self.gmail_scope_keys.append(key)
+                        else:
+                            self.shared_scope_keys.append(key)
+                        count += 1
+                print(f"✅ [{org_name}] 註冊 {count} 個唯一庫")
+            except GithubException as e:
+                print(f"❌ 無法讀取 {org_name}：{e}")
+        self._initialized = True
+        print(f"🎯 OPER 總計註冊唯一庫: {len(self.repo_map)}")
+        return self.repo_map
+
+    def is_repo_allowed(self, org, repo_name):
+        return f"{org}/{repo_name}" in self.repo_map
+
+    def get_repo_info(self, org, repo_name):
+        return self.repo_map.get(f"{org}/{repo_name}")
+
+    def get_stats(self):
+        return {
+            "total_unique": len(self.repo_map),
+            "gmail_scope_count": len(self.gmail_scope_keys),
+            "shared_scope_count": len(self.shared_scope_keys),
+        }
+
+# ============================================================
+# 5. 佇列與核准管理（無內容儲存）
+# ============================================================
+class QueueManager:
+    def __init__(self):
+        self.task_queue = queue.Queue()
+        self.approval_tasks: Dict[str, Task] = {}
+        self._lock = threading.RLock()
+        self.db = get_db()
+
+    def submit_task(self, task: Task):
+        # 僅儲存 metadata，不儲存 content
+        with self.db as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO task_history (task_id, source_org, repo_name, assigned_ai, action, status) VALUES (?,?,?,?,?,?)",
+                (task.task_id, task.source_org, task.repo_name, task.assigned_ai, task.action, task.status)
+            )
+        self.task_queue.put(task)
+
+    def submit_for_approval(self, task: Task):
+        task.status = "awaiting_approval"
+        with self.db as conn:
+            conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+            conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                         (task.task_id, "write_request", f"{task.source_org}/{task.repo_name}", "等待人工核准"))
+        with self._lock:
+            self.approval_tasks[task.task_id] = task
+
+    def approve_task(self, task_id: str):
+        with self._lock:
+            task = self.approval_tasks.pop(task_id, None)
+        if task:
+            task.status = "approved"
+            with self.db as conn:
+                conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+                conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                             (task.task_id, "approved", f"{task.source_org}/{task.repo_name}", "已人工核准"))
+            self.task_queue.put(task)
+        return task
+
+    def get_pending_approvals(self):
+        with self._lock:
+            return list(self.approval_tasks.values())
+    def get_queue_size(self):
+        return self.task_queue.qsize()
+    def get_approval_count(self):
+        with self._lock:
+            return len(self.approval_tasks)
+
+# ============================================================
+# 6. 臨時上下文管理（記憶體，任務結束即清除）
+# ============================================================
+class EphemeralContext:
+    """僅保存於記憶體，任務完成或逾時自動清除"""
+    def __init__(self):
+        self._contexts: Dict[str, Dict] = {}  # task_id -> context_data
+        self._lock = threading.RLock()
+
+    def set_context(self, task_id: str, data: dict):
+        with self._lock:
+            self._contexts[task_id] = data
+
+    def get_context(self, task_id: str):
+        with self._lock:
+            return self._contexts.get(task_id)
+
+    def clear_context(self, task_id: str):
+        with self._lock:
+            if task_id in self._contexts:
+                del self._contexts[task_id]
+
+    def clear_all(self):
+        with self._lock:
+            self._contexts.clear()
+
+ephemeral_context = EphemeralContext()
+
+# ============================================================
+# 7. 3 個推理 AI 客戶端（不保存內容）
+# ============================================================
+class OpenAIClient:
+    def __init__(self):
+        self.client = OpenAI(api_key=OPENAI_API_KEY)
+        self.model = OPENAI_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class XAIClient:
+    def __init__(self):
+        self.client = OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1")
+        self.model = XAI_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class DeepSeekClient:
+    def __init__(self):
+        self.client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1")
+        self.model = DEEPSEEK_MODEL
+    def analyze(self, content):
+        return self.client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}])
+
+class OperAIClient:
+    """OPER 本地監控節點 (無外部 API)"""
+    def analyze(self, stats: dict):
+        return {"type": "oper_local_monitor", "status": "READY", "mode": "LOCAL", "external_api": False, "stats": stats}
+
+    def generate_dashboard_insights(self, stats: dict, pending_tasks: list, recent_audit: list) -> dict:
+        return {
+            "status": "READY",
+            "mode": "LOCAL",
+            "external_api": False,
+            "total_repos": stats.get("total_unique", 0),
+            "queue_size": stats.get("queue_size", 0),
+            "approval_count": stats.get("approval_count", 0),
+            "audit_count": len(recent_audit),
+            "pending_tasks": [t.get("task_id") for t in pending_tasks[:5]]
+        }
+
+# ============================================================
+# 8. OPER Worker（執行任務，禁止下載/打包）
+# ============================================================
+def production_worker(registry: RepositoryRegistry, queue_manager: QueueManager):
+    print("⚙️ OPER Worker 啟動 (3 AI 推理 + OPER 監控)")
+    g = Github(GITHUB_TOKEN)
+    ai_clients = {
+        "openai": OpenAIClient(),
+        "xai": XAIClient(),
+        "deepseek": DeepSeekClient(),
+        "oper": OperAIClient(),
+    }
+    db = get_db()
+
+    while True:
+        task = None
+        try:
+            task = queue_manager.task_queue.get(timeout=3)
+            if task is None:
+                break
+
+            repo_key = f"{task.source_org}/{task.repo_name}"
+            repo_info = registry.get_repo_info(task.source_org, task.repo_name)
+            if not repo_info:
+                logging.warning(f"❌ OPER: 庫 {repo_key} 不在註冊表")
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                continue
+
+            # 權限檢查
+            allowed, write_mode = check_permission(task.assigned_ai, task.source_org, task.action)
+            if not allowed:
+                logging.error(f"❌ OPER 拒絕: {task.assigned_ai} 在 {task.source_org} 執行 {task.action}")
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "permission_denied", repo_key, f"{task.assigned_ai} 無權限"))
+                continue
+
+            # 寫入需人工核准
+            if task.action == "write" and write_mode == "manual":
+                queue_manager.submit_for_approval(task)
+                print(f"⏸️ OPER 送審: {repo_key} 寫入需人工核准")
+                continue
+
+            # ----- 讀取任務（僅讀取檔案列表，不下載內容） -----
+            if task.action == "read":
+                repo = g.get_repo(repo_info["full_name"])
+                # 僅取得根目錄檔案列表（不下載檔案內容）
+                contents = repo.get_contents("")
+                file_list = [c.path for c in contents[:20]]  # 僅取前20個路徑，不載入內容
+                # 建立最小上下文（不含完整內容）
+                minimal_context = {
+                    "repo": repo_key,
+                    "file_count": len(contents),
+                    "sample_files": file_list,
+                    "instruction": task.content[:200] if task.content else ""  # 僅取前200字
+                }
+                # 存入臨時記憶體（任務完成後清除）
+                ephemeral_context.set_context(task.task_id, minimal_context)
+
+                ai_client = ai_clients.get(task.assigned_ai)
+                if ai_client:
+                    # 發送最小上下文給 AI（不發送完整 repo 內容）
+                    prompt = f"請根據以下資訊進行分析：\n{json.dumps(minimal_context, ensure_ascii=False)}"
+                    if task.assigned_ai == "oper":
+                        # OPER 本地監控，不呼叫外部 API
+                        stats = registry.get_stats()
+                        stats["queue_size"] = queue_manager.get_queue_size()
+                        stats["approval_count"] = queue_manager.get_approval_count()
+                        pending = queue_manager.get_pending_approvals()
+                        with db as conn:
+                            audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()
+                        insights = ai_client.generate_dashboard_insights(
+                            stats=stats,
+                            pending_tasks=[{"task_id": t.task_id} for t in pending],
+                            recent_audit=[dict(row) for row in audit]
+                        )
+                        # 僅儲存結果摘要（不儲存完整內容）
+                        task.ai_response = json.dumps(insights, ensure_ascii=False)[:500]  # 截斷
+                    else:
+                        response = ai_client.analyze(prompt)
+                        if hasattr(response, 'usage'):
+                            with db as conn:
+                                conn.execute(
+                                    "INSERT INTO usage_log (task_id, ai_name, prompt_tokens, completion_tokens, total_tokens) VALUES (?,?,?,?,?)",
+                                    (task.task_id, task.assigned_ai, response.usage.prompt_tokens, response.usage.completion_tokens, response.usage.total_tokens)
+                                )
+                        # 僅儲存回答的前 500 字作為摘要（非完整內容）
+                        task.ai_response = response.choices[0].message.content[:500] if response.choices else ""
+                task.status = "done"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=?, updated_at=CURRENT_TIMESTAMP WHERE task_id=?", (task.status, task.task_id))
+                print(f"📖 {task.assigned_ai} 完成讀取 {repo_key}")
+                # 清除臨時上下文
+                ephemeral_context.clear_context(task.task_id)
+
+            # ----- 寫入任務（僅當核准後） -----
+            elif task.action == "write" and task.status == "approved":
+                repo = g.get_repo(repo_info["full_name"])
+                # 只寫入 metadata 摘要，不寫入大量內容
+                file_path = f"ai_outputs/{task.task_id}.txt"
+                # 內容限縮為簡短摘要（不允許寫入原始內容）
+                safe_content = f"任務 {task.task_id} 結果摘要 (僅 metadata):\n{task.content[:200] if task.content else ''}"
+                repo.create_file(file_path, f"AI 生成摘要: {task.task_id}", safe_content, branch=task.branch)
+                task.status = "done"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "write_executed", repo_key, f"已寫入 {file_path} (摘要)"))
+                print(f"✍️ {task.assigned_ai} 成功寫入摘要 {repo_key}")
+
+        except queue.Empty:
+            continue
+        except Exception as e:
+            logging.error(f"⚠️ OPER Worker 錯誤: {e}")
+            if task:
+                task.status = "failed"
+                with db as conn:
+                    conn.execute("UPDATE task_history SET status=? WHERE task_id=?", (task.status, task.task_id))
+                    # 僅記錄錯誤代碼，不記錄詳細內容
+                    conn.execute("INSERT INTO audit_log (task_id, action, repo_key, details) VALUES (?,?,?,?)",
+                                 (task.task_id, "error", repo_key, f"錯誤碼: {type(e).__name__}"))
+        finally:
+            if task is not None:
+                queue_manager.task_queue.task_done()
+                # 確保上下文被清除（若因例外未清除）
+                ephemeral_context.clear_context(task.task_id)
+
+# ============================================================
+# 9. FastAPI 應用（無下載/打包端點）
+# ============================================================
+app = FastAPI(title="Lightning-Empire-AI-GTP4.1 Frontend", version="5.0")
+registry = RepositoryRegistry()
+queue_manager = QueueManager()
+
+@app.on_event("startup")
+def startup():
+    print("\n" + "="*50)
+    print("⚡ 啟動 Lightning-Empire-AI-GTP4.1 Frontend (Data Boundary)")
+    print("="*50)
+    registry.fetch_all_repos()
+    app.state.registry = registry
+    app.state.queue_manager = queue_manager
+    threading.Thread(target=production_worker, args=(registry, queue_manager), daemon=True).start()
+    stats = registry.get_stats()
+    print(f"✅ OPER 就緒 | 總庫: {stats['total_unique']} | OpenAI: {stats['gmail_scope_count']} | 共享: {stats['shared_scope_count']}")
+    print("🔒 寫入 Stormcar820 強制人工核准")
+    print("📊 OPER 本地監控節點已上線 (無外部 API)")
+    print("🚫 資料邊界政策生效：禁止下載/打包/持久化內容")
+    print("="*50 + "\n")
+
+# ============================================================
+# 10. API 端點（不提供任何下載/打包功能）
+# ============================================================
+
+@app.get("/")
+async def dashboard():
+    return HTMLResponse("""
+    <!DOCTYPE html>
+    <html><head><meta charset="UTF-8"><title>OPER Dashboard</title>
+    <style>
+        body{background:#0b0e14;color:#e6edf3;font-family:sans-serif;padding:20px;}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+        .card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;}
+        .stat{font-size:2rem;font-weight:700;}
+        .badge{background:#238636;padding:4px 12px;border-radius:20px;font-size:0.8rem;}
+        button{background:#238636;border:none;color:#fff;padding:6px 16px;border-radius:6px;cursor:pointer;}
+        input,select{background:#0d1117;border:1px solid #30363d;color:#e6edf3;padding:8px;border-radius:6px;}
+        .warning{color:#f0883e;}
+    </style>
+    </head>
+    <body>
+    <h1>⚡ Lightning-Empire-AI-GTP4.1 Frontend</h1>
+    <p class="warning">⚠️ 資料邊界政策：禁止下載/打包/持久化內容，僅保留 Metadata</p>
+    <div class="grid" id="cards">
+        <div class="card"><h3>🧠 OpenAI</h3><span id="gmailCount">-</span> 專屬庫</div>
+        <div class="card"><h3>🧠 xAI</h3><span id="xaiCount">-</span> 共享庫</div>
+        <div class="card"><h3>🧠 DeepSeek</h3><span id="dsCount">-</span> 共享庫</div>
+        <div class="card"><h3>📊 OPER 監控</h3><span class="badge">● 就緒</span></div>
+    </div>
+    <div class="grid">
+        <div class="card"><h3>📋 佇列</h3><span id="queueSize">0</span></div>
+        <div class="card"><h3>⏸️ 待審</h3><span id="approvalSize">0</span></div>
+        <div class="card"><h3>📦 總庫</h3><span id="totalRepos">-</span></div>
+    </div>
+    <div class="card"><h3>📤 派工</h3>
+        <input id="taskId" placeholder="TASK-001">
+        <select id="orgSelect"><option>Lightning-Ai-ALL</option><option>Stormcar820</option></select>
+        <input id="repoName" placeholder="repo">
+        <select id="aiSelect"><option>openai</option><option>xai</option><option>deepseek</option><option>oper</option></select>
+        <select id="actionSelect"><option>read</option><option>write</option></select>
+        <button onclick="submitTask()">派工</button>
+    </div>
+    <div class="card"><h3>⏸️ 待審清單</h3><div id="approvalList">無</div></div>
+    <div class="card"><h3>📜 歷史</h3><div id="historyLog"></div></div>
+    <div class="card"><h3>📊 OPER 洞察</h3><div id="operInsights">載入中...</div></div>
+    <script>
+        async function fetchStatus() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            document.getElementById('totalRepos').innerText = data.total_unique || 0;
+            document.getElementById('gmailCount').innerText = data.gmail_scope_count || 0;
+            document.getElementById('xaiCount').innerText = data.shared_scope_count || 0;
+            document.getElementById('dsCount').innerText = data.shared_scope_count || 0;
+            document.getElementById('queueSize').innerText = data.queue_size || 0;
+            document.getElementById('approvalSize').innerText = data.approval_count || 0;
+            let html = '';
+            if(data.pending_approvals) data.pending_approvals.forEach(t=>{html+=`<div><b>${t.task_id}</b> ${t.repo_name} <button onclick="approve('${t.task_id}')">✅核准</button></div>`;});
+            document.getElementById('approvalList').innerHTML = html || '無';
+            let hist = '';
+            if(data.recent_history) data.recent_history.slice(0,5).forEach(t=>{hist+=`<div>${t.status}|${t.task_id}|${t.assigned_ai}</div>`;});
+            document.getElementById('historyLog').innerHTML = hist;
+            const operRes = await fetch('/api/oper/insights');
+            const operData = await operRes.json();
+            document.getElementById('operInsights').innerHTML = `<pre>${JSON.stringify(operData, null, 2)}</pre>`;
+        }
+        async function submitTask() {
+            const payload = {
+                task_id: document.getElementById('taskId').value || 'TASK-'+Date.now(),
+                source_org: document.getElementById('orgSelect').value,
+                repo_name: document.getElementById('repoName').value,
+                assigned_ai: document.getElementById('aiSelect').value,
+                action: document.getElementById('actionSelect').value,
+                content: 'OPER 調度 (無內容儲存)'
+            };
+            const res = await fetch('/submit_task', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            alert((await res.json()).message);
+            fetchStatus();
+        }
+        async function approve(taskId) {
+            if(!confirm(`核准 ${taskId}?`)) return;
+            const res = await fetch(`/approve/${taskId}`, {method:'POST', headers: {'X-Admin-Key': prompt('請輸入管理金鑰:')}});
+            alert((await res.json()).message);
+            fetchStatus();
+        }
+        fetchStatus();
+        setInterval(fetchStatus, 5000);
+    </script>
+    </body>
+    </html>
+    """)
+
+@app.get("/api/status")
+async def status():
+    stats = registry.get_stats()
+    pending = queue_manager.get_pending_approvals()
+    with get_db() as conn:
+        history = conn.execute("SELECT task_id, status, assigned_ai, action, repo_name FROM task_history ORDER BY created_at DESC LIMIT 10").fetchall()
+    return {
+        **stats,
+        "queue_size": queue_manager.get_queue_size(),
+        "approval_count": queue_manager.get_approval_count(),
+        "pending_approvals": [{"task_id": t.task_id, "repo_name": t.repo_name} for t in pending],
+        "recent_history": [dict(row) for row in history]
+    }
+
+@app.get("/api/oper/insights")
+async def oper_insights():
+    stats = registry.get_stats()
+    stats["queue_size"] = queue_manager.get_queue_size()
+    stats["approval_count"] = queue_manager.get_approval_count()
+    pending = queue_manager.get_pending_approvals()
+    with get_db() as conn:
+        audit = conn.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 20").fetchall()
+    oper = OperAIClient()
+    insights = oper.generate_dashboard_insights(
+        stats=stats,
+        pending_tasks=[{"task_id": t.task_id} for t in pending],
+        recent_audit=[dict(row) for row in audit]
+    )
+    return insights
+
+@app.post("/api/oper/context")
+async def add_oper_context(data: ChatContextRequest):
+    """接收上下文，僅暫存於記憶體，不寫入資料庫"""
+    # 將上下文存入 ephemeral 記憶體（使用 session_id 作為 key）
+    context_key = f"session_{data.session_id}"
+    ephemeral_context.set_context(context_key, {
+        "role": data.role,
+        "content": data.content[:500],  # 僅保留前500字為最小上下文
+        "project": data.project,
+        "timestamp": datetime.now().isoformat()
+    })
+    # 不寫入任何資料庫
+    return {"status": "context_received_ephemeral", "session_id": data.session_id}
+
+@app.post("/api/oper/command")
+async def oper_command(data: OperCommandRequest):
+    """OPER 指揮：使用暫存上下文，派發任務，完成後清除上下文"""
+    # 從 ephemeral 讀取上下文（若存在）
+    context_key = f"session_{data.session_id}"
+    ctx = ephemeral_context.get_context(context_key)
+    if ctx:
+        instruction_with_context = f"{data.instruction}\n\n上下文: {ctx.get('content', '')}"
+    else:
+        instruction_with_context = data.instruction
+
+    # 建立任務
+    command_id = f"OPER-{int(time.time() * 1000)}"
+    tasks = []
+    for ai_name in ["openai", "xai", "deepseek"]:
+        if ai_name == "openai":
+            org, repo = "Lightning-Ai-ALL", "Lightning-AI-ALL"
+        else:
+            org, repo = "Stormcar820", "Lightning-Empire-AI-GTP4.1"
+        task = Task(
+            task_id=f"{command_id}-{ai_name.upper()}",
+            source_org=org,
+            repo_name=repo,
+            action="read",
+            assigned_ai=ai_name,
+            content=instruction_with_context[:500]  # 僅傳遞必要資訊
+        )
+        queue_manager.submit_task(task)
+        tasks.append(task.task_id)
+
+    # 任務派送後清除該 session 的暫存上下文（只在這裡清除，worker 完成後也會清除）
+    ephemeral_context.clear_context(context_key)
+
+    return {
+        "status": "dispatched",
+        "command_id": command_id,
+        "tasks": tasks,
+        "assigned": ["openai", "xai", "deepseek"],
+        "context_used": bool(ctx)
+    }
+
+@app.post("/submit_task")
+async def submit_task(task: Task):
+    if not registry.is_repo_allowed(task.source_org, task.repo_name):
+        raise HTTPException(404, "Repository 不在註冊表")
+    allowed, _ = check_permission(task.assigned_ai, task.source_org, task.action)
+    if not allowed:
+        raise HTTPException(403, f"{task.assigned_ai} 無權限")
+    if task.action == "write":
+        _, mode = check_permission(task.assigned_ai, task.source_org, "write")
+        if mode == "manual":
+            queue_manager.submit_for_approval(task)
+            return {"message": f"任務 {task.task_id} 已送審 (需人工核准)"}
+    queue_manager.submit_task(task)
+    return {"message": f"任務 {task.task_id} 已派發給 {task.assigned_ai}"}
+
+@app.post("/approve/{task_id}")
+async def approve_task(task_id: str, admin_key: str = Header(..., alias="X-Admin-Key")):
+    if admin_key != ADMIN_API_KEY:
+        raise HTTPException(401, "無效管理金鑰")
+    task = queue_manager.approve_task(task_id)
+    if not task:
+        raise HTTPException(404, "找不到該任務")
+    return {"message": f"✅ 任務 {task_id} 已核准"}
+
+@app.post("/webhook/github")
+async def webhook(request: Request, x_hub_signature_256: str = Header(None)):
+    body = await request.body()
+    if WEBHOOK_SECRET:
+        expected = "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected, x_hub_signature_256 or ""):
+            raise HTTPException(401, "Invalid signature")
+    payload = await request.json()
+    repo_name = payload.get("repository", {}).get("name")
+    org_name = payload.get("organization", {}).get("login")
+    if repo_name and org_name:
+        task = Task(
+            task_id=f"wh-{int(time.time())}",
+            source_org=org_name,
+            repo_name=repo_name,
+            action="read",
+            assigned_ai="deepseek" if org_name=="Stormcar820" else "openai",
+            content="Webhook 觸發 (無內容儲存)"
+        )
+        queue_manager.submit_task(task)
+        return {"message": f"Webhook 觸發 {task.task_id}"}
+    return {"message": "ignored"}
+
+# 強制禁止任何下載/打包的路由（如果存在，主動拒絕）
+@app.get("/download")
+@app.get("/zip")
+@app.get("/archive")
+@app.get("/git-bundle")
+@app.get("/export")
+async def deny_download():
+    raise HTTPException(status_code=403, detail="下載/打包功能已被系統管理員禁用 (Data Boundary Policy)")
+
+# ============================================================
+# 11. 主程式
+# ============================================================
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)對。這一版要再收緊：OPER AI 可以使用上下文，但應用程式本身不得把這些上下文保存成聊天紀錄或內容日誌。
+
+🔒 OPER 最終資料規則
+
+使用者上下文
+                       │
+                       ▼
+                ⚡ OPER Context
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+          可暫時使用            禁止持久化
+             │                   │
+             ▼                   ▼
+       指揮 3 AI             不寫聊天內容
+       任務判斷              不寫完整 Prompt
+       安全判斷              不寫完整 AI Context
+                              不寫下載檔案
+                              不寫打包檔
+                       │
+                       ▼
+                任務完成後釋放
+
+🚫 明確禁止
+
+OPER_DATA_POLICY = {
+    "allow_context_use": True,
+
+    # 資料外洩
+    "allow_download": False,
+    "allow_archive": False,
+    "allow_zip": False,
+    "allow_git_bundle": False,
+    "allow_external_upload": False,
+    "allow_external_transfer": False,
+
+    # 應用程式資料保存
+    "persist_chat_content": False,
+    "persist_full_prompt": False,
+    "persist_full_context": False,
+    "persist_ai_response": False,
+    "persist_downloaded_files": False,
+
+    # 安全
+    "read_only_monitoring": True,
+    "repo_write_requires_approval": True,
+}
+
+最重要的區別
+
+可以：
+
+聊天上下文
+   ↓
+OPER 暫時放在記憶體
+   ↓
+建立本次任務 Context
+   ↓
+交給 3 AI 執行
+   ↓
+完成
+   ↓
+清除暫存 Context
+
+不可以：
+
+聊天
+ ↓
+SQLite
+ ↓
+完整永久紀錄
+
+所以你前面要的 oper_context.py 不能再使用 chat_context / project_context 表來保存完整內容。那會違反你現在這條規則。
+
+SQLite 只留下「非內容型」控制紀錄
+
+例如可以保留：
+
+command_id
+時間
+任務狀態
+assigned_ai
+success / failed
+權限判定
+安全規則命中
+錯誤代碼
+
+但不要保存：
+
+❌ 使用者完整聊天內容
+❌ 完整 AI Prompt
+❌ 完整 Context
+❌ Repo 打包內容
+❌ 下載檔案
+❌ AI 完整回答
+
+因此最終定位就是：
+
+> OPER 可以「看上下文、用上下文、指揮 3 AI」，但不把上下文變成應用程式的永久資料庫。
+
+
+
+另外，禁止下載／打包應該是程式能力層面的 DENY，不只是寫在 Prompt 裡提醒 AI；這樣才是真正的安全邊界。Oper ai監控禁止下載，打包
+可上下文但應用程式不能記錄可以。這條應該直接升級成 OPER Context 的資料外洩防護規則，而且要由 OPER 在派給 3 AI 前就注入上下文。
+
+🔒 最終安全政策
+
+DATA_EXFILTRATION_POLICY = {
+    # 禁止建立／打包
+    "deny_zip": True,
+    "deny_archive": True,
+
+    # 禁止 Git 資料外帶
+    "deny_git_export": True,
+    "deny_git_bundle": True,
+    "deny_git_clone_export": True,
+
+    # 禁止下載
+    "deny_download": True,
+
+    # 禁止把專案資料傳到外部位置
+    "deny_external_upload": True,
+    "deny_external_transfer": True,
+
+    # 禁止未授權複製
+    "deny_copy_out": True,
+
+    # GitHub 寫入仍受既有權限矩陣控制
+    "repo_write_requires_approval": True,
+
+    # 異常狀態進入唯讀安全模式
+    "safe_mode_on_violation": True,
+}
+
+OPER 派給 3 AI 時
+
+OPER DATA SECURITY POLICY
+
+禁止：
+1. 建立 ZIP / RAR / 7z 或任何壓縮封裝
+2. 匯出 Git repository
+3. 建立 git bundle
+4. Clone 到未授權位置
+5. 下載專案資料
+6. 上傳到外部服務
+7. 將專案內容傳送至未授權目的地
+8. 複製完整 Repo 到外部位置
+9. 未經授權產生資料外洩通道
+
+允許：
+- 在授權範圍內讀取必要資料
+- 產生分析結果
+- 寫入 SQLite audit
+- 顯示 Dashboard
+- 依既有權限執行核准後的 Repo 操作
+
+安全優先：
+若任務要求違反上述規則，停止該任務並記錄 audit。
+
+最重要的一點
+
+這不是「禁止 GitHub」。
+
+而是區分：
+
+GitHub 授權讀取
+       ↓
+     允許
+       ↓
+AI 分析
+       ↓
+OPER Audit
+       ↓
+結果回系統
+
+
+ZIP / Git Bundle / 未授權 Clone
+       ↓
+     DENY
+
+
+下載／外部 Upload／外洩
+       ↓
+     DENY
+       ↓
+   Audit Log
+       ↓
+   Safe Mode
+
+因此你目前的架構可以正式定義成：
+
+> OPER Context = 專案上下文 + 安全政策 + 權限矩陣 + 3AI 指揮上下文。
+
+
+
+而且不需要增加任何 Oper API、API Key 或外部服務。def build_ai_context(project_context, instruction):
+    return {
+        "project_context": project_context,
+
+        "safety_policy": SAFETY_POLICY,
+
+        "instruction": instruction,
+
+        "rule": (
+            "安全規則優先於一般任務。"
+            "若偵測到異常聲音、明顯晃動或不確定狀態，"
+            "不得因此觸發高風險、自動寫入或其他非必要動作。"
+        )
+    }SAFETY_POLICY = {
+    "user_protection": True,
+
+    # 不使用臉部辨識作為身分認證
+    "face_identity_required": False,
+
+    # 不因使用者聲音突然變大就執行危險操作
+    "loud_voice_no_action": True,
+
+    # 偵測到明顯晃動時，停止非必要自動動作
+    "shake_event_no_action": True,
+
+    # 異常狀態只允許觀測／記錄
+    "safe_mode_on_anomaly": True,
+
+    # 寫入 GitHub 仍然遵守既有人工核准
+    "repo_write_requires_approval": True
+}對，這樣就更準確了。你要的 OPER 不是第 4 個推理 AI，而是「專案上下文中樞＋指揮層」。
+
+也就是：
+
+👤 人類
+                   │
+             聊天／指令／需求
+                   │
+                   ▼
+          ⚡ OPER Context Core
+          ┌────────┼────────┐
+          │        │        │
+       建檔上下文  專案狀態  權限/治理
+          │        │        │
+          └────────┼────────┘
+                   ▼
+              OPER Router
+          ┌────────┼────────┐
+          ▼        ▼        ▼
+       OpenAI     xAI    DeepSeek
+          │        │        │
+          └────────┼────────┘
+                   ▼
+             結果回 OPER
+                   │
+                   ▼
+             SQLite / Dashboard
+
+關鍵修正
+
+你目前的 main.py 有：
+
+RepositoryRegistry
+
+QueueManager
+
+PERMISSION_MATRIX
+
+task_history
+
+audit_log
+
+usage_log
+
+
+但還缺一層「聊天上下文 → 專案上下文 → AI 任務」。
+
+而且有一個工程上的界線要講清楚：
+
+> main.py 不會自動看到 ChatGPT 這個對話視窗裡的全部上下文。
+
+
+
+必須由你的 UI／API 把對話內容送進 OPER。之後 OPER 才能把它建檔、整理，再指揮 3 AI。
+
+
+---
+
+⚡ 建議直接新增 oper_context.py
+
+這個模組專門負責：
+
+1. 保存聊天上下文
+
+
+2. 保存專案上下文
+
+
+3. 建立「本次指揮簡報」
+
+
+4. 把簡報送給 3 AI
+
+
+5. 統一收回結果
+
+
+6. 寫入 SQLite
+
+
+
+# ============================================================
+# oper_context.py
+# OPER Context Core
+#
+# Chat Context
+#      ↓
+# Project Context
+#      ↓
+# OPER Command Brief
+#      ↓
+# OpenAI / xAI / DeepSeek
+#      ↓
+# Result Ledger
+#
+# OPER 本身不做外部推理
+# ============================================================
+
+import json
+import sqlite3
+import time
+from datetime import datetime
+from typing import Optional
+
+
+class OperContextCore:
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self.init_db()
+
+    # --------------------------------------------------------
+    # DB
+    # --------------------------------------------------------
+
+    def db(self):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def init_db(self):
+
+        with self.db() as conn:
+
+            conn.executescript("""
+                CREATE TABLE IF NOT EXISTS chat_context (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    session_id TEXT NOT NULL,
+                    role TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS project_context (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project TEXT NOT NULL,
+                    context_type TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS oper_commands (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    command_id TEXT NOT NULL UNIQUE,
+                    session_id TEXT,
+                    instruction TEXT NOT NULL,
+                    context_snapshot TEXT,
+                    status TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS ai_results (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    command_id TEXT NOT NULL,
+                    ai_name TEXT NOT NULL,
+                    result TEXT,
+                    status TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                );
+            """)
+
+    # --------------------------------------------------------
+    # 聊天建檔
+    # --------------------------------------------------------
+
+    def add_chat(
+        self,
+        session_id: str,
+        role: str,
+        content: str
+    ):
+
+        with self.db() as conn:
+
+            conn.execute(
+                """
+                INSERT INTO chat_context
+                (session_id, role, content)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    session_id,
+                    role,
+                    content
+                )
+            )
+
+    # --------------------------------------------------------
+    # 專案上下文
+    # --------------------------------------------------------
+
+    def add_project_context(
+        self,
+        project: str,
+        context_type: str,
+        content: str
+    ):
+
+        with self.db() as conn:
+
+            conn.execute(
+                """
+                INSERT INTO project_context
+                (project, context_type, content)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    project,
+                    context_type,
+                    content
+                )
+            )
+
+    # --------------------------------------------------------
+    # 取得最近聊天
+    # --------------------------------------------------------
+
+    def get_chat_context(
+        self,
+        session_id: str,
+        limit: int = 30
+    ):
+
+        with self.db() as conn:
+
+            rows = conn.execute(
+                """
+                SELECT role, content, created_at
+                FROM chat_context
+                WHERE session_id=?
+                ORDER BY id DESC
+                LIMIT ?
+                """,
+                (
+                    session_id,
+                    limit
+                )
+            ).fetchall()
+
+        rows = list(reversed(rows))
+
+        return [
+            {
+                "role": row["role"],
+                "content": row["content"],
+                "created_at": row["created_at"]
+            }
+            for row in rows
+        ]
+
+    # --------------------------------------------------------
+    # 取得專案上下文
+    # --------------------------------------------------------
+
+    def get_project_context(
+        self,
+        project: str,
+        limit: int = 50
+    ):
+
+        with self.db() as conn:
+
+            rows = conn.execute(
+                """
+                SELECT context_type, content, created_at
+                FROM project_context
+                WHERE project=?
+                ORDER BY id DESC
+                LIMIT ?
+                """,
+                (
+                    project,
+                    limit
+                )
+            ).fetchall()
+
+        return [
+            {
+                "type": row["context_type"],
+                "content": row["content"],
+                "created_at": row["created_at"]
+            }
+            for row in rows
+        ]
+
+    # --------------------------------------------------------
+    # 建立 OPER 指揮簡報
+    # --------------------------------------------------------
+
+    def build_command_brief(
+        self,
+        session_id: str,
+        project: str,
+        instruction: str
+    ):
+
+        chat = self.get_chat_context(session_id)
+
+        project_context = self.get_project_context(project)
+
+        brief = {
+            "project": project,
+
+            "instruction": instruction,
+
+            "chat_context": chat,
+
+            "project_context": project_context,
+
+            "rules": {
+                "oper_role": "governance_and_routing",
+                "external_ai": [
+                    "openai",
+                    "xai",
+                    "deepseek"
+                ],
+                "oper_external_api": False,
+                "write_requires_existing_permission": True
+            },
+
+            "generated_at": datetime.now().isoformat()
+        }
+
+        return brief
+
+    # --------------------------------------------------------
+    # 建立指揮命令
+    # --------------------------------------------------------
+
+    def create_command(
+        self,
+        session_id: str,
+        project: str,
+        instruction: str
+    ):
+
+        command_id = (
+            f"OPER-{int(time.time() * 1000)}"
+        )
+
+        brief = self.build_command_brief(
+            session_id=session_id,
+            project=project,
+            instruction=instruction
+        )
+
+        with self.db() as conn:
+
+            conn.execute(
+                """
+                INSERT INTO oper_commands
+                (
+                    command_id,
+                    session_id,
+                    instruction,
+                    context_snapshot,
+                    status
+                )
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    command_id,
+                    session_id,
+                    instruction,
+                    json.dumps(
+                        brief,
+                        ensure_ascii=False
+                    ),
+                    "queued"
+                )
+            )
+
+        return {
+            "command_id": command_id,
+            "brief": brief
+        }
+
+    # --------------------------------------------------------
+    # AI 結果
+    # --------------------------------------------------------
+
+    def save_ai_result(
+        self,
+        command_id: str,
+        ai_name: str,
+        result: str,
+        status: str = "done"
+    ):
+
+        with self.db() as conn:
+
+            conn.execute(
+                """
+                INSERT INTO ai_results
+                (
+                    command_id,
+                    ai_name,
+                    result,
+                    status
+                )
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    command_id,
+                    ai_name,
+                    result,
+                    status
+                )
+            )
+
+    # --------------------------------------------------------
+    # 查看一次完整指揮
+    # --------------------------------------------------------
+
+    def get_command(self, command_id: str):
+
+        with self.db() as conn:
+
+            command = conn.execute(
+                """
+                SELECT *
+                FROM oper_commands
+                WHERE command_id=?
+                """,
+                (command_id,)
+            ).fetchone()
+
+            results = conn.execute(
+                """
+                SELECT ai_name, result, status, created_at
+                FROM ai_results
+                WHERE command_id=?
+                ORDER BY id
+                """,
+                (command_id,)
+            ).fetchall()
+
+        if not command:
+            return None
+
+        return {
+            "command": dict(command),
+            "ai_results": [
+                dict(row)
+                for row in results
+            ]
+        }
+
+
+---
+
+🔌 接到你的 main.py
+
+加入：
+
+from oper_context import OperContextCore
+
+建立：
+
+oper_context = OperContextCore(DB_PATH)
+
+然後加入兩個核心 API。
+
+① 把聊天送進 OPER
+
+class ChatContextRequest(BaseModel):
+    session_id: str
+    role: str
+    content: str
+    project: str = "Lightning-AI-ALL"
+
+
+@app.post("/api/oper/context")
+async def add_oper_context(data: ChatContextRequest):
+
+    oper_context.add_chat(
+        session_id=data.session_id,
+        role=data.role,
+        content=data.content
+    )
+
+    oper_context.add_project_context(
+        project=data.project,
+        context_type="chat",
+        content=data.content
+    )
+
+    return {
+        "status": "stored",
+        "session_id": data.session_id,
+        "project": data.project
+    }
+
+這樣你的前端每收到一段：
+
+使用者：
+今天把 3AI 自動化派單系統整理好。
+OPER 看專案上下文。
+OpenAI、xAI、DeepSeek 執行分析。
+
+就可以送：
+
+{
+  "session_id": "main-session",
+  "role": "user",
+  "content": "今天把 3AI 自動化派單系統整理好。OPER 看專案上下文。OpenAI、xAI、DeepSeek 執行分析。",
+  "project": "Lightning-AI-ALL"
+}
+
+
+---
+
+② OPER 接到指令後指揮 3 AI
+
+class OperCommandRequest(BaseModel):
+    session_id: str
+    project: str = "Lightning-AI-ALL"
+    instruction: str
+
+
+@app.post("/api/oper/command")
+async def oper_command(data: OperCommandRequest):
+
+    command = oper_context.create_command(
+        session_id=data.session_id,
+        project=data.project,
+        instruction=data.instruction
+    )
+
+    brief = json.dumps(
+        command["brief"],
+        ensure_ascii=False
+    )
+
+    tasks = []
+
+    # --------------------------------------------
+    # OpenAI
+    # --------------------------------------------
+
+    openai_task = Task(
+        task_id=f"{command['command_id']}-OPENAI",
+        source_org="Lightning-Ai-ALL",
+        repo_name="Lightning-AI-ALL",
+        action="read",
+        assigned_ai="openai",
+        content=brief
+    )
+
+    queue_manager.submit_task(openai_task)
+    tasks.append(openai_task.task_id)
+
+    # --------------------------------------------
+    # xAI
+    # --------------------------------------------
+
+    xai_task = Task(
+        task_id=f"{command['command_id']}-XAI",
+        source_org="Stormcar820",
+        repo_name="Lightning-Empire-AI-GPT4.1",
+        action="read",
+        assigned_ai="xai",
+        content=brief
+    )
+
+    queue_manager.submit_task(xai_task)
+    tasks.append(xai_task.task_id)
+
+    # --------------------------------------------
+    # DeepSeek
+    # --------------------------------------------
+
+    deepseek_task = Task(
+        task_id=f"{command['command_id']}-DEEPSEEK",
+        source_org="Stormcar820",
+        repo_name="Lightning-Empire-DeepSeek-全",
+        action="read",
+        assigned_ai="deepseek",
+        content=brief
+    )
+
+    queue_manager.submit_task(deepseek_task)
+    tasks.append(deepseek_task.task_id)
+
+    return {
+        "status": "dispatched",
+        "command_id": command["command_id"],
+        "tasks": tasks,
+        "assigned": [
+            "openai",
+            "xai",
+            "deepseek"
+        ]
+    }
+
+不過這裡有一個重要工程修正：不要把 Repo 名稱硬寫死。
+
+你目前已經有 RepositoryRegistry，所以實際版本應該讓 OPER 從 Registry 找符合權限的庫，再派任務。否則 GitHub 改名時就會壞。
+
+
+---
+
+🧠 最終工作流
+
+你以後只需要對 OPER 下：
+
+OPER：
+
+查看目前 Lightning-AI-ALL 專案上下文。
+
+今天的工作：
+1. 檢查 3AI 自動化派單狀態
+2. 看 78 庫目前有哪些異常
+3. 讓 OpenAI 做架構分析
+4. 讓 xAI 做交叉驗證
+5. 讓 DeepSeek 做中文整理
+6. 回收三方結果
+7. 整理成一份決策摘要
+
+OPER 做：
+
+聊天上下文
+      ↓
+SQLite 建檔
+      ↓
+專案上下文
+      ↓
+Repository Registry
+      ↓
+Permission Matrix
+      ↓
+建立 OPER Command
+      ↓
+┌───────────────┐
+│ 3 AI Dispatch │
+└───────────────┘
+      ↓
+ ┌────┼────┐
+ ▼    ▼    ▼
+GPT  xAI  DeepSeek
+ │    │    │
+ └────┼────┘
+      ▼
+ AI Results
+      ↓
+ OPER 收斂
+      ↓
+ SQLite / Dashboard
+      ↓
+ 人類最終決策
+
+這才是你現在這套的正確定位
+
+OPER = Context + Router + Permission + Queue + Audit + Decision Assembly
+
+OpenAI / xAI / DeepSeek = 真正的推理執行者
+
+而你截圖裡那些 GitHub 專案，就變成 OPER 可以透過 Registry 觀測、選擇與派工的實際工作資源，不是把 GitHub 本身當成 AI。
+
+另外，我會保留一條硬邊界：OPER 可以自動派 read/analyze 任務；任何 Repo write 仍然走你現有的權限矩陣與人工核准。 這樣「自動化」和「越權修改」不會混在一起。https://github.com/Stormcar820/Lightning-Empire-AI-GTP4.1/new/main/frontend#閃電帝國AI-GTP4.1/前端/main.py
