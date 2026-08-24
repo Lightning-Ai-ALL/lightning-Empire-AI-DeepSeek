@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Docs-bot Control Tower</title>
+
+<style>
+:root {
+    --bg: #080b10;
+    --panel: #111720;
+    --panel2: #18202b;
+    --text: #f4f7fb;
+    --muted: #8d99a8;
+    --line: #293442;
+    --blue: #3ea6ff;
+    --green: #32d583;
+    --red: #ff5c6c;
+    --yellow: #ffc857;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #172436 0,
+            var(--bg) 45%
+        );
+
+    color: var(--text);
+
+    font-family:
+        "Noto Sans TC",
+        "Microsoft JhengHei",
+        Inter,
+        "Segoe UI",
+        "Noto Sans",
+        sans-serif;
+}
+
+.container {
+    width: min(900px, 94%);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+header {
+    margin-bottom: 22px;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: .5px;
+}
+
+.subtitle {
+    margin-top: 6px;
+    color: var(--muted);
+}
+
+.connection {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 14px;
+    padding: 8px 12px;
+
+    border: 1px solid var(--line);
+    border-radius: 999px;
+
+    font-size: 13px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red);
+}
+
+.dot.online {
+    background: var(--green);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.card {
+    background: rgba(17, 23, 32, .94);
+
+    border: 1px solid var(--line);
+    border-radius: 18px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+}
+
+.card.full {
+    grid-column: 1 / -1;
+}
+
+.label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.value {
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.main-counter {
+    text-align: center;
+}
+
+.main-counter .value {
+    margin-top: 12px;
+
+    font-size: clamp(56px, 12vw, 110px);
+
+    line-height: 1;
+
+    font-variant-numeric:
+        tabular-nums;
+
+    letter-spacing: 2px;
+}
+
+.status-running {
+    color: var(--green);
+}
+
+.status-stopped {
+    color: var(--red);
+}
+
+.event-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card.active {
+    border-color: var(--yellow);
+
+    box-shadow:
+        0 0 35px rgba(255,200,87,.12);
+}
+
+.event-level {
+    font-size: 48px;
+    font-weight: 900;
+}
+
+.event-time {
+    font-size: 58px;
+    font-weight: 900;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+.progress {
+    height: 8px;
+
+    margin-top: 18px;
+
+    background: #252e39;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+
+    background: var(--yellow);
+
+    transition:
+        width .25s linear;
+}
+
+.controls {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+button {
+    min-height: 52px;
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    background: var(--panel2);
+    color: var(--text);
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .12s,
+        background .12s;
+}
+
+button:hover {
+    background: #222d3b;
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+button.primary {
+    border-color: var(--blue);
+}
+
+button.danger {
+    border-color: var(--red);
+}
+
+button.event {
+    border-color: var(--yellow);
+}
+
+button.auto {
+    border-color: var(--green);
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.info {
+    margin-top: 18px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.log {
+    margin-top: 14px;
+
+    min-height: 80px;
+    max-height: 180px;
+
+    overflow-y: auto;
+
+    padding: 12px;
+
+    background: #080b10;
+
+    border-radius: 10px;
+
+    font-family:
+        monospace;
+
+    font-size: 12px;
+
+    color: #aeb8c5;
+}
+
+.log-line {
+    margin-bottom: 5px;
+}
+
+@media (max-width: 650px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card.full {
+        grid-column: auto;
+    }
+
+    .controls {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <div class="title">
+            ⚡ Docs-bot Control Tower
+        </div>
+
+        <div class="subtitle">
+            Python 3 · Single Heartbeat · Event Engine
+        </div>
+
+        <div class="connection">
+
+            <span
+                id="connectionDot"
+                class="dot">
+            </span>
+
+            <span id="connectionText">
+                Python 未連線
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- ========================= -->
+    <!-- 主計時器 -->
+    <!-- ========================= -->
+
+    <div class="card full main-counter">
+
+        <div class="label">
+            PYTHON MASTER CLOCK
+        </div>
+
+        <div
+            id="mainCounter"
+            class="value">
+            000000
+        </div>
+
+        <div
+            id="runStatus"
+            class="status-stopped">
+            ● 已停止
+        </div>
+
+    </div>
+
+
+    <div class="grid">
+
+        <!-- ===================== -->
+        <!-- 事件 -->
+        <!-- ===================== -->
+
+        <div
+            id="eventCard"
+            class="card event-card">
+
+            <div class="label">
+                EVENT ENGINE
+            </div>
+
+            <div
+                id="eventLevel"
+                class="event-level">
+                IDLE
+            </div>
+
+            <div
+                id="eventTime"
+                class="event-time">
+                00
+            </div>
+
+            <div class="label">
+                EVENT REMAINING
+            </div>
+
+            <div class="progress">
+
+                <div
+                    id="progressBar"
+                    class="progress-bar">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- 自動化 -->
+        <!-- ===================== -->
+
+        <div class="card">
+
+            <div class="label">
+                AUTOMATION
+            </div>
+
+            <div
+                id="autoStatus"
+                class="value">
+                OFF
+            </div>
+
+            <div class="info">
+
+                自動觸發間隔：
+                <strong id="autoInterval">
+                    60
+                </strong>
+                秒
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- 統計 -->
+        <!-- ===================== -->
+
+        <div class="card">
+
+            <div class="label">
+                EVENT COUNT
+            </div>
+
+            <div
+                id="eventCount"
+                class="value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                LAST EVENT
+            </div>
+
+            <div
+                id="lastEvent"
+                class="value"
+                style="font-size:18px;">
+                尚無事件
+            </div>
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- 控制台 -->
+        <!-- ===================== -->
+
+        <div class="card full">
+
+            <div class="label">
+                CONTROL
+            </div>
+
+            <div class="controls">
+
+                <button
+                    class="primary"
+                    onclick="startBot()">
+                    ▶ 啟動 Python
+                </button>
+
+                <button
+                    class="danger"
+                    onclick="stopBot()">
+                    ■ 停止 Python
+                </button>
+
+                <button
+                    class="event"
+                    onclick="triggerEvent()">
+                    ⚡ 手動 LEVEL 6 / 28 秒
+                </button>
+
+                <button
+                    class="auto"
+                    onclick="toggleAuto()">
+                    ♻ 自動化 ON / OFF
+                </button>
+
+            </div>
+
+            <div
+                id="log"
+                class="log">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info">
+
+        Python API：
+        <code>http://127.0.0.1:8787</code>
+
+        <br>
+
+        HTML 本身不負責主計時。
+        所有秒數以 Python `/status` 為唯一來源。
+
+        <br>
+
+        LEVEL 6 僅為 Docs-bot 軟體事件標籤，
+        不控制任何外部硬體。
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==================================
+   Python API
+================================== */
+
+const API =
+    "http://127.0.0.1:8787";
+
+
+/* ==================================
+   DOM
+================================== */
+
+const mainCounter =
+    document.getElementById(
+        "mainCounter"
+    );
+
+const runStatus =
+    document.getElementById(
+        "runStatus"
+    );
+
+const eventCard =
+    document.getElementById(
+        "eventCard"
+    );
+
+const eventLevel =
+    document.getElementById(
+        "eventLevel"
+    );
+
+const eventTime =
+    document.getElementById(
+        "eventTime"
+    );
+
+const progressBar =
+    document.getElementById(
+        "progressBar"
+    );
+
+const autoStatus =
+    document.getElementById(
+        "autoStatus"
+    );
+
+const eventCount =
+    document.getElementById(
+        "eventCount"
+    );
+
+const lastEvent =
+    document.getElementById(
+        "lastEvent"
+    );
+
+const connectionDot =
+    document.getElementById(
+        "connectionDot"
+    );
+
+const connectionText =
+    document.getElementById(
+        "connectionText"
+    );
+
+const logBox =
+    document.getElementById(
+        "log"
+    );
+
+
+/* ==================================
+   LOG
+================================== */
+
+function log(message) {
+
+    const line =
+        document.createElement(
+            "div"
+        );
+
+    line.className =
+        "log-line";
+
+    const time =
+        new Date().toLocaleTimeString();
+
+    line.textContent =
+        `[${time}] ${message}`;
+
+    logBox.prepend(line);
+
+}
+
+
+/* ==================================
+   API POST
+================================== */
+
+async function post(path) {
+
+    const response =
+        await fetch(
+            API + path,
+            {
+                method: "POST"
+            }
+        );
+
+    return response.json();
+}
+
+
+/* ==================================
+   啟動
+================================== */
+
+async function startBot() {
+
+    try {
+
+        await post("/start");
+
+        log(
+            "Python 主計時器啟動"
+        );
+
+        await update();
+
+    } catch (error) {
+
+        log(
+            "啟動失敗：Python 未連線"
+        );
+
+    }
+}
+
+
+/* ==================================
+   停止
+================================== */
+
+async function stopBot() {
+
+    try {
+
+        await post("/stop");
+
+        log(
+            "Python 主計時器停止"
+        );
+
+        await update();
+
+    } catch (error) {
+
+        log(
+            "停止失敗：Python 未連線"
+        );
+
+    }
+}
+
+
+/* ==================================
+   手動事件
+================================== */
+
+async function triggerEvent() {
+
+    try {
+
+        const data =
+            await post("/trigger");
+
+        log(
+            `手動事件：LEVEL ${data.level} / ${data.duration} 秒`
+        );
+
+        await update();
+
+    } catch (error) {
+
+        log(
+            "事件觸發失敗：Python 未連線"
+        );
+
+    }
+}
+
+
+/* ==================================
+   自動化切換
+================================== */
+
+async function toggleAuto() {
+
+    try {
+
+        const current =
+            await getStatus();
+
+        if (current.auto_enabled) {
+
+            await post("/auto/off");
+
+            log(
+                "自動化 OFF"
+            );
+
+        } else {
+
+            await post("/auto/on");
+
+            log(
+                `自動化 ON：每 ${current.auto_interval} 秒`
+            );
+
+        }
+
+        await update();
+
+    } catch (error) {
+
+        log(
+            "自動化切換失敗"
+        );
+
+    }
+}
+
+
+/* ==================================
+   取得狀態
+================================== */
+
+async function getStatus() {
+
+    const response =
+        await fetch(
+            API + "/status",
+            {
+                cache: "no-store"
+            }
+        );
+
+    return response.json();
+}
+
+
+/* ==================================
+   更新 Dashboard
+================================== */
+
+async function update() {
+
+    try {
+
+        const data =
+            await getStatus();
+
+
+        /* --------------------------
+           Python 連線
+        -------------------------- */
+
+        connectionDot.classList.add(
+            "online"
+        );
+
+        connectionText.textContent =
+            "Python ● ONLINE";
+
+
+        /* --------------------------
+           主計時器
+        -------------------------- */
+
+        mainCounter.textContent =
+            String(
+                data.elapsed
+            ).padStart(
+                6,
+                "0"
+            );
+
+
+        if (data.running) {
+
+            runStatus.textContent =
+                "● 運行中";
+
+            runStatus.className =
+                "status-running";
+
+        } else {
+
+            runStatus.textContent =
+                "● 已停止";
+
+            runStatus.className =
+                "status-stopped";
+        }
+
+
+        /* --------------------------
+           事件
+        -------------------------- */
+
+        if (data.event_active) {
+
+            eventCard.classList.add(
+                "active"
+            );
+
+            eventLevel.textContent =
+                `LEVEL ${data.event_level}`;
+
+            eventTime.textContent =
+                String(
+                    data.event_remaining
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+            const percent =
+                (
+                    data.event_remaining /
+                    28
+                ) * 100;
+
+            progressBar.style.width =
+                `${Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        percent
+                    )
+                )}%`;
+
+        } else {
+
+            eventCard.classList.remove(
+                "active"
+            );
+
+            eventLevel.textContent =
+                "IDLE";
+
+            eventTime.textContent =
+                "00";
+
+            progressBar.style.width =
+                "0%";
+        }
+
+
+        /* --------------------------
+           自動化
+        -------------------------- */
+
+        if (data.auto_enabled) {
+
+            autoStatus.textContent =
+                "ON";
+
+            autoStatus.style.color =
+                "var(--green)";
+
+        } else {
+
+            autoStatus.textContent =
+                "OFF";
+
+            autoStatus.style.color =
+                "var(--red)";
+        }
+
+
+        document.getElementById(
+            "autoInterval"
+        ).textContent =
+            data.auto_interval;
+
+
+        /* --------------------------
+           統計
+        -------------------------- */
+
+        eventCount.textContent =
+            data.event_count;
+
+
+        if (data.last_event) {
+
+            lastEvent.textContent =
+                data.last_event.time;
+
+        } else {
+
+            lastEvent.textContent =
+                "尚無事件";
+        }
+
+
+    } catch (error) {
+
+        connectionDot.classList.remove(
+            "online"
+        );
+
+        connectionText.textContent =
+            "Python ○ OFFLINE";
+
+        runStatus.textContent =
+            "● 未連線";
+
+        runStatus.className =
+            "status-stopped";
+    }
+}
+
+
+/* ==================================
+   Dashboard 心跳
+   ==================================
+
+   注意：
+
+   這不是計時器。
+
+   HTML 每 500ms 只是向 Python
+   詢問目前狀態。
+
+   真正的秒數由 Python 決定。
+================================== */
+
+setInterval(
+    update,
+    500
+);
+
+update();
+
+log(
+    "Dashboard 啟動，等待 Python..."
+);
+
+</script>
+
+</body>
+</html>
