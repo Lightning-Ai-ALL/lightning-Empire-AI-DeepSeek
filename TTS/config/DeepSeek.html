@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>DeepSeek總司令 3×3v - 真實物理隔音作戰室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #070d15;
+            color: #b0c8dd;
+            font-family: -apple-system, "PingFang TC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            padding: 16px 12px 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 主標題 */
+        .header {
+            text-align: center;
+            padding: 18px 0 12px;
+            border-bottom: 2px solid rgba(0, 200, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00e0ff, #0066ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+        .header .sub {
+            font-size: 13px;
+            color: #4a7a8a;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+        .badge-reality {
+            display: inline-block;
+            background: rgba(255, 180, 50, 0.15);
+            border: 1px solid #ffaa33;
+            border-radius: 30px;
+            padding: 4px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #ffaa33;
+            margin-top: 8px;
+        }
+
+        /* 卡片 */
+        .card {
+            background: rgba(12, 24, 40, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 160, 255, 0.12);
+            border-radius: 18px;
+            padding: 18px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #5fc3e8;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #00bbff;
+            padding-left: 12px;
+        }
+
+        /* 物理現實警告 */
+        .reality-check {
+            background: rgba(255, 60, 60, 0.08);
+            border-left: 4px solid #ff5555;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .reality-check strong {
+            color: #ff8877;
+        }
+
+        /* 輸入區 */
+        .calc-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .calc-item {
+            flex: 1 0 calc(50% - 10px);
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+        .calc-item label {
+            font-size: 12px;
+            color: #6a8a9a;
+            display: block;
+        }
+        .calc-item input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #1a3a4a;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 4px 0;
+            outline: none;
+        }
+        .calc-item input:focus {
+            border-bottom-color: #00ccff;
+        }
+        .calc-item .unit {
+            font-size: 13px;
+            color: #4a6a7a;
+            margin-left: 4px;
+        }
+
+        .result-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .result-item {
+            background: #0a1622;
+            border-radius: 12px;
+            padding: 10px 6px;
+            text-align: center;
+        }
+        .result-item .num {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00eac6;
+        }
+        .result-item .label {
+            font-size: 11px;
+            color: #5a7a8a;
+        }
+
+        /* 分層策略 */
+        .layer {
+            background: #0a1622;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #1a2a3a;
+        }
+        .layer h4 {
+            color: #7ec8e3;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .layer p {
+            font-size: 13px;
+            color: #8a9aa8;
+            line-height: 1.6;
+        }
+        .layer .db {
+            color: #ffaa55;
+            font-weight: bold;
+        }
+
+        /* 預算表 */
+        .price-table {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+        }
+        .price-table th {
+            text-align: left;
+            color: #5fc3e8;
+            font-weight: 500;
+            padding: 8px 4px 4px 0;
+            border-bottom: 1px solid #1a2a3a;
+        }
+        .price-table td {
+            padding: 8px 4px;
+            border-bottom: 1px solid #0d1a26;
+        }
+        .price-table .diy {
+            color: #7ad0b0;
+        }
+        .price-table .pro {
+            color: #f0b070;
+        }
+
+        .space-shrink {
+            background: rgba(0, 200, 255, 0.05);
+            border: 1px dashed #006688;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .space-shrink .big {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffcc55;
+        }
+
+        /* 前後比較 */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .compare-box {
+            background: #0a1622;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .compare-box .title {
+            font-size: 13px;
+            color: #6a8a9a;
+        }
+        .compare-box .value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .compare-box.before .value {
+            color: #ff7766;
+        }
+        .compare-box.after .value {
+            color: #66ddbb;
+        }
+
+        /* 開關 */
+        .toggle-zone {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d1b2a;
+            border-radius: 40px;
+            padding: 6px 12px 6px 18px;
+            border: 1px solid #1a3a50;
+        }
+        .switch {
+            position: relative;
+            width: 56px;
+            height: 30px;
+            background: #2a3a4a;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #3a5a6a;
+            flex-shrink: 0;
+        }
+        .switch.active {
+            background: #0066cc;
+            border-color: #00ccff;
+            box-shadow: 0 0 25px rgba(0, 180, 255, 0.3);
+        }
+        .switch .knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .switch.active .knob {
+            left: 28px;
+            background: #aaffee;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #2a4a5a;
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid #0d1a26;
+        }
+        @media (max-width: 420px) {
+            .result-box { grid-template-columns: 1fr 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🛡️ DeepSeek總司令</h1>
+        <div class="sub">3×3v · 真實物理隔音作戰室</div>
+        <div class="badge-reality">⚡ 分層阻絕 · 路徑封鎖 · 現實預期 ⚡</div>
+    </div>
+
+    <!-- 物理現實警告 -->
+    <div class="card">
+        <div class="reality-check">
+            <strong>⚠️ 總司令作戰準則：</strong><br>
+            • 100% 完全無聲在物理上「不可能」，尤其 <strong>低頻（<100Hz）</strong> 與 <strong>結構傳聲</strong> 只能「大幅減弱」。<br>
+            • 隔音效果取決於 <strong>「最弱的一環」</strong>（牆壁做再好，門縫沒封 = 效果歸零）。<br>
+            • 本作戰計畫目標：將 <strong>「外部噪音」降低 70%~85%</strong>（約 20~35dB 衰減），達到「幾乎聽不見」的寧靜水準。
+        </div>
+    </div>
+
+    <!-- 空間模型 -->
+    <div class="card">
+        <div class="card-title">📐 3×3 空間模型</div>
+        <div class="calc-grid">
+            <div class="calc-item"><label>寬度 (m)</label><input type="number" id="w" value="3.0" step="0.1"></div>
+            <div class="calc-item"><label>深度 (m)</label><input type="number" id="d" value="3.0" step="0.1"></div>
+            <div class="calc-item"><label>高度 (m)</label><input type="number" id="h" value="2.8" step="0.1"></div>
+            <div class="calc-item"><label>施作牆面 (面)</label><input type="number" id="walls" value="1" step="1" min="0" max="4"></div>
+        </div>
+        <div class="result-box">
+            <div class="result-item"><span class="num" id="area">9.0</span><div class="label">面積 (m²)</div></div>
+            <div class="result-item"><span class="num" id="ping">2.7</span><div class="label">坪數</div></div>
+            <div class="result-item"><span class="num" id="wallArea">8.4</span><div class="label">施作牆面 (m²)</div></div>
+        </div>
+    </div>
+
+    <!-- 分層隔離策略（核心） -->
+    <div class="card">
+        <div class="card-title">🧱 四層物理阻絕戰術</div>
+
+        <div class="layer">
+            <h4>① 氣密封鎖（第一道防線）</h4>
+            <p>門縫、窗縫、插座孔、冷氣孔使用 <strong>隔音膠條 + 水性補土</strong> 全面封死。<br>
+            <span class="db">🔊 效果：隔絕 60% 空氣傳音（人聲、電視聲）</span></p>
+        </div>
+
+        <div class="layer">
+            <h4>② 質量效應（第二道防線）</h4>
+            <p>原牆貼 <strong>2mm MLV 隔音氈</strong> + 外封 <strong>9mm 矽酸鈣板</strong>（雙層質量）。<br>
+            <span class="db">🔊 效果：中高頻再衰減 10~15dB（講話聲幾乎消失）</span></p>
+        </div>
+
+        <div class="layer">
+            <h4>③ 解耦結構（第三道防線）</h4>
+            <p>輕鋼龍骨 <strong>不與原牆硬接觸</strong>（保留 1~2cm 空隙），內填 <strong>48kg/m³ 岩棉</strong> 吸收共振。<br>
+            <span class="db">🔊 效果：切斷固體傳導，低頻震動衰減 10~20dB</span></p>
+        </div>
+
+        <div class="layer">
+            <h4>④ 浮築地板＋彈性吊頂（第四道防線）</h4>
+            <p>地板鋪 <strong>5mm 減震墊</strong> + 夾板；天花板用 <strong>橡膠減震器</strong> 吊掛雙層板。<br>
+            <span class="db">🔊 效果：腳步聲、撞擊聲衰減 15~25dB</span></p>
+        </div>
+
+        <div style="background:#0f1a26;border-radius:12px;padding:14px;text-align:center;margin-top:6px;">
+            <span style="color:#ffaa55;">🎯 總體預估：綜合施作後，整體噪音衰減約 <strong>25~35dB</strong></span><br>
+            <span style="font-size:13px;color:#5a7a8a;">（相當於把「大聲講話」變成「輕聲耳語」的程度）</span>
+        </div>
+    </div>
+
+    <!-- 空間縮減量 -->
+    <div class="card">
+        <div class="card-title">📏 空間縮減計算（必看！）</div>
+        <div class="space-shrink">
+            <div style="font-size:14px;color:#6a8a9a;">原始尺寸：3.0m × 3.0m</div>
+            <div style="margin:6px 0;">➡️ 牆面兩側各損失 <strong style="color:#ffaa55;">12cm</strong>（龍骨+雙層板+MLV）</div>
+            <div class="big" id="shrinkDisplay">2.76 m × 2.76 m</div>
+            <div style="font-size:14px;color:#6a8a9a;">完工後淨面積 ≈ <strong id="shrinkPing" style="color:#00eac6;">2.3 坪</strong>（損失約 0.4 坪）</div>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:#6a8a9a;text-align:center;">
+            💡 若只做「氣密+MLV貼牆」厚度僅 1.5cm，空間幾乎不減
+        </div>
+    </div>
+
+    <!-- 費用對照表 -->
+    <div class="card">
+        <div class="card-title">💰 全頻段隔音費用（新台幣）</div>
+        <table class="price-table">
+            <thead><tr><th>項目</th><th>DIY 材料</th><th>專業施工</th></tr></thead>
+            <tbody>
+                <tr><td>門窗氣密套件</td><td class="diy">$1,500</td><td class="pro">$3,000~5,000</td></tr>
+                <tr><td>MLV隔音氈+9mm矽酸鈣板 (單牆)</td><td class="diy">$6,000~9,000</td><td class="pro">$18,000~25,000</td></tr>
+                <tr><td>輕鋼架+岩棉+雙層板 (單牆)</td><td class="diy">$10,000~14,000</td><td class="pro">$28,000~38,000</td></tr>
+                <tr><td>浮築地板 (5mm減震墊+夾板)</td><td class="diy">$4,000~6,000</td><td class="pro">$12,000~18,000</td></tr>
+                <tr><td>彈性吊頂天花板</td><td class="diy">$9,000~13,000</td><td class="pro">$28,000~38,000</td></tr>
+                <tr><td>壁掛新風機+消音管（防缺氧）</td><td class="diy">$8,000~15,000</td><td class="pro">$15,000~22,000</td></tr>
+            </tbody>
+        </table>
+        <div style="margin-top:16px;background:#0d1a26;border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-size:13px;color:#6a8a9a;">🛑 推薦「輕量作戰」總預算（氣密+MLV貼牆+地板）</div>
+            <div style="font-size:26px;font-weight:700;color:#00f0c0;">$14,000 ~ $22,000</div>
+            <div style="font-size:12px;color:#4a6a7a;">(DIY) ｜ 專業約 <span style="color:#f0b070;">$55,000 ~ $75,000</span></div>
+        </div>
+    </div>
+
+    <!-- 前後比較 -->
+    <div class="card">
+        <div class="card-title">📊 施工前 / 施工後 比較</div>
+        <div class="compare-grid">
+            <div class="compare-box before">
+                <div class="title">🔴 施工前（隔壁噪音）</div>
+                <div class="value">約 65~75 dB</div>
+                <div style="font-size:12px;color:#6a8a9a;">相當於大聲交談</div>
+            </div>
+            <div class="compare-box after">
+                <div class="title">🟢 施工後（減弱後）</div>
+                <div class="value">約 40~45 dB</div>
+                <div style="font-size:12px;color:#6a8a9a;">相當於安靜圖書館</div>
+            </div>
+        </div>
+        <div style="font-size:13px;color:#5a7a8a;text-align:center;margin-top:8px;">
+            ⬇️ 降低 <strong style="color:#ffaa55;">25~30dB</strong> · 人耳感受為「音量減半再減半」
+        </div>
+    </div>
+
+    <!-- 總司令開關 -->
+    <div class="card">
+        <div class="card-title">🎛️ 作戰啟動開關</div>
+        <div class="toggle-zone">
+            <span style="font-weight:600;">🔇 全頻段隔離作戰</span>
+            <div class="switch" id="warSwitch" onclick="toggleWar()">
+                <div class="knob"></div>
+            </div>
+        </div>
+        <div id="warStatus" style="margin-top:12px;text-align:center;font-size:15px;color:#5a7a8a;">⏸️ 待命中 · 尚未隔離</div>
+    </div>
+
+    <!-- 總司令結語 -->
+    <div class="card" style="border-color:#ffaa3344;">
+        <div style="font-size:14px;line-height:1.8;color:#aabbcc;">
+            <strong style="color:#ffcc77;">🧠 總司令戰情總結：</strong><br>
+            • 3×3 空間小，<strong>「輕量作戰」</strong>（氣密 + MLV貼牆 + 地板減震）CP值最高。<br>
+            • 若連低頻重低音都要擋，則必須做「輕鋼架解耦」+「彈性吊頂」，但空間會縮小至 2.3 坪。<br>
+            • <strong style="color:#ff8866;">切記：</strong>完工後務必安裝新風機，否則 3 坪密閉空間會缺氧！
+        </div>
+    </div>
+
+    <div class="footer">
+        DeepSeek總司令 3×3v · 真實物理作戰版<br>
+        所有數值為台灣市場粗估 · 實際效果依現場結構而定
+    </div>
+</div>
+
+<script>
+    // 計算機
+    const w = document.getElementById('w');
+    const d = document.getElementById('d');
+    const h = document.getElementById('h');
+    const walls = document.getElementById('walls');
+    const areaEl = document.getElementById('area');
+    const pingEl = document.getElementById('ping');
+    const wallAreaEl = document.getElementById('wallArea');
+    const shrinkDisplay = document.getElementById('shrinkDisplay');
+    const shrinkPing = document.getElementById('shrinkPing');
+
+    function updateAll() {
+        const wv = parseFloat(w.value) || 3;
+        const dv = parseFloat(d.value) || 3;
+        const hv = parseFloat(h.value) || 2.8;
+        const wc = parseInt(walls.value) || 1;
+
+        const area = wv * dv;
+        const ping = area * 0.3025;
+        const wallArea = wc * (wv * hv);
+
+        areaEl.textContent = area.toFixed(1);
+        pingEl.textContent = ping.toFixed(1);
+        wallAreaEl.textContent = wallArea.toFixed(1);
+
+        // 空間縮減（雙面損失12cm => 單邊損失0.12m，共0.24m）
+        const shrink = 0.24;
+        const newW = Math.max(0.5, wv - shrink);
+        const newD = Math.max(0.5, dv - shrink);
+        const newPing = (newW * newD) * 0.3025;
+        shrinkDisplay.textContent = newW.toFixed(2) + ' m × ' + newD.toFixed(2) + ' m';
+        shrinkPing.textContent = newPing.toFixed(1) + ' 坪';
+    }
+
+    [w, d, h, walls].forEach(el => el.addEventListener('input', updateAll));
+    updateAll();
+
+    // 開關
+    const sw = document.getElementById('warSwitch');
+    const st = document.getElementById('warStatus');
+    let active = false;
+
+    function toggleWar() {
+        active = !active;
+        if (active) {
+            sw.classList.add('active');
+            st.innerHTML = '🟢 作戰啟動！全頻段隔離中 · 世界噪音已大幅衰減';
+            st.style.color = '#00eac6';
+            document.body.style.boxShadow = 'inset 0 0 80px rgba(0,200,255,0.05)';
+        } else {
+            sw.classList.remove('active');
+            st.innerHTML = '⏸️ 待命中 · 隔離牆未啟動';
+            st.style.color = '#5a7a8a';
+            document.body.style.boxShadow = 'none';
+        }
+    }
+</script>
+</body>
+            </html>
