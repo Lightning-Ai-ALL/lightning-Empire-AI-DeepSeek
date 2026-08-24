@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧾 三層架構 · 收據管理</title>
+    <style>
+        /* ============================================================
+           表示層 (Presentation Layer) — 樣式與佈局
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f5fc;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1320px;
+            width: 100%;
+        }
+
+        /* 標題列 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f1a3a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #5e6f92;
+            background: #e3e9f5;
+            padding: 4px 14px;
+            border-radius: 60px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-actions button {
+            background: #fff;
+            border: 1px solid #d3dcec;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2c3e5a;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .header-actions button:hover {
+            background: #edf2fc;
+            border-color: #a4b6d4;
+        }
+
+        .header-actions .btn-danger {
+            color: #b22234;
+            border-color: #f8d7da;
+        }
+
+        .header-actions .btn-danger:hover {
+            background: #fef2f2;
+            border-color: #f5a3a3;
+        }
+
+        /* 三層架構視覺標示 */
+        .layer-badge {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .layer-badge span {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            padding: 4px 16px;
+            border-radius: 40px;
+            background: #eef2f9;
+            color: #2f405c;
+            border: 1px solid #d8e0ee;
+        }
+
+        .layer-badge .pres {
+            background: #dbeafe;
+            border-color: #93b4e8;
+            color: #1a3a7a;
+        }
+        .layer-badge .biz {
+            background: #d1fae5;
+            border-color: #6ec9a8;
+            color: #0a5c3a;
+        }
+        .layer-badge .data {
+            background: #fce7f3;
+            border-color: #e9a0c8;
+            color: #7a2a5a;
+        }
+
+        /* 主網格：表單 + 預覽 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 860px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        /* 卡片共用 */
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px 24px 28px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f1a3a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
+        }
+
+        .card-title .layer-tag {
+            font-size: 10px;
+            font-weight: 600;
+            background: #eef2f9;
+            padding: 2px 12px;
+            border-radius: 40px;
+            color: #3e5270;
+        }
+
+        /* 表單元件 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2a3b5a;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e0e7f2;
+            border-radius: 14px;
+            font-size: 14px;
+            background: #fafdff;
+            outline: none;
+            transition: 0.15s;
+        }
+
+        .form-group input:focus {
+            border-color: #5b73c7;
+            box-shadow: 0 0 0 3px rgba(91, 115, 199, 0.12);
+            background: #fff;
+        }
+
+        .form-group input[readonly] {
+            background: #f2f6fd;
+            color: #40557a;
+        }
+
+        /* 明細區塊 */
+        .items-section {
+            background: #f7faff;
+            border-radius: 18px;
+            padding: 16px;
+            margin: 18px 0 12px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .item-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-row input {
+            padding: 8px 12px;
+            border: 1px solid #dce4ef;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+        }
+
+        .item-row input:focus {
+            border-color: #5b73c7;
+            box-shadow: 0 0 0 2px rgba(91, 115, 199, 0.08);
+        }
+
+        .item-row .btn-remove {
+            background: #fee9e9;
+            border: none;
+            border-radius: 30px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+            color: #b91c1c;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+        }
+
+        .item-row .btn-remove:hover {
+            background: #fccccc;
+        }
+
+        .btn-add-item {
+            background: transparent;
+            border: 1px dashed #b9c8e0;
+            border-radius: 30px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #3a5078;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.15s;
+            margin-top: 6px;
+        }
+
+        .btn-add-item:hover {
+            background: #eaf1fd;
+            border-color: #5b73c7;
+            color: #142a4a;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #142a5e;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 4px 16px rgba(20, 42, 94, 0.18);
+        }
+
+        .btn-primary:hover {
+            background: #1e387a;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #eef2fa;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #142a5e;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f5;
+        }
+
+        /* 收據預覽 */
+        .receipt-preview {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 22px;
+            border: 1px solid #e9eef6;
+            min-height: 280px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #dce3ef;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .receipt-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0a1428;
+            letter-spacing: 1px;
+        }
+
+        .receipt-header .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #3f5270;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .receipt-body table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin: 12px 0;
+        }
+
+        .receipt-body th {
+            text-align: left;
+            padding: 8px 4px 6px 0;
+            border-bottom: 1px solid #e3e9f2;
+            font-weight: 600;
+            color: #142a4a;
+        }
+
+        .receipt-body td {
+            padding: 8px 4px 8px 0;
+            border-bottom: 1px solid #f0f4fc;
+            color: #1a2c4a;
+        }
+
+        .receipt-body td:last-child,
+        .receipt-body th:last-child {
+            text-align: right;
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a1428;
+            padding-top: 16px;
+            border-top: 2px solid #dce3ef;
+            margin-top: 6px;
+        }
+
+        .receipt-total span {
+            background: #eef2fa;
+            padding: 2px 16px;
+            border-radius: 30px;
+        }
+
+        .receipt-empty {
+            color: #98aac7;
+            text-align: center;
+            padding: 44px 0;
+            font-size: 15px;
+        }
+
+        /* 歷史記錄 */
+        .history-list {
+            max-height: 360px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #fafdff;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #edf2f9;
+            transition: 0.15s;
+        }
+
+        .history-item:hover {
+            background: #f3f8ff;
+            border-color: #cbd6ea;
+        }
+
+        .history-info .h-customer {
+            font-weight: 600;
+            color: #0f1a3a;
+        }
+
+        .history-info .h-meta {
+            font-size: 12px;
+            color: #5a6e90;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .history-amount {
+            font-weight: 700;
+            color: #0a1428;
+            font-size: 18px;
+        }
+
+        .history-actions button {
+            background: transparent;
+            border: none;
+            color: #6a7e9e;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 30px;
+            transition: 0.15s;
+        }
+
+        .history-actions button:hover {
+            background: #f1f4fa;
+            color: #b22234;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #98aac7;
+            padding: 40px 0;
+            font-size: 14px;
+        }
+
+        /* 列印 */
+        @media print {
+            body {
+                background: #fff;
+                padding: 0.2in;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                border-radius: 8px !important;
+            }
+            .grid-2 {
+                display: block !important;
+            }
+            .receipt-preview {
+                border: none !important;
+                padding: 0 !important;
+            }
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: #c8d3e8;
+            border-radius: 12px;
+        }
+
+        /* 層級標籤小提示 */
+        .layer-hint {
+            font-size: 11px;
+            color: #6f84a8;
+            padding: 8px 0 0;
+            border-top: 1px solid #ecf0f7;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .layer-hint code {
+            background: #f0f4fc;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: #2b4a7a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <!-- ============================================================
+        表示層 (Presentation Layer) — 標題與操作列
+        ============================================================ -->
+        <div class="header no-print">
+            <h1>
+                🧾 收據管理
+                <small>三層架構 · 付費檔</small>
+            </h1>
+            <div class="header-actions">
+                <button onclick="ui.printReceipt()">🖨️ 列印收據</button>
+                <button class="btn-danger" onclick="ui.clearAll()">🗑️ 清除記錄</button>
+            </div>
+        </div>
+
+        <!-- 架構標示 -->
+        <div class="layer-badge no-print">
+            <span class="pres">🎨 表示層 (UI)</span>
+            <span class="biz">⚙️ 業務邏輯層 (BLL)</span>
+            <span class="data">💾 資料存取層 (DAL)</span>
+        </div>
+
+        <!-- ============================================================
+        主區塊：表單 (表示層) + 預覽 (表示層)
+        ============================================================ -->
+        <div class="grid-2">
+            <!-- 左：表單 — 表示層 -->
+            <div class="card no-print">
+                <div class="card-title">
+                    📝 開立收據
+                    <span class="layer-tag">表示層</span>
+                </div>
+
+                <div class="form-group">
+                    <label>客戶名稱</label>
+                    <input type="text" id="customerName" placeholder="請輸入客戶" value="星宇集團" />
+                </div>
+
+                <div class="form-group">
+                    <label>收據編號 (付費檔名)</label>
+                    <input type="text" id="receiptId" readonly style="background:#f2f6fd; color:#2a4060;" />
+                </div>
+
+                <!-- 明細項目 — 表示層 -->
+                <div class="items-section">
+                    <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:500; color:#2a4060; margin-bottom:8px; padding:0 4px;">
+                        <span>品名</span>
+                        <span style="display:flex; gap:20px;"><span>數量</span><span>單價</span></span>
+                    </div>
+                    <div id="itemRows"><!-- 動態渲染 --></div>
+                    <button class="btn-add-item" onclick="ui.addItemRow()">＋ 新增明細</button>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-primary" onclick="ui.generateReceipt()">🧾 開立收據</button>
+                    <button class="btn-secondary" onclick="ui.saveRecord()">💾 記入記錄</button>
+                </div>
+
+                <!-- 層級提示 -->
+                <div class="layer-hint">
+                    <span><code>表示層</code> 事件綁定 · 渲染</span>
+                    <span><code>業務邏輯層</code> 計算 · 驗證</span>
+                    <span><code>資料存取層</code> localStorage</span>
+                </div>
+            </div>
+
+            <!-- 右：收據預覽 — 表示層 -->
+            <div class="card" style="display:flex; flex-direction:column;">
+                <div class="card-title">
+                    👁️ 收據預覽
+                    <span class="layer-tag">表示層</span>
+                </div>
+                <div class="receipt-preview" id="receiptPreview">
+                    <div class="receipt-empty">點擊「開立收據」產生預覽</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        歷史記錄 — 表示層
+        ============================================================ -->
+        <div class="card no-print">
+            <div class="card-title">
+                📂 歷史記錄
+                <span class="layer-tag">表示層</span>
+                <span id="historyCount" style="font-size:13px; font-weight:400; color:#4a6180; margin-left:auto;">0 筆</span>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-empty">尚無收據記錄</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JavaScript — 三層架構實作
+    ============================================================ -->
+    <script>
+        /**
+         * ============================================================
+         *  📦 資料存取層 (Data Access Layer — DAL)
+         *  職責：所有 localStorage 讀寫操作
+         * ============================================================
+         */
+        const DAL = {
+            STORAGE_KEY: 'receiptHistory_v2',
+
+            /** 取得所有歷史記錄 */
+            getAll() {
+                try {
+                    const raw = localStorage.getItem(this.STORAGE_KEY);
+                    return raw ? JSON.parse(raw) : [];
+                } catch {
+                    return [];
+                }
+            },
+
+            /** 儲存整個歷史陣列 */
+            saveAll(history) {
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
+            },
+
+            /** 新增一筆記錄 (置頂) */
+            addRecord(record) {
+                const list = this.getAll();
+                list.unshift(record);
+                this.saveAll(list);
+                return list;
+            },
+
+            /** 刪除指定索引的記錄 */
+            deleteByIndex(index) {
+                const list = this.getAll();
+                if (index < 0 || index >= list.length) return null;
+                list.splice(index, 1);
+                this.saveAll(list);
+                return list;
+            },
+
+            /** 清除全部 */
+            clearAll() {
+                localStorage.removeItem(this.STORAGE_KEY);
+                return [];
+            }
+        };
+
+
+        /**
+         * ============================================================
+         *  ⚙️ 業務邏輯層 (Business Logic Layer — BLL)
+         *  職責：收據生成、計算、驗證、ID 產生
+         * ============================================================
+         */
+        const BLL = {
+            /** 產生收據編號 (付費檔名) */
+            generateReceiptId() {
+                const now = new Date();
+                const d = now.toISOString().slice(0, 10).replace(/-/g, '');
+                const seq = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+                return `R-${d}-${seq}`;
+            },
+
+            /** 計算明細小計與總額 */
+            calculateTotals(items) {
+                let total = 0;
+                const detail = items.map(it => {
+                    const qty = Number(it.qty) || 0;
+                    const price = Number(it.price) || 0;
+                    const subtotal = qty * price;
+                    total += subtotal;
+                    return { ...it, qty, price, subtotal };
+                });
+                return { items: detail, total };
+            },
+
+            /** 驗證明細有效性 (至少一筆，數量>0，價格>=0) */
+            validateItems(items) {
+                if (!items || items.length === 0) return { valid: false, msg: '請至少新增一筆明細' };
+                for (const it of items) {
+                    const qty = Number(it.qty);
+                    const price = Number(it.price);
+                    if (isNaN(qty) || qty <= 0) return { valid: false, msg: `「${it.name || '未命名'}」數量須大於 0` };
+                    if (isNaN(price) || price < 0) return { valid: false, msg: `「${it.name || '未命名'}」單價不可為負` };
+                }
+                return { valid: true };
+            },
+
+            /** 建立收據物件 (不含儲存) */
+            buildReceipt(customer, id, items) {
+                const now = new Date();
+                const dateStr = now.toLocaleString('zh-TW', { hour12: false });
+                const { items: detailItems, total } = this.calculateTotals(items);
+                return {
+                    id,
+                    customer: customer.trim() || '未具名客戶',
+                    date: dateStr,
+                    items: detailItems,
+                    total,
+                    timestamp: now.getTime(),
+                };
+            }
+        };
+
+
+        /**
+         * ============================================================
+         *  🎨 表示層 (Presentation Layer — UI)
+         *  職責：DOM 操作、事件綁定、渲染、使用者互動
+         * ============================================================
+         */
+        const UI = {
+            /** 當前明細項目 (業務邏輯層會參考) */
+            _items: [
+                { name: '影視廣告代言費 (年度)', qty: 1, price: 18000000 },
+                { name: '品牌形象授權', qty: 1, price: 3500000 },
+            ],
+
+            /** 當前生成的收據 (未儲存) */
+            _currentReceipt: null,
+
+            /** DOM 快取 */
+            _dom: {},
+
+            /** 初始化 */
+            init() {
+                this._cacheDom();
+                this._bindEvents();
+                // 產生預設編號
+                this._dom.receiptId.value = BLL.generateReceiptId();
+                // 渲染明細
+                this._renderItemRows();
+                // 載入歷史記錄
+                this._renderHistory();
+                // 自動產生第一張預覽
+                this.generateReceipt();
+            },
+
+            _cacheDom() {
+                this._dom = {
+                    customerName: document.getElementById('customerName'),
+                    receiptId: document.getElementById('receiptId'),
+                    itemRows: document.getElementById('itemRows'),
+                    receiptPreview: document.getElementById('receiptPreview'),
+                    historyList: document.getElementById('historyList'),
+                    historyCount: document.getElementById('historyCount'),
+                };
+            },
+
+            _bindEvents() {
+                // 客戶名稱變更 → 更新預覽
+                this._dom.customerName.addEventListener('input', () => {
+                    if (this._currentReceipt) {
+                        this._currentReceipt.customer = this._dom.customerName.value.trim() || '未具名客戶';
+                        this._renderPreview(this._currentReceipt);
+                    }
+                });
+            },
+
+            /* ---------- 明細操作 ---------- */
+            _renderItemRows() {
+                const container = this._dom.itemRows;
+                let html = '';
+                this._items.forEach((item, idx) => {
+                    html += `
+                        <div class="item-row" data-index="${idx}">
+                            <input type="text" class="item-name" value="${this._escapeHtml(item.name)}" placeholder="品名">
+                            <input type="number" class="item-qty" value="${item.qty}" min="1" step="1" placeholder="數量">
+                            <input type="number" class="item-price" value="${item.price}" min="0" step="1" placeholder="單價">
+                            <button class="btn-remove" data-index="${idx}">✕</button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+
+                // 綁定刪除事件 (事件代理)
+                container.querySelectorAll('.btn-remove').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = parseInt(btn.dataset.index, 10);
+                        this._removeItem(idx);
+                    });
+                });
+
+                // 綁定輸入變更事件 (即時更新)
+                container.querySelectorAll('.item-row').forEach((row, idx) => {
+                    const nameInput = row.querySelector('.item-name');
+                    const qtyInput = row.querySelector('.item-qty');
+                    const priceInput = row.querySelector('.item-price');
+
+                    const update = () => {
+                        this._items[idx].name = nameInput.value || '未命名';
+                        this._items[idx].qty = parseInt(qtyInput.value) || 1;
+                        this._items[idx].price = parseInt(priceInput.value) || 0;
+                        // 若有 currentReceipt 則重新生成預覽
+                        if (this._currentReceipt) {
+                            this.generateReceipt();
+                        } else {
+                            // 僅更新預覽區 (無收據狀態)
+                            this._renderPreview(null);
+                        }
+                    };
+
+                    nameInput.addEventListener('input', update);
+                    qtyInput.addEventListener('input', update);
+                    priceInput.addEventListener('input', update);
+                });
+            },
+
+            _removeItem(index) {
+                if (this._items.length <= 1) {
+                    alert('至少保留一項明細');
+                    return;
+                }
+                this._items.splice(index, 1);
+                this._renderItemRows();
+                if (this._currentReceipt) {
+                    this.generateReceipt();
+                } else {
+                    this._renderPreview(null);
+                }
+            },
+
+            addItemRow() {
+                this._items.push({ name: '新項目', qty: 1, price: 0 });
+                this._renderItemRows();
+                if (this._currentReceipt) {
+                    this.generateReceipt();
+                } else {
+                    this._renderPreview(null);
+                }
+            },
+
+            /* ---------- 收據生成 (業務邏輯層呼叫) ---------- */
+            generateReceipt() {
+                // 收集當前 items (從 DOM 讀取，確保一致)
+                const rows = this._dom.itemRows.querySelectorAll('.item-row');
+                const newItems = [];
+                rows.forEach(row => {
+                    const name = row.querySelector('.item-name').value || '未命名';
+                    const qty = parseInt(row.querySelector('.item-qty').value) || 1;
+                    const price = parseInt(row.querySelector('.item-price').value) || 0;
+                    newItems.push({ name, qty, price });
+                });
+                this._items = newItems;
+
+                // 業務邏輯層驗證
+                const validation = BLL.validateItems(this._items);
+                if (!validation.valid) {
+                    alert(validation.msg);
+                    return;
+                }
+
+                // 取得客戶名稱
+                const customer = this._dom.customerName.value.trim() || '未具名客戶';
+
+                // 取得編號 (若無則產生)
+                let id = this._dom.receiptId.value.trim();
+                if (!id) {
+                    id = BLL.generateReceiptId();
+                    this._dom.receiptId.value = id;
+                }
+
+                // 業務邏輯層建立收據
+                const receipt = BLL.buildReceipt(customer, id, this._items);
+                this._currentReceipt = receipt;
+
+                // 表示層渲染
+                this._renderPreview(receipt);
+            },
+
+            /* ---------- 預覽渲染 ---------- */
+            _renderPreview(receipt) {
+                const container = this._dom.receiptPreview;
+                if (!receipt) {
+                    container.innerHTML = `
+                        <div class="receipt-empty">
+                            <div style="font-size:40px; margin-bottom:12px;">📄</div>
+                            點擊「開立收據」產生預覽
+                        </div>
+                    `;
+                    return;
+                }
+
+                const { id, customer, date, items, total } = receipt;
+                let rowsHtml = '';
+                items.forEach(it => {
+                    const sub = it.qty * it.price;
+                    rowsHtml += `
+                        <tr>
+                            <td>${this._escapeHtml(it.name)}</td>
+                            <td>${it.qty}</td>
+                            <td>${this._formatCurrency(it.price)}</td>
+                            <td>${this._formatCurrency(sub)}</td>
+                        </tr>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <div class="receipt-header">
+                        <h2>🧾 收 據</h2>
+                        <div class="meta">
+                            <span>編號：${id}</span>
+                            <span>日期：${date}</span>
+                            <span>客戶：${this._escapeHtml(customer)}</span>
+                        </div>
+                    </div>
+                    <div class="receipt-body">
+                        <table>
+                            <thead><tr><th>品名</th><th>數量</th><th>單價</th><th>金額</th></tr></thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                        <div class="receipt-total">
+                            總計 <span>${this._formatCurrency(total)} 元</span>
+                        </div>
+                    </div>
+                `;
+            },
+
+            /* ---------- 儲存記錄 (呼叫 DAL) ---------- */
+            saveRecord() {
+                if (!this._currentReceipt) {
+                    alert('請先點擊「開立收據」產生收據內容');
+                    return;
+                }
+
+                // 檢查是否已存在 (避免重複儲存)
+                const history = DAL.getAll();
+                const dup = history.some(h => h.id === this._currentReceipt.id && h.total === this._currentReceipt.total);
+                if (dup) {
+                    alert('此收據已存在記錄中，請勿重複儲存');
+                    return;
+                }
+
+                // 資料存取層儲存
+                DAL.addRecord(this._currentReceipt);
+                this._renderHistory();
+                alert('✅ 已記入記錄！');
+            },
+
+            /* ---------- 歷史記錄渲染 (DAL 讀取) ---------- */
+            _renderHistory() {
+                const history = DAL.getAll();
+                const container = this._dom.historyList;
+                const countEl = this._dom.historyCount;
+
+                countEl.textContent = `${history.length} 筆`;
+
+                if (history.length === 0) {
+                    container.innerHTML = `<div class="history-empty">尚無收據記錄</div>`;
+                    return;
+                }
+
+                let html = '';
+                history.forEach((rec, idx) => {
+                    const summary = rec.items.map(it => `${it.name}×${it.qty}`).join('、');
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="h-customer">${this._escapeHtml(rec.customer)}</div>
+                                <div class="h-meta">
+                                    <span>📎 ${rec.id}</span>
+                                    <span>📅 ${rec.date}</span>
+                                    <span>📦 ${summary}</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span class="history-amount">${this._formatCurrency(rec.total)}</span>
+                                <div class="history-actions">
+                                    <button onclick="ui.deleteHistory(${idx})" title="刪除">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            },
+
+            /** 刪除歷史 (DAL 操作) */
+            deleteHistory(index) {
+                if (!confirm('確定刪除這筆記錄？')) return;
+                DAL.deleteByIndex(index);
+                this._renderHistory();
+            },
+
+            /** 清除全部 (DAL 操作) */
+            clearAll() {
+                const history = DAL.getAll();
+                if (history.length === 0) return;
+                if (!confirm('確定清除所有記錄？此操作無法復原。')) return;
+                DAL.clearAll();
+                this._renderHistory();
+                // 若目前有收據，保留預覽
+            },
+
+            /** 列印 */
+            printReceipt() {
+                if (!this._currentReceipt) {
+                    alert('請先開立收據再列印');
+                    return;
+                }
+                window.print();
+            },
+
+            /* ---------- 工具函數 ---------- */
+            _escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            _formatCurrency(num) {
+                return Number(num).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+        };
+
+
+        // ============================================================
+        //  啟動應用程式 (表示層初始化)
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            UI.init();
+            // 將 UI 暴露給全域，方便 HTML onclick 呼叫
+            window.ui = UI;
+        });
+    </script>
+
+</body>
+</html>
