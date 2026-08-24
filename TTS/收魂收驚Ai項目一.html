@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧾 開立收據 · 記帳系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f4f6fc;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1280px;
+            width: 100%;
+        }
+
+        /* 標題 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1f36;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #6b7280;
+            background: #e5e9f2;
+            padding: 4px 12px;
+            border-radius: 60px;
+        }
+
+        .btn-utils {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-utils button {
+            background: #fff;
+            border: 1px solid #d1d9e8;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-utils button:hover {
+            background: #f0f4ff;
+            border-color: #9aa9c4;
+        }
+
+        .btn-utils .btn-danger {
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .btn-utils .btn-danger:hover {
+            background: #fef2f2;
+            border-color: #f87171;
+        }
+
+        /* 主要兩欄 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 860px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        /* 卡片共用 */
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px 24px 28px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            transition: 0.2s;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1f36;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            letter-spacing: -0.2px;
+        }
+
+        .card-title span {
+            background: #eef2f9;
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 12px;
+            color: #4b5563;
+        }
+
+        /* 表單 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 14px;
+            background: #fafcff;
+            transition: 0.15s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #6b7fd4;
+            box-shadow: 0 0 0 3px rgba(107, 127, 212, 0.15);
+            background: #fff;
+        }
+
+        /* 明細項目 (動態行) */
+        .items-section {
+            background: #f8fafd;
+            border-radius: 18px;
+            padding: 16px;
+            margin: 18px 0 12px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .item-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-row input {
+            padding: 8px 12px;
+            border: 1px solid #dde3ed;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+        }
+
+        .item-row input:focus {
+            border-color: #6b7fd4;
+            box-shadow: 0 0 0 2px rgba(107, 127, 212, 0.1);
+        }
+
+        .item-row .btn-remove {
+            background: #fee9e9;
+            border: none;
+            border-radius: 30px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+            color: #b91c1c;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+        }
+
+        .item-row .btn-remove:hover {
+            background: #fecaca;
+        }
+
+        .btn-add-item {
+            background: transparent;
+            border: 1px dashed #b9c4db;
+            border-radius: 30px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a5a7a;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.15s;
+            margin-top: 6px;
+        }
+
+        .btn-add-item:hover {
+            background: #eef3fc;
+            border-color: #6b7fd4;
+            color: #1f2a4a;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #1a2a5c;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 4px 12px rgba(26, 42, 92, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #253a7a;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #eef2f9;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a2a5c;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f5;
+        }
+
+        /* 收據預覽 (列印樣式) */
+        .receipt-preview {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 22px;
+            border: 1px solid #eaedf4;
+            min-height: 280px;
+            transition: 0.2s;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #dce2ed;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .receipt-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 1px;
+        }
+
+        .receipt-header .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #4b5563;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .receipt-body table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin: 12px 0;
+        }
+
+        .receipt-body th {
+            text-align: left;
+            padding: 8px 4px 6px 0;
+            border-bottom: 1px solid #e5e9f0;
+            font-weight: 600;
+            color: #1f2a4a;
+        }
+
+        .receipt-body td {
+            padding: 8px 4px 8px 0;
+            border-bottom: 1px solid #f0f3f9;
+            color: #1e293b;
+        }
+
+        .receipt-body td:last-child,
+        .receipt-body th:last-child {
+            text-align: right;
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            padding-top: 16px;
+            border-top: 2px solid #dce2ed;
+            margin-top: 6px;
+        }
+
+        .receipt-total span {
+            background: #eef2f9;
+            padding: 2px 16px;
+            border-radius: 30px;
+        }
+
+        .receipt-empty {
+            color: #9aa5b9;
+            text-align: center;
+            padding: 44px 0;
+            font-size: 15px;
+        }
+
+        /* 歷史記錄 */
+        .history-list {
+            max-height: 360px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #fafcff;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #eef2f8;
+            transition: 0.15s;
+        }
+
+        .history-item:hover {
+            background: #f4f8ff;
+            border-color: #d0d9ea;
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .history-info .h-customer {
+            font-weight: 600;
+            color: #1a1f36;
+        }
+
+        .history-info .h-meta {
+            font-size: 12px;
+            color: #6b7280;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .history-amount {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 18px;
+        }
+
+        .history-actions button {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 30px;
+            transition: 0.15s;
+        }
+
+        .history-actions button:hover {
+            background: #f1f3f8;
+            color: #b91c1c;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #9aa5b9;
+            padding: 40px 0;
+            font-size: 14px;
+        }
+
+        /* 列印樣式 */
+        @media print {
+            body {
+                background: #fff;
+                padding: 0.2in;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                border-radius: 8px !important;
+            }
+            .grid-2 {
+                display: block !important;
+            }
+            .receipt-preview {
+                border: none !important;
+                padding: 0 !important;
+            }
+            .history-item {
+                break-inside: avoid;
+            }
+        }
+
+        /* 捲軸 */
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <!-- 標題列 -->
+        <div class="header no-print">
+            <h1>
+                🧾 收據管理
+                <small>開立 · 記錄 · 歸檔</small>
+            </h1>
+            <div class="btn-utils">
+                <button onclick="printReceipt()">🖨️ 列印收據</button>
+                <button class="btn-danger" onclick="clearAllHistory()">🗑️ 清除記錄</button>
+            </div>
+        </div>
+
+        <!-- 主要兩欄：左表單 / 右預覽 -->
+        <div class="grid-2">
+            <!-- 左：表單 + 明細 -->
+            <div class="card no-print">
+                <div class="card-title">
+                    📝 開立收據
+                    <span>付費檔</span>
+                </div>
+
+                <div class="form-group">
+                    <label>客戶名稱</label>
+                    <input type="text" id="customerName" placeholder="例如：陳小姐 / 星宇科技" value="陳小姐">
+                </div>
+
+                <div class="form-group">
+                    <label>收據編號</label>
+                    <input type="text" id="receiptId" placeholder="自動產生" readonly style="background:#f4f6fc; color:#4b5563;">
+                </div>
+
+                <!-- 明細項目 -->
+                <div class="items-section">
+                    <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px; padding:0 4px;">
+                        <span>品名</span>
+                        <span style="display:flex; gap:20px;"><span>數量</span><span>單價</span></span>
+                    </div>
+                    <div id="itemRows">
+                        <!-- 動態插入 -->
+                    </div>
+                    <button class="btn-add-item" onclick="addItemRow()">＋ 新增明細</button>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn-primary" onclick="generateReceipt()">🧾 開立收據</button>
+                    <button class="btn-secondary" onclick="saveRecord()">💾 記入記錄</button>
+                </div>
+                <p style="font-size:12px; color:#9aa5b9; margin-top:12px; text-align:center;">點擊「開立收據」預覽，再「記入記錄」保存</p>
+            </div>
+
+            <!-- 右：收據預覽 -->
+            <div class="card" style="display:flex; flex-direction:column;">
+                <div class="card-title no-print">
+                    👁️ 收據預覽
+                    <span>即時生成</span>
+                </div>
+                <div class="receipt-preview" id="receiptPreview">
+                    <!-- 由 JS 渲染 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 歷史記錄 -->
+        <div class="card no-print">
+            <div class="card-title">
+                📂 歷史記錄
+                <span id="historyCount">0 筆</span>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 由 JS 渲染 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  狀態
+        // ============================================================
+        let items = [
+            { name: '設計顧問費', qty: 1, price: 3500 },
+            { name: '專案管理', qty: 2, price: 1200 },
+        ];
+        let currentReceipt = null; // 暫存目前生成的收據
+        let history = JSON.parse(localStorage.getItem('receiptHistory')) || [];
+
+        // DOM 參考
+        const customerNameInput = document.getElementById('customerName');
+        const receiptIdInput = document.getElementById('receiptId');
+        const itemRowsContainer = document.getElementById('itemRows');
+        const previewContainer = document.getElementById('receiptPreview');
+        const historyList = document.getElementById('historyList');
+        const historyCount = document.getElementById('historyCount');
+
+        // ============================================================
+        //  工具
+        // ============================================================
+        function generateId() {
+            const now = new Date();
+            const d = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const seq = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            return `R-${d}-${seq}`;
+        }
+
+        function formatDate(d) {
+            const dt = new Date(d);
+            return dt.toLocaleString('zh-TW', { hour12: false });
+        }
+
+        function formatCurrency(num) {
+            return Number(num).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        // ============================================================
+        //  明細行渲染
+        // ============================================================
+        function renderItemRows() {
+            let html = '';
+            items.forEach((item, idx) => {
+                html += `
+                    <div class="item-row" data-index="${idx}">
+                        <input type="text" class="item-name" value="${escapeHtml(item.name)}" placeholder="品名">
+                        <input type="number" class="item-qty" value="${item.qty}" min="1" step="1" placeholder="數量">
+                        <input type="number" class="item-price" value="${item.price}" min="0" step="1" placeholder="單價">
+                        <button class="btn-remove" onclick="removeItem(${idx})">✕</button>
+                    </div>
+                `;
+            });
+            itemRowsContainer.innerHTML = html;
+
+            // 綁定變更事件，即時更新預覽
+            document.querySelectorAll('.item-row').forEach((row, idx) => {
+                const nameInput = row.querySelector('.item-name');
+                const qtyInput = row.querySelector('.item-qty');
+                const priceInput = row.querySelector('.item-price');
+
+                const updateItem = () => {
+                    items[idx].name = nameInput.value || '未命名';
+                    items[idx].qty = parseInt(qtyInput.value) || 1;
+                    items[idx].price = parseInt(priceInput.value) || 0;
+                    // 如果有當前收據，重新生成預覽 (但不儲存)
+                    if (currentReceipt) {
+                        generateReceipt();
+                    } else {
+                        renderPreview();
+                    }
+                };
+
+                nameInput.addEventListener('input', updateItem);
+                qtyInput.addEventListener('input', updateItem);
+                priceInput.addEventListener('input', updateItem);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function addItemRow() {
+            items.push({ name: '新項目', qty: 1, price: 0 });
+            renderItemRows();
+            if (currentReceipt) generateReceipt();
+            else renderPreview();
+        }
+
+        function removeItem(index) {
+            if (items.length <= 1) {
+                alert('至少保留一項明細');
+                return;
+            }
+            items.splice(index, 1);
+            renderItemRows();
+            if (currentReceipt) generateReceipt();
+            else renderPreview();
+        }
+
+        // ============================================================
+        //  渲染預覽 (不含儲存狀態)
+        // ============================================================
+        function renderPreview(receiptData) {
+            const data = receiptData || currentReceipt;
+            if (!data) {
+                previewContainer.innerHTML = `
+                    <div class="receipt-empty">
+                        <div style="font-size:40px; margin-bottom:12px;">📄</div>
+                        點擊「開立收據」產生預覽
+                    </div>
+                `;
+                return;
+            }
+
+            const { id, customer, date, items: itemList, total } = data;
+            let rowsHtml = '';
+            itemList.forEach(it => {
+                const sub = it.qty * it.price;
+                rowsHtml += `
+                    <tr>
+                        <td>${escapeHtml(it.name)}</td>
+                        <td>${it.qty}</td>
+                        <td>${formatCurrency(it.price)}</td>
+                        <td>${formatCurrency(sub)}</td>
+                    </tr>
+                `;
+            });
+
+            const html = `
+                <div class="receipt-header">
+                    <h2>🧾 收 據</h2>
+                    <div class="meta">
+                        <span>編號：${id}</span>
+                        <span>日期：${date}</span>
+                        <span>客戶：${escapeHtml(customer)}</span>
+                    </div>
+                </div>
+                <div class="receipt-body">
+                    <table>
+                        <thead>
+                            <tr><th>品名</th><th>數量</th><th>單價</th><th>金額</th></tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                    <div class="receipt-total">
+                        總計 <span>${formatCurrency(total)} 元</span>
+                    </div>
+                </div>
+            `;
+            previewContainer.innerHTML = html;
+        }
+
+        // ============================================================
+        //  開立收據 (生成 currentReceipt)
+        // ============================================================
+        function generateReceipt() {
+            // 收集當前 items 資料 (從 input 抓)
+            const rows = document.querySelectorAll('.item-row');
+            const newItems = [];
+            rows.forEach(row => {
+                const name = row.querySelector('.item-name').value || '未命名';
+                const qty = parseInt(row.querySelector('.item-qty').value) || 1;
+                const price = parseInt(row.querySelector('.item-price').value) || 0;
+                if (qty > 0 && price >= 0) {
+                    newItems.push({ name, qty, price });
+                }
+            });
+            if (newItems.length === 0) {
+                alert('請至少新增一筆有效明細 (數量>0, 單價>=0)');
+                return;
+            }
+
+            // 更新 items 陣列
+            items = newItems;
+            renderItemRows(); // 重新渲染保持同步
+
+            const customer = customerNameInput.value.trim() || '未具名客戶';
+            const id = receiptIdInput.value || generateId();
+            if (!receiptIdInput.value) receiptIdInput.value = id;
+
+            const now = new Date();
+            const dateStr = now.toLocaleString('zh-TW', { hour12: false });
+
+            let total = 0;
+            items.forEach(it => total += it.qty * it.price);
+
+            currentReceipt = {
+                id: id,
+                customer: customer,
+                date: dateStr,
+                items: items.map(it => ({ ...it })),
+                total: total,
+                timestamp: now.getTime(),
+            };
+
+            renderPreview(currentReceipt);
+        }
+
+        // ============================================================
+        //  記入記錄 (儲存至 localStorage)
+        // ============================================================
+        function saveRecord() {
+            if (!currentReceipt) {
+                alert('請先點擊「開立收據」產生收據內容');
+                return;
+            }
+            // 檢查是否重複 (防止短時間重複儲存)
+            const dup = history.some(h => h.id === currentReceipt.id && h.total === currentReceipt.total);
+            if (dup) {
+                alert('此收據已存在記錄中，請勿重複儲存');
+                return;
+            }
+
+            history.unshift({ ...currentReceipt }); // 最新在上
+            localStorage.setItem('receiptHistory', JSON.stringify(history));
+            renderHistory();
+            alert('✅ 已記入記錄！');
+        }
+
+        // ============================================================
+        //  歷史記錄渲染
+        // ============================================================
+        function renderHistory() {
+            historyCount.textContent = `${history.length} 筆`;
+            if (history.length === 0) {
+                historyList.innerHTML = `<div class="history-empty">尚無收據記錄</div>`;
+                return;
+            }
+
+            let html = '';
+            history.forEach((rec, idx) => {
+                const itemSummary = rec.items.map(it => `${it.name}×${it.qty}`).join('、');
+                html += `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div class="h-customer">${escapeHtml(rec.customer)}</div>
+                            <div class="h-meta">
+                                <span>📎 ${rec.id}</span>
+                                <span>📅 ${rec.date}</span>
+                                <span>📦 ${itemSummary}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span class="history-amount">${formatCurrency(rec.total)}</span>
+                            <div class="history-actions">
+                                <button onclick="deleteHistory(${idx})" title="刪除">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            historyList.innerHTML = html;
+        }
+
+        function deleteHistory(index) {
+            if (!confirm('確定要刪除這筆記錄嗎？')) return;
+            history.splice(index, 1);
+            localStorage.setItem('receiptHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function clearAllHistory() {
+            if (history.length === 0) return;
+            if (!confirm('確定清除所有記錄？此操作無法復原。')) return;
+            history = [];
+            localStorage.setItem('receiptHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        // ============================================================
+        //  列印收據
+        // ============================================================
+        function printReceipt() {
+            if (!currentReceipt) {
+                alert('請先開立收據再列印');
+                return;
+            }
+            window.print();
+        }
+
+        // ============================================================
+        //  初始化
+        // ============================================================
+        function init() {
+            // 設定編號
+            receiptIdInput.value = generateId();
+
+            // 渲染明細
+            renderItemRows();
+
+            // 如果有歷史記錄，載入
+            renderHistory();
+
+            // 自動生成第一張預覽
+            generateReceipt();
+
+            // 客戶名稱變更時更新預覽
+            customerNameInput.addEventListener('input', () => {
+                if (currentReceipt) {
+                    currentReceipt.customer = customerNameInput.value.trim() || '未具名客戶';
+                    renderPreview(currentReceipt);
+                }
+            });
+        }
+
+        init();
+    </script>
+
+</body>
+</html>
